@@ -1,0 +1,10 @@
+超维社
+
+
+初始化配置:
+go run cmd/answer/main.go init -C ./answer-data
+运行：
+go run cmd/answer/main.go run -C ./answer-data
+
+
+go run cmd/answer/main.go upgrade -C ./answer-data

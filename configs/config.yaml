@@ -35,6 +35,7 @@ service_config:
   upload_path: "/data/uploads"
 ui:
   public_url: '/'
-  api_url: '/'
+  #api_url: '/' #REACT_APP_API_URL
+  api_url: 'http://127.0.0.1/'
   base_url: ''
 

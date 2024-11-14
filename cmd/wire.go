@@ -32,12 +32,14 @@ import (
 	"github.com/apache/incubator-answer/internal/base/server"
 	"github.com/apache/incubator-answer/internal/base/translator"
 	"github.com/apache/incubator-answer/internal/controller"
-	"github.com/apache/incubator-answer/internal/controller/template_render"
+	templaterender "github.com/apache/incubator-answer/internal/controller/template_render"
 	"github.com/apache/incubator-answer/internal/controller_admin"
+	"github.com/apache/incubator-answer/internal/controller_article" //@cws
 	"github.com/apache/incubator-answer/internal/repo"
 	"github.com/apache/incubator-answer/internal/router"
 	"github.com/apache/incubator-answer/internal/service"
 	"github.com/apache/incubator-answer/internal/service/service_config"
+	"github.com/apache/incubator-answer/internal/service_article" //@cws
 	"github.com/google/wire"
 	"github.com/segmentfault/pacman"
 	"github.com/segmentfault/pacman/log"
@@ -59,12 +61,15 @@ func initApplication(
 		router.ProviderSetRouter,
 		controller.ProviderSetController,
 		controller_admin.ProviderSetController,
+		controller_article.ProviderSetController, //@cws
 		templaterender.ProviderSetTemplateRenderController,
 		service.ProviderSetService,
+		service_article.ProviderSetService, //@cws
+
 		cron.ProviderSetService,
 		repo.ProviderSetRepo,
 		translator.ProviderSet,
 		middleware.ProviderSetMiddleware,
-		newApplication,
+		newApplication, //调用wire.Build方法传入所有的依赖对象以及构建最终对象的函数得到目标对象
 	))
 }

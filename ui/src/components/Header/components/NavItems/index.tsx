@@ -50,34 +50,75 @@ const Index: FC<Props> = ({ redDot, userInfo, logOut }) => {
   return (
     <>
       <Nav className="flex-row">
+   
+
         <NavLink
           to="/users/notifications/inbox"
           title={t('inbox', { keyPrefix: 'notifications' })}
-          className="icon-link nav-link d-flex align-items-center justify-content-center p-0 me-3 position-relative">
-          <Icon name="bell-fill" className="fs-4" />
-          {(redDot?.inbox || 0) > 0 && (
-            <div className="unread-dot bg-danger">
-              <span className="visually-hidden">
-                {t('new_alerts', { keyPrefix: 'notifications' })}
-              </span>
-            </div>
-          )}
+          className="icon-link nav-link d-flex align-items-center justify-content-center p-0 me-3 position-relative     "
+          style={ {flexWrap:"wrap",gap:0 }  }
+          >
+          <div className="d-inline">
+                <Icon name="bell-fill" className="fs-4" /> 
+                {(redDot?.inbox || 0) > 0 && (
+                    <div className="unread-dot bg-danger">
+                    <span className="visually-hidden">
+                        {t('new_alerts', { keyPrefix: 'notifications' })}
+                    </span>
+                    </div>
+                )}
+          </div>
+          <span className="my-head-nav-title">消息</span>
         </NavLink>
 
         <NavLink
           to="/users/notifications/achievement"
           title={t('achievement', { keyPrefix: 'notifications' })}
-          className="icon-link nav-link d-flex align-items-center justify-content-center p-0 me-3 position-relative">
-          <Icon name="trophy-fill" className="fs-4" />
-          {(redDot?.achievement || 0) > 0 && (
-            <div className="unread-dot bg-danger">
-              <span className="visually-hidden">
-                {t('new_alerts', { keyPrefix: 'notifications' })}
-              </span>
+          className="icon-link nav-link d-flex align-items-center justify-content-center p-0 me-3 position-relative"
+          style={ {flexWrap:"wrap",gap:0 }  }
+          >
+            <div>
+                    <Icon name="trophy-fill" className="fs-4" />
+                    {(redDot?.achievement || 0) > 0 && (
+                        <div className="unread-dot bg-danger">
+                        <span className="visually-hidden">
+                            {t('new_alerts', { keyPrefix: 'notifications' })}
+                        </span>
+                        </div>
+                    )}
             </div>
-          )}
+            <span  className="my-head-nav-title">成就</span>
         </NavLink>
+
+        <NavLink
+          to="/users/notifications/achievement"
+          title={t('achievement', { keyPrefix: 'notifications' })}
+          className="icon-link nav-link d-flex align-items-center justify-content-center p-0 me-3 position-relative"
+          style={ {width:"100px"}  }
+          >
+              <div>
+                <svg className="icon-create-center" aria-hidden="true" >
+                        <use xlinkHref="#icon-chuangzuozhezhongxin"/>
+                    </svg>
+
+              </div>
+            <span  className="my-head-nav-title">创作中心</span>
+        </NavLink>
+
+        {/* <a href="/a">
+            <div style={ {textAlign :'center'} } >
+                <svg className="icon-create-center" aria-hidden="true" >
+                    <use xlinkHref="#icon-chuangzuozhezhongxin"/>
+                </svg>
+             </div>
+            <div  className="my-head-nav-title">创作中心</div> */}
+
+        
+          
       </Nav>
+
+  
+       
 
       <Dropdown align="end">
         <Dropdown.Toggle
@@ -160,6 +201,9 @@ const Index: FC<Props> = ({ redDot, userInfo, logOut }) => {
           </Dropdown.Menu>
         </Dropdown>
       ) : null}
+      
+     
+        
     </>
   );
 };

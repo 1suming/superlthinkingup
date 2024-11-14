@@ -17,17 +17,23 @@
  * under the License.
  */
 
-package router
+.people-dropdown {
+  position: absolute;
+  top: 34px;
+  left: 0;
+  width: 100%;
 
-import "github.com/google/wire"
-
-// ProviderSetRouter is providers.
-var ProviderSetRouter = wire.NewSet(
-	NewAnswerAPIRouter,
-	NewSwaggerRouter,
-	NewStaticRouter,
-	NewUIRouter,
-	NewTemplateRouter,
-	NewPluginAPIRouter,
-	NewArticleAPIRouter, //@cws
-)
+  .dropdown-item.active {
+    color: var(--bs-body-color);
+    background-color: var(--an-invite-answer-item-active);
+  }
+  .check-cover {
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    margin: auto 0;
+  }
+}

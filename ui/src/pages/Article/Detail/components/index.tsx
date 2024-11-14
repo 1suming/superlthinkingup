@@ -17,17 +17,22 @@
  * under the License.
  */
 
-package router
+import Article from './Article';
+import Answer from './Answer';
+import AnswerHead from './AnswerHead';
+import RelatedQuestions from './RelatedQuestions';
+import WriteAnswer from './WriteAnswer';
+import Alert from './Alert';
+import ContentLoader from './ContentLoader';
+import InviteToAnswer from './InviteToAnswer';
 
-import "github.com/google/wire"
-
-// ProviderSetRouter is providers.
-var ProviderSetRouter = wire.NewSet(
-	NewAnswerAPIRouter,
-	NewSwaggerRouter,
-	NewStaticRouter,
-	NewUIRouter,
-	NewTemplateRouter,
-	NewPluginAPIRouter,
-	NewArticleAPIRouter, //@cws
-)
+export {
+    Article,
+  Answer,
+  AnswerHead,
+  RelatedQuestions,
+  WriteAnswer,
+  Alert,
+  ContentLoader,
+  InviteToAnswer,
+};

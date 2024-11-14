@@ -19,7 +19,9 @@
 
 package controller
 
-import "github.com/google/wire"
+import (
+	"github.com/google/wire"
+)
 
 // ProviderSetController is controller providers.
 var ProviderSetController = wire.NewSet(

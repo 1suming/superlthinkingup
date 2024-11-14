@@ -480,5 +480,55 @@ const routes: RouteNode[] = [
     path: '/maintenance',
     page: 'pages/Maintenance',
   },
+
+  //@cws 文章平台
+    {
+        path: '/',
+        page: 'pages/Layout', //page: 'pages/Article/Layout/ArticleRootLayout',
+        loader: async () => {
+            await guard.setupApp();
+            return null;
+        },
+        guard: () => {
+            const gr = guard.shouldLoginRequired();
+            if (!gr.ok) {
+                return gr;
+            }
+            return guard.notForbidden();
+        },
+        children: [
+            { 
+                // side nav layout // 'pages/SideNavLayout',
+                page: 'pages/Article/Layout/ArticleSideNavLayout',
+                children: [
+                    {
+                        index: true,
+                        path: '/articles',
+                        page: 'pages/Questions',
+                    },
+                    {
+                        path: '/articles',
+                        page: 'pages/Questions',
+                    },
+
+                    {
+                        path: 'articles/:qid',
+                        page: 'pages/Article/Detail',
+                      },
+                      {
+                        path: 'articles/:qid/:slugPermalink',
+                        page:'pages/Article/Detail',
+                      },
+                      {
+                        path: 'articles/:qid/:slugPermalink/:aid',
+                        page: 'pages/Article/Detail',
+                      },
+
+                ],
+            },
+
+        ],
+    },
+
 ];
 export default routes;

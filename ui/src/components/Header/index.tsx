@@ -17,7 +17,7 @@
  * under the License.
  */
 
-import { FC, memo, useState, useEffect } from 'react';
+import { FC, memo, useState, useEffect,useRef} from 'react';
 import {
   Navbar,
   Container,
@@ -37,6 +37,7 @@ import {
 
 import classnames from 'classnames';
 
+
 import { userCenter, floppyNavigation } from '@/utils';
 import {
   loggedUserInfoStore,
@@ -53,7 +54,10 @@ import NavItems from './components/NavItems';
 
 import './index.scss';
 
-const Header: FC = () => {
+interface  HeaderProps {
+    siteHeadNavRef: React.RefObject<HTMLElement>;
+}
+const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [urlSearch] = useSearchParams();
@@ -127,9 +131,16 @@ const Header: FC = () => {
   if (theme_config?.[theme]?.navbar_style) {
     navbarStyle = `theme-${theme_config[theme].navbar_style}`;
   }
+  console.log('@navbarStyle:',navbarStyle)
+//   const ax=useRef(null);
+
+//   useEffect(() => {
+//     const ex= ax.current;
+//     console.log(ex);
+//   });
 
   return (
-    <Navbar
+    <Navbar ref={siteHeadNavRef}
       variant={navbarStyle === 'theme-colored' ? 'dark' : ''}
       expand="lg"
       className={classnames('sticky-top', navbarStyle)}

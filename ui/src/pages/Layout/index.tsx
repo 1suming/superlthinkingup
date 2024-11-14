@@ -17,13 +17,14 @@
  * under the License.
  */
 
-import { FC, memo, useEffect } from 'react';
+import { FC, memo, useEffect ,useRef,useState} from 'react';
 import { Outlet, useLocation, ScrollRestoration } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { SWRConfig } from 'swr';
+import { throttle, debounce } from 'lodash';
 
-import { toastStore, loginToContinueStore, errorCodeStore } from '@/stores';
+import { toastStore, loginToContinueStore, errorCodeStore,myGlobalInfoStore } from '@/stores';
 import {
   Header,
   Footer,
@@ -37,6 +38,9 @@ import { LoginToContinueModal, BadgeModal } from '@/components/Modal';
 import { changeTheme } from '@/utils';
 import { useQueryNotificationStatus } from '@/services';
 
+ 
+
+
 const Layout: FC = () => {
   const location = useLocation();
   const { msg: toastMsg, variant, clear: toastClear } = toastStore();
@@ -46,6 +50,8 @@ const Layout: FC = () => {
   const { code: httpStatusCode, reset: httpStatusReset } = errorCodeStore();
   const { show: showLoginToContinueModal } = loginToContinueStore();
   const { data: notificationData } = useQueryNotificationStatus();
+
+
 
   useEffect(() => {
     httpStatusReset();
@@ -67,6 +73,65 @@ const Layout: FC = () => {
       systemThemeQuery.removeListener(handleSystemThemeChange);
     };
   }, []);
+
+   //@cws
+ const siteHeadNavRef=useRef< HTMLElement>(null);
+
+//   const [siteHeadNavHeight,setSiteHeadNavHeight]= useState(0);
+  let siteHeadNavHeight=0; //setState每次调用都会重新渲染，不需要用setState
+
+//   const [isSideNavSticky,setIsSideNavSticky]=useState(false);
+  const {isSideNavSticky,setIsSideNavSticky,setSideNavStickyTop}= myGlobalInfoStore()
+  const handleScroll=() => {
+    const offset=window.scrollY;
+    if(siteHeadNavHeight!==undefined){
+        if(offset > siteHeadNavHeight ){
+        //   isSideNavSticky=true;
+         setIsSideNavSticky(true);
+          setSideNavStickyTop(siteHeadNavHeight);
+          console.log("offset > sitehadNavHeight scorll true:"+"offset:"+offset+",siteHeadNavHeight"+siteHeadNavHeight + " isSideNavSticky,"+ isSideNavSticky);
+        }
+        else{
+            setIsSideNavSticky(false);
+            console.log("offset > sitehadNavHeight scorll  false:",isSideNavSticky);
+        }
+    }
+ 
+  }
+    // 使用节流
+  const throttledScrollHandler = throttle(handleScroll, 200);
+    // // 使用防抖
+    // const debouncedScrollHandler = debounce(handleScroll, 200);
+  
+
+    useEffect(() => {
+        if (siteHeadNavRef.current) {
+            const { height } = siteHeadNavRef.current.getBoundingClientRect();
+            if (height !== undefined && height > 0) {
+                // setSiteHeadNavHeight(height);
+                siteHeadNavHeight=height;
+                console.log("siteHeadNavHeight>>", height);
+                //总是sticky
+                setIsSideNavSticky(true);
+                setSideNavStickyTop(siteHeadNavHeight);
+            }
+            else { console.log("siteHeadNavHeight is undefined"); }
+        }   
+  
+        // window.addEventListener('scroll',throttledScrollHandler)
+        // return () => {
+        //     window.removeEventListener('scroll', throttledScrollHandler);
+        // };
+    }, []);  
+ 
+//   let scrolledCls="";
+//   if(scrolled){
+//     scrolledCls="stick-top";
+//   }else{
+//     scrolledCls="";
+//   }
+
+
   return (
     <HelmetProvider>
       <PageTags />
@@ -75,7 +140,7 @@ const Layout: FC = () => {
         value={{
           revalidateOnFocus: false,
         }}>
-        <Header />
+        <Header siteHeadNavRef={siteHeadNavRef}/>
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
         <div className="position-relative page-wrap d-flex flex-column flex-fill">
           {httpStatusCode ? (

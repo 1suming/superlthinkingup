@@ -44,7 +44,7 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint', 'prettier'],
   rules: {
-    'prettier/prettier': 'error',
+    'prettier/prettier': 'off',
     'no-unused-vars': 'off',
     'no-console': 'off',
     'import/prefer-default-export': 'off',
@@ -71,11 +71,17 @@ module.exports = {
     'import/extensions': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'react/jsx-props-no-spreading': 'off',
+    "react/self-closing-comp": ["off"],
+    "jsx-a11y/anchor-is-valid":["off"],
+    "spaced-comment":'off',
     '@typescript-eslint/default-param-last': 'off',
     'no-nested-ternary': 'off',
     'class-methods-use-this': 'off',
+    "@typescript-eslint/no-unused-vars":"off",
+    "no-useless-concat":"off",
+    "prefer-template":"off",
     'import/order': [
-      'error',
+      'warn',
       {
         groups: [
           'builtin',
@@ -106,8 +112,9 @@ module.exports = {
           },
         ],
         pathGroupsExcludedImportTypes: ['react'],
-        'newlines-between': 'always',
+        'newlines-between': 'ignore',
       },
+
     ],
     'jsx-a11y/click-events-have-key-events': 'off',
     'jsx-a11y/no-noninteractive-tabindex': 'off',

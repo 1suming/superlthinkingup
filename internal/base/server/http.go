@@ -43,6 +43,7 @@ func NewHTTPServer(debug bool,
 	templateRouter *router.TemplateRouter,
 	pluginAPIRouter *router.PluginAPIRouter,
 	uiConf *UI,
+	articleRouter *router.ArticleAPIRouter, //@csw
 ) *gin.Engine {
 
 	if debug {
@@ -102,5 +103,11 @@ func NewHTTPServer(debug bool,
 		agent.RegisterAuthAdminRouter(adminauthV1)
 		return nil
 	})
+	//@csw
+	// register api that no need to login
+	article_unAuthV1 := r.Group("/article/api/v1")
+	article_unAuthV1.Use(authUserMiddleware.Auth(), authUserMiddleware.EjectUserBySiteInfo())
+	articleRouter.RegisterUnAuthArticleAPIRouter(article_unAuthV1)
+
 	return r
 }
