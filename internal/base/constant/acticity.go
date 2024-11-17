@@ -77,3 +77,23 @@ const (
 	ActTagDeleted   ActivityTypeKey = "tag.deleted"
 	ActTagUndeleted ActivityTypeKey = "tag.undeleted"
 )
+
+// @ms:
+const (
+	ActArticleAsked     ActivityTypeKey = "question.asked"
+	ActArticleClosed    ActivityTypeKey = "question.closed"
+	ActArticleReopened  ActivityTypeKey = "question.reopened"
+	ActArticleAnswered  ActivityTypeKey = "question.answered"
+	ActArticleCommented ActivityTypeKey = "question.commented"
+	ActArticleAccept    ActivityTypeKey = "question.accept"
+	ActArticleUpvote    ActivityTypeKey = "question.upvote"
+	ActArticleDownVote  ActivityTypeKey = "question.downvote"
+	ActArticleEdited    ActivityTypeKey = "question.edited"
+	ActArticleRollback  ActivityTypeKey = "question.rollback"
+	ActArticleDeleted   ActivityTypeKey = "question.deleted"
+	ActArticleUndeleted ActivityTypeKey = "question.undeleted"
+	ActArticlePin       ActivityTypeKey = "question.pin"
+	ActArticleUnPin     ActivityTypeKey = "question.unpin"
+	ActArticleHide      ActivityTypeKey = "question.hide"
+	ActArticleShow      ActivityTypeKey = "question.show"
+)

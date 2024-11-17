@@ -25,6 +25,7 @@ import (
 	"github.com/apache/incubator-answer/internal/base/reason"
 	"github.com/apache/incubator-answer/internal/schema"
 	answercommon "github.com/apache/incubator-answer/internal/service/answer_common"
+	articlecommon "github.com/apache/incubator-answer/internal/service/article_common"
 	"github.com/apache/incubator-answer/internal/service/comment_common"
 	questioncommon "github.com/apache/incubator-answer/internal/service/question_common"
 	tagcommon "github.com/apache/incubator-answer/internal/service/tag_common"
@@ -40,6 +41,8 @@ type ObjService struct {
 	commentRepo  comment_common.CommentCommonRepo
 	tagRepo      tagcommon.TagCommonRepo
 	tagCommon    *tagcommon.TagCommonService
+
+	articleRepo articlecommon.ArticleRepo
 }
 
 // NewObjService new object service
@@ -49,6 +52,7 @@ func NewObjService(
 	commentRepo comment_common.CommentCommonRepo,
 	tagRepo tagcommon.TagCommonRepo,
 	tagCommon *tagcommon.TagCommonService,
+	articleRepo articlecommon.ArticleRepo,
 ) *ObjService {
 	return &ObjService{
 		answerRepo:   answerRepo,
@@ -56,6 +60,7 @@ func NewObjService(
 		commentRepo:  commentRepo,
 		tagRepo:      tagRepo,
 		tagCommon:    tagCommon,
+		articleRepo:  articleRepo,
 	}
 }
 func (os *ObjService) GetUnreviewedRevisionInfo(ctx context.Context, objectID string) (objInfo *schema.UnreviewedRevisionInfoInfo, err error) {
@@ -206,6 +211,23 @@ func (os *ObjService) GetInfo(ctx context.Context, objectID string) (objInfo *sc
 			ObjectType:          objectType,
 			Title:               questionInfo.Title,
 			Content:             questionInfo.ParsedText, // todo trim
+		}
+	case constant.ArticleObjectType: //@ms:
+		articleInfo, exist, err := os.articleRepo.GetArticle(ctx, objectID)
+		if err != nil {
+			return nil, err
+		}
+		if !exist {
+			break
+		}
+		objInfo = &schema.SimpleObjectInfo{
+			ObjectID:            articleInfo.ID,
+			ObjectCreatorUserID: articleInfo.UserID,
+			QuestionID:          articleInfo.ID,
+			QuestionStatus:      articleInfo.Status,
+			ObjectType:          objectType,
+			Title:               articleInfo.Title,
+			Content:             articleInfo.ParsedText, // todo trim
 		}
 	case constant.AnswerObjectType:
 		answerInfo, exist, err := os.answerRepo.GetAnswer(ctx, objectID)

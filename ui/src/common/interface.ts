@@ -794,3 +794,5 @@ export interface BadgeDetailListRes {
   count: number;
   list: BadgeDetailListItem[];
 }
+
+export * from "./article_interface";//@ms:

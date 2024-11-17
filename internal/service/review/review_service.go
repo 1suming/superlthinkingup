@@ -51,6 +51,8 @@ type ReviewRepo interface {
 	GetReview(ctx context.Context, reviewID int) (review *entity.Review, exist bool, err error)
 	GetReviewCount(ctx context.Context, status int) (count int64, err error)
 	GetReviewPage(ctx context.Context, page, pageSize int, cond *entity.Review) (reviewList []*entity.Review, total int64, err error)
+
+	//AddReview(ctx context.Context, review *entity.Review) (err error)
 }
 
 // ReviewService user service
@@ -126,6 +128,32 @@ func (cs *ReviewService) AddQuestionReview(ctx context.Context,
 		questionStatus = entity.QuestionStatusAvailable
 	}
 	return questionStatus
+}
+func (cs *ReviewService) AddArticleReview(ctx context.Context,
+	question *entity.Article, tags []*schema.TagItem, ip, ua string) (questionStatus int) {
+	//reviewContent := &plugin.ReviewContent{
+	//	ObjectType: constant.QuestionObjectType,
+	//	Title:      question.Title,
+	//	Content:    question.ParsedText,
+	//	IP:         ip,
+	//	UserAgent:  ua,
+	//}
+	//for _, tag := range tags {
+	//	reviewContent.Tags = append(reviewContent.Tags, tag.SlugName)
+	//}
+	//reviewContent.Author = cs.getReviewContentAuthorInfo(ctx, question.UserID)
+	//reviewStatus := cs.callPluginToReview(ctx, question.UserID, question.ID, reviewContent)
+	//switch reviewStatus {
+	//case plugin.ReviewStatusApproved:
+	//	questionStatus = entity.QuestionStatusAvailable
+	//case plugin.ReviewStatusNeedReview:
+	//	questionStatus = entity.QuestionStatusPending
+	//case plugin.ReviewStatusDeleteDirectly:
+	//	questionStatus = entity.QuestionStatusDeleted
+	//default:
+	//	questionStatus = entity.QuestionStatusAvailable
+	//}
+	return entity.ArticleStatusAvailable
 }
 
 // AddAnswerReview add review for answer if needed

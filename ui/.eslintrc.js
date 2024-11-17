@@ -80,6 +80,7 @@ module.exports = {
     "@typescript-eslint/no-unused-vars":"off",
     "no-useless-concat":"off",
     "prefer-template":"off",
+    "prefer-const":"off",
     'import/order': [
       'warn',
       {

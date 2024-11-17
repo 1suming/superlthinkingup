@@ -108,6 +108,15 @@ const (
 	MetaObjectNotFound               = "error.meta.object_not_found"
 	BadgeObjectNotFound              = "error.badge.object_not_found"
 	StatusInvalid                    = "error.common.status_invalid"
+
+	//@ms:
+
+	ArticleNotFound       = "error.Article.not_found"
+	ArticleCannotDeleted  = "error.Article.cannot_deleted"
+	ArticleCannotClose    = "error.Article.cannot_close"
+	ArticleCannotUpdate   = "error.Article.cannot_update"
+	ArticleAlreadyDeleted = "error.Article.already_deleted"
+	ArticleUnderReview    = "error.Article.under_review"
 )
 
 // user external login reasons

@@ -33,10 +33,10 @@ import { scrollToElementTop, scrollToDocTop } from '@/utils';
 import { usePageTags, usePageUsers, useSkeletonControl } from '@/hooks';
 import type {
   ListResult,
-  QuestionDetailRes,
+  ArticleDetailRes,
   AnswerItem,
 } from '@/common/interface';
-import { questionDetail, getAnswers } from '@/services';
+import { articleDetail, getAnswers } from '@/services';
 
 import {
   Article,
@@ -66,7 +66,7 @@ const Index = () => {
   const [urlSearch] = useSearchParams();
   const page = Number(urlSearch.get('page') || 0);
   const order = urlSearch.get('order') || '';
-  const [question, setQuestion] = useState<QuestionDetailRes | null>(null);
+  const [question, setQuestion] = useState<ArticleDetailRes | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const { isSkeletonShow } = useSkeletonControl(isLoading);
   const [answers, setAnswers] = useState<ListResult<AnswerItem>>({
@@ -96,56 +96,57 @@ const Index = () => {
     }
   }, [location.state]);
 
-  const requestAnswers = async () => {
-    const res = await getAnswers({
-      order: order === 'updated' || order === 'created' ? order : 'default',
-      question_id: qid,
-      page: 1,
-      page_size: 999,
-    });
+//   const requestAnswers = async () => {
+//     const res = await getAnswers({
+//       order: order === 'updated' || order === 'created' ? order : 'default',
+//       question_id: qid,
+//       page: 1,
+//       page_size: 999,
+//     });
 
-    if (res) {
-      res.list = res.list?.filter((v) => {
-        // delete answers only show to author and admin and has search params aid
-        if (v.status === 10) {
-          if (
-            (v?.user_info?.username === userInfo?.username || isAdmin) &&
-            aid === v.id
-          ) {
-            return v;
-          }
-          return null;
-        }
+//     if (res) {
+//       res.list = res.list?.filter((v) => {
+//         // delete answers only show to author and admin and has search params aid
+//         if (v.status === 10) {
+//           if (
+//             (v?.user_info?.username === userInfo?.username || isAdmin) &&
+//             aid === v.id
+//           ) {
+//             return v;
+//           }
+//           return null;
+//         }
 
-        return v;
-      });
+//         return v;
+//       });
 
-      setAnswers({ ...res, count: res.list.length });
-      if (page > 0 || order) {
-        // scroll into view;
-        const element = document.getElementById('answerHeader');
-        scrollToElementTop(element);
-      }
+//       setAnswers({ ...res, count: res.list.length });
+//       if (page > 0 || order) {
+//         // scroll into view;
+//         const element = document.getElementById('answerHeader');
+//         scrollToElementTop(element);
+//       }
 
-      res.list.forEach((item) => {
-        setUsers([
-          {
-            displayName: item.user_info?.display_name,
-            userName: item.user_info?.username,
-          },
-          {
-            displayName: item?.update_user_info?.display_name,
-            userName: item?.update_user_info?.username,
-          },
-        ]);
-      });
-    }
-  };
+//       res.list.forEach((item) => {
+//         setUsers([
+//           {
+//             displayName: item.user_info?.display_name,
+//             userName: item.user_info?.username,
+//           },
+//           {
+//             displayName: item?.update_user_info?.display_name,
+//             userName: item?.update_user_info?.username,
+//           },
+//         ]);
+//       });
+//     }
+//   };
 
   const getDetail = async () => {
     setIsLoading(true);
     try {
-      const res = await questionDetail(qid);
+      const res = await articleDetail(qid);
+      console.log("api response:",res)
       if (res) {
         setUsers([
           {
@@ -190,7 +191,7 @@ const Index = () => {
     if (type === 'delete_answer') {
       getDetail();
     }
-    requestAnswers();
+   //@ms: requestAnswers();
   };
 
   const writeAnswerCallback = (obj: AnswerItem) => {
@@ -215,33 +216,34 @@ const Index = () => {
       return;
     }
     getDetail();
-    requestAnswers();
+    //@ms>:requestAnswers();
   }, [qid]);
 
-  useEffect(() => {
-    if (page || order) {
-      requestAnswers();
-    }
-  }, [page, order]);
+//   useEffect(() => {
+//     if (page || order) {
+//       requestAnswers();
+//     }
+//   }, [page, order]);
   usePageTags({
     title: question?.title,
     description: question?.description,
     keywords: question?.tags.map((_) => _.slug_name).join(','),
   });
 
-  const showInviteToAnswer = question?.id;
+  let showInviteToAnswer = question?.id;
+  showInviteToAnswer ="";
   let canInvitePeople = false;
-  if (showInviteToAnswer && Array.isArray(question.extends_actions)) {
-    const inviteAct = question.extends_actions.find((op) => {
-      return op.action === 'invite_other_to_answer';
-    });
-    if (inviteAct) {
-      canInvitePeople = true;
-    }
-  }
+//   if (showInviteToAnswer && Array.isArray(question.extends_actions)) {
+//     const inviteAct = question.extends_actions.find((op) => {
+//       return op.action === 'invite_other_to_answer';
+//     });
+//     if (inviteAct) {
+//       canInvitePeople = true;
+//     }
+//   }
 
   return (
-    <Row className="questionDetailPage pt-4 mb-5">
+    <Row className="articleDetailPage pt-4 mb-5">
       <Col className="page-main flex-auto">
         {question?.operation?.level && <Alert data={question.operation} />}
         {isSkeletonShow ? (
@@ -259,12 +261,7 @@ const Index = () => {
       </Col>
       <Col className="page-right-side mt-4 mt-xl-0">
         <CustomSidebar />
-        {showInviteToAnswer ? (
-          <InviteToAnswer
-            questionId={question.id}
-            readOnly={!canInvitePeople}
-          />
-        ) : null}
+       
         <RelatedQuestions id={question?.id || ''} />
       </Col>
     

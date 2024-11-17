@@ -731,7 +731,20 @@ func (ts *TagCommonService) RefreshTagQuestionCount(ctx context.Context, tagIDs 
 	}
 	return nil
 }
-
+func (ts *TagCommonService) RefreshTagArticleCount(ctx context.Context, tagIDs []string) (err error) {
+	for _, tagID := range tagIDs {
+		count, err := ts.tagRelRepo.CountTagRelByTagID(ctx, tagID)
+		if err != nil {
+			return err
+		}
+		err = ts.tagCommonRepo.UpdateTagQuestionCount(ctx, tagID, int(count))
+		if err != nil {
+			return err
+		}
+		log.Debugf("tag count updated %s %d", tagID, count)
+	}
+	return nil
+}
 func (ts *TagCommonService) RefreshTagCountByQuestionID(ctx context.Context, questionID string) (err error) {
 	tagListList, err := ts.tagRelRepo.GetObjectTagRelList(ctx, questionID)
 	if err != nil {
@@ -742,6 +755,22 @@ func (ts *TagCommonService) RefreshTagCountByQuestionID(ctx context.Context, que
 		tagIDs = append(tagIDs, item.TagID)
 	}
 	err = ts.RefreshTagQuestionCount(ctx, tagIDs)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (ts *TagCommonService) RefreshTagCountByArticleID(ctx context.Context, questionID string) (err error) {
+	tagListList, err := ts.tagRelRepo.GetObjectTagRelList(ctx, questionID)
+	if err != nil {
+		return err
+	}
+	tagIDs := make([]string, 0)
+	for _, item := range tagListList {
+		tagIDs = append(tagIDs, item.TagID)
+	}
+	err = ts.RefreshTagQuestionCount(ctx, tagIDs) //用这个也没关系
 	if err != nil {
 		return err
 	}

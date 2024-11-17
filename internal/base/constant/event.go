@@ -28,6 +28,8 @@ const (
 	eventAnswer   = "answer"
 	eventComment  = "comment"
 	eventUser     = "user"
+
+	eventArticle = "article"
 )
 
 // event action
@@ -56,7 +58,15 @@ const (
 	EventQuestionFlag   EventType = eventQuestion + "." + eventFlag
 	EventQuestionReact  EventType = eventQuestion + "." + eventReact
 )
-
+const (
+	EventArticleCreate EventType = eventArticle + "." + eventCreate
+	EventArticleUpdate EventType = eventArticle + "." + eventUpdate
+	EventArticleDelete EventType = eventArticle + "." + eventDelete
+	EventArticleVote   EventType = eventArticle + "." + eventVote
+	EventArticleAccept EventType = eventArticle + "." + eventAccept
+	EventArticleFlag   EventType = eventArticle + "." + eventFlag
+	EventArticleReact  EventType = eventArticle + "." + eventReact
+)
 const (
 	EventAnswerCreate EventType = eventAnswer + "." + eventCreate
 	EventAnswerUpdate EventType = eventAnswer + "." + eventUpdate

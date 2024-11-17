@@ -20,6 +20,7 @@ import (
 	"github.com/apache/incubator-answer/internal/repo/activity"
 	"github.com/apache/incubator-answer/internal/repo/activity_common"
 	"github.com/apache/incubator-answer/internal/repo/answer"
+	"github.com/apache/incubator-answer/internal/repo/article"
 	"github.com/apache/incubator-answer/internal/repo/auth"
 	"github.com/apache/incubator-answer/internal/repo/badge"
 	"github.com/apache/incubator-answer/internal/repo/badge_award"
@@ -54,6 +55,7 @@ import (
 	activity_common2 "github.com/apache/incubator-answer/internal/service/activity_common"
 	"github.com/apache/incubator-answer/internal/service/activity_queue"
 	"github.com/apache/incubator-answer/internal/service/answer_common"
+	"github.com/apache/incubator-answer/internal/service/article_common"
 	auth2 "github.com/apache/incubator-answer/internal/service/auth"
 	badge2 "github.com/apache/incubator-answer/internal/service/badge"
 	collection2 "github.com/apache/incubator-answer/internal/service/collection"
@@ -166,7 +168,8 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	userController := controller.NewUserController(authService, userService, captchaService, emailService, siteInfoCommonService, userNotificationConfigService)
 	commentRepo := comment.NewCommentRepo(dataData, uniqueIDRepo)
 	commentCommonRepo := comment.NewCommentCommonRepo(dataData, uniqueIDRepo)
-	objService := object_info.NewObjService(answerRepo, questionRepo, commentCommonRepo, tagCommonRepo, tagCommonService)
+	articleRepo := article.NewArticleRepo(dataData, uniqueIDRepo)
+	objService := object_info.NewObjService(answerRepo, questionRepo, commentCommonRepo, tagCommonRepo, tagCommonService, articleRepo)
 	notificationQueueService := notice_queue.NewNotificationQueueService()
 	externalNotificationQueueService := notice_queue.NewNewQuestionNotificationQueueService()
 	commentService := comment2.NewCommentService(commentRepo, commentCommonRepo, userCommon, objService, voteRepo, emailService, userRepo, notificationQueueService, externalNotificationQueueService, activityQueueService, eventQueueService)
@@ -266,8 +269,9 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	embedController := controller.NewEmbedController()
 	renderController := controller.NewRenderController()
 	pluginAPIRouter := router.NewPluginAPIRouter(connectorController, userCenterController, captchaController, embedController, renderController)
-	articleService := service_article.NewArticleService()
-	articleController := controller_article.NewArticleController(articleService)
+	articleCommon := articlecommon.NewArticleCommon(articleRepo, answerRepo, voteRepo, followRepo, tagCommonService, userCommon, collectionCommon, answerCommon, metaCommonService, configService, activityQueueService, revisionRepo, dataData)
+	articleService := service_article.NewArticleService(activityRepo, articleRepo, answerRepo, tagCommonService, tagService, articleCommon, userCommon, userRepo, userRoleRelService, revisionService, metaCommonService, collectionCommon, answerActivityService, emailService, notificationQueueService, externalNotificationQueueService, activityQueueService, siteInfoCommonService, externalNotificationService, reviewService, configService, eventQueueService)
+	articleController := controller_article.NewArticleController(articleService, answerService, rankService, siteInfoCommonService, captchaService, rateLimitMiddleware)
 	articleAPIRouter := router.NewArticleAPIRouter(articleController)
 	ginEngine := server.NewHTTPServer(debug, staticRouter, answerAPIRouter, swaggerRouter, uiRouter, authUserMiddleware, avatarMiddleware, shortIDMiddleware, templateRouter, pluginAPIRouter, uiConf, articleAPIRouter)
 	scheduledTaskManager := cron.NewScheduledTaskManager(siteInfoCommonService, questionService)

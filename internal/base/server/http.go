@@ -105,7 +105,7 @@ func NewHTTPServer(debug bool,
 	})
 	//@csw
 	// register api that no need to login
-	article_unAuthV1 := r.Group("/article/api/v1")
+	article_unAuthV1 := r.Group("/answer/api/v1")
 	article_unAuthV1.Use(authUserMiddleware.Auth(), authUserMiddleware.EjectUserBySiteInfo())
 	articleRouter.RegisterUnAuthArticleAPIRouter(article_unAuthV1)
 

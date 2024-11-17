@@ -32,6 +32,8 @@ const (
 	CaptchaActionReport           = "report"
 	CaptchaActionDelete           = "delete"
 	CaptchaActionVote             = "vote"
+
+	CaptchaActionArticle = "article"
 )
 
 type ActionRecordInfo struct {

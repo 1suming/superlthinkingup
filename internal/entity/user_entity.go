@@ -52,6 +52,7 @@ type User struct {
 	FollowCount    int       `xorm:"not null default 0 INT(11) follow_count"`
 	AnswerCount    int       `xorm:"not null default 0 INT(11) answer_count"`
 	QuestionCount  int       `xorm:"not null default 0 INT(11) question_count"`
+	ArticleCount   int       `xorm:"not null default 0 INT(11) article_count"` //@CWS
 	Rank           int       `xorm:"not null default 0 INT(11) rank"`
 	Status         int       `xorm:"not null default 1 INT(11) status"`
 	AuthorityGroup int       `xorm:"not null default 1 INT(11) authority_group"`

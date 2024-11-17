@@ -24,6 +24,7 @@ import (
 	"github.com/apache/incubator-answer/internal/repo/activity"
 	"github.com/apache/incubator-answer/internal/repo/activity_common"
 	"github.com/apache/incubator-answer/internal/repo/answer"
+	"github.com/apache/incubator-answer/internal/repo/article"
 	"github.com/apache/incubator-answer/internal/repo/auth"
 	"github.com/apache/incubator-answer/internal/repo/badge"
 	"github.com/apache/incubator-answer/internal/repo/badge_award"
@@ -107,4 +108,6 @@ var ProviderSetRepo = wire.NewSet(
 	badge.NewEventRuleRepo,
 	badge_group.NewBadgeGroupRepo,
 	badge_award.NewBadgeAwardRepo,
+
+	article.NewArticleRepo,
 )

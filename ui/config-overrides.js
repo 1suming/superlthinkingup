@@ -129,7 +129,7 @@ module.exports = {
       const config = configFunction(proxy, allowedHost);
       config.proxy = [
         {
-          context: ['/answer', '/installation'],
+          context: ['/answer', '/installation'], //,'/article'
           target: process.env.REACT_APP_API_URL,
           changeOrigin: true,
           secure: false,

@@ -8,3 +8,16 @@ go run cmd/answer/main.go run -C ./answer-data
 
 
 go run cmd/answer/main.go upgrade -C ./answer-data
+
+wire生成：
+cd cmd
+wire gen .
+
+
+golang mysql转struct
+
+https://www.toolin.cn/sql2go
+
+wordpress数据表：
+https://curder.github.io/wordpress-study/guide/basic/project-tables.html
+

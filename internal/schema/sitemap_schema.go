@@ -33,3 +33,10 @@ type SiteMapQuestionInfo struct {
 	Title      string `json:"title"`
 	UpdateTime string `json:"time"`
 }
+
+// @ms:
+type SiteMapArticleInfo struct {
+	ID         string `json:"id"`
+	Title      string `json:"title"`
+	UpdateTime string `json:"time"`
+}

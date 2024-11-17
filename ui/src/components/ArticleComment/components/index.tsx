@@ -17,11 +17,8 @@
  * under the License.
  */
 
-export * from './admin';
-export * from './common';
-export * from './client';
-export * from './install';
-export * from './user-center';
+import Form from './Form';
+import ActionBar from './ActionBar';
+import Reply from './Reply';
 
-//@ms:
-export * from './article';
+export { Form, ActionBar, Reply };

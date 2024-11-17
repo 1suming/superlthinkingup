@@ -17,11 +17,30 @@
  * under the License.
  */
 
-export * from './admin';
-export * from './common';
-export * from './client';
-export * from './install';
-export * from './user-center';
+@import 'bootstrap/scss/functions';
+@import 'bootstrap/scss/variables';
+@import 'bootstrap/scss/mixins/_breakpoints';
 
-//@ms:
-export * from './article';
+.comments-wrap {
+  .comment-item {
+    &:hover {
+      @include media-breakpoint-up(md) {
+        .control-area {
+          display: flex !important;
+        }
+      }
+    }
+    border-bottom: 1px solid var(--an-comment-item-border-bottom);
+  }
+  .fmt {
+    display: inline;
+    p {
+      &:last-child {
+        display: inline;
+      }
+    }
+    img {
+      display: block;
+    }
+  }
+}

@@ -58,6 +58,10 @@ const (
 	NotificationInvitedYouToAnswer = "notification.action.invited_you_to_answer"
 	// NotificationEarnedBadge earned badge
 	NotificationEarnedBadge = "notification.action.earned_badge"
+
+	NotificationYourArticleIsClosed = "notification.action.your_Article_is_closed"
+	// NotificationYourArticleWasDeleted your Article was deleted
+	NotificationYourArticleWasDeleted = "notification.action.your_Article_was_deleted"
 )
 
 type NotificationChannelKey string

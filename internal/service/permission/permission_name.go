@@ -63,6 +63,22 @@ const (
 	QuestionUnDelete            = "question.undeleted"
 	TagUnDelete                 = "tag.undeleted"
 )
+const (
+	ArticleAdd               = "article.add"
+	ArticleEdit              = "article.edit"
+	ArticleEditWithoutReview = "article.edit_without_review"
+	ArticleDelete            = "article.delete"
+	ArticleClose             = "article.close"
+	ArticleReopen            = "article.reopen"
+	ArticleVoteUp            = "article.vote_up"
+	ArticleVoteDown          = "article.vote_down"
+	ArticlePin               = "article.pin"
+	ArticleUnPin             = "article.unpin"
+	ArticleHide              = "article.hide"
+	ArticleShow              = "article.show"
+
+	ArticleUnDelete = "article.undeleted"
+)
 
 const (
 	reportActionName                = "action.report"
