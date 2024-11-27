@@ -341,3 +341,16 @@ func (tc *TagController) UpdateTagSynonym(ctx *gin.Context) {
 	err = tc.tagService.UpdateTagSynonym(ctx, req)
 	handler.HandleResponse(ctx, err, nil)
 }
+
+// @cws
+func (tc *TagController) GetTagByType(ctx *gin.Context) {
+	req := &schema.GetTagWithPageReq{}
+	if handler.BindAndCheck(ctx, req) {
+		return
+	}
+
+	req.UserID = middleware.GetLoginUserIDFromContext(ctx)
+
+	resp, err := tc.tagService.GetTagWithPage(ctx, req)
+	handler.HandleResponse(ctx, err, resp)
+}

@@ -62,6 +62,20 @@ import PluginRender from './PluginRender';
 import HighlightText from './HighlightText';
 import CardBadge from './CardBadge';
 
+
+//--article module ------------------------------------
+ 
+import ArticleActions from './Article/Actions';
+import ArticleComment from './Article/Comment';
+
+import ArticleOperate from './Article/Operate';
+import ArticleUserCard from './Article/UserCard';
+
+import ArticleList from './Article/ArticleList';
+import ArticleCounts from './Article/Counts';
+
+import HotArticles from './Article/HotArticles';
+
 export {
   Avatar,
   Header,
@@ -109,5 +123,15 @@ export {
   PluginRender,
   HighlightText,
   CardBadge,
+
+  ArticleActions,
+  ArticleComment, 
+  ArticleOperate,
+  ArticleUserCard,
+
+  ArticleList,
+  ArticleCounts,
+  HotArticles,
+  
 };
 export type { EditorRef, JSONSchema, UISchema };

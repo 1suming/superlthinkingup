@@ -58,6 +58,11 @@ alter table ta_article add  column `vote_count` int NOT NULL DEFAULT '0'
 
 	KEY article_parent (article_parent),
 
+
+alter table ta_article add  column `thumbnails` json comment '文章缩略图';
+
+
+
 	-- article_type varchar(20) NOT NULL default 'article' comment '：文章类型（post/page等）',
 	-- article_mime_type varchar(100) NOT NULL default '',
 
@@ -128,3 +133,10 @@ INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.undeleted', '-1');
 INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.unpin', '-1');
 INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.vote_down', '125');
 INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.vote_up', '1');
+
+
+再原本的tag上增加tag_type类型，和 order_
+
+alter table tag add  column  tag_type tinyint NOT NULL DEFAULT '0' comment '0:默认,1:Article类型的';
+alter table tag add  column  tag_sort int NOT NULL DEFAULT '0' comment 'tag的顺序，越小越靠前';
+

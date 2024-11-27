@@ -840,6 +840,10 @@ ui:
     http_50X: HTTP Error 500
     http_403: HTTP Error 403
     logout: Log Out
+
+    articles: articles
+    article: article
+
   notifications:
     title: Notifications
     inbox: Inbox
@@ -1166,6 +1170,7 @@ ui:
       review: Review
       bookmark: Bookmarks
       moderation: Moderation
+      create_center: Create Center
     search:
       placeholder: Search
   footer:
@@ -2258,3 +2263,135 @@ ui:
     post_list: This post has been listed.
     post_unlist: This post has been unlisted.
     post_pending: Your post is awaiting review. This is a preview, it will be visible after it has been approved.
+
+  #ms -----------------------------------------------------------
+  article_detail:
+    action: Action
+    Asked: Asked
+    asked: asked
+    update: Modified
+    edit: edited
+    commented: commented
+    Views: Viewed
+    Follow: Follow
+    Following: Following
+    follow_tip: Follow this question to receive notifications
+    answered: answered
+    closed_in: Closed in
+    show_exist: Show existing question.
+    useful: Useful
+    question_useful: It is useful and clear
+    question_un_useful: It is unclear or not useful
+    question_bookmark: Bookmark this question
+    answer_useful: It is useful
+    answer_un_useful: It is not useful
+    answers:
+      title: Answers
+      score: Score
+      newest: Newest
+      oldest: Oldest
+      btn_accept: Accept
+      btn_accepted: Accepted
+    write_answer:
+      title: Your Answer
+      edit_answer: Edit my existing answer
+      btn_name: Post your answer
+      add_another_answer: Add another answer
+      confirm_title: Continue to answer
+      continue: Continue
+      confirm_info: >-
+        <p>Are you sure you want to add another answer?</p><p>You could use the
+        edit link to refine and improve your existing answer, instead.</p>
+      empty: Answer cannot be empty.
+      characters: content must be at least 6 characters in length.
+      tips:
+        header_1: Thanks for your answer
+        li1_1: Please be sure to <strong>answer the question</strong>. Provide details and share your research.
+        li1_2: Back up any statements you make with references or personal experience.
+        header_2: But <strong>avoid</strong> ...
+        li2_1: Asking for help, seeking clarification, or responding to other answers.
+    reopen:
+      confirm_btn: Reopen
+      title: Reopen this post
+      content: Are you sure you want to reopen?
+    list:
+      confirm_btn: List
+      title: List this post
+      content: Are you sure you want to list?
+    unlist:
+      confirm_btn: Unlist
+      title: Unlist this post
+      content: Are you sure you want to unlist?
+    pin:
+      title: Pin this post
+      content: Are you sure you wish to pinned globally? This post will appear at the top of all post lists.
+      confirm_btn: Pin
+
+    created: created 
+    updated: updated
+
+  related_article:
+    title: Related Articles
+
+  article:
+    following_tags: Following Tags
+    edit: Edit
+    save: Save
+    follow_tag_tip: Follow tags to curate your list of questions.
+    hot_questions: Hot Articles
+    all_questions: All Articles
+    x_questions: "{{ count }} Questions"
+    x_answers: "{{ count }} answers"
+    questions: Questions
+    answers: Answers
+    newest: Newest
+    active: Active
+    hot: Hot
+    recommend: Recommend
+    score: Score
+    unanswered: Unanswered
+    modified: modified
+    answered: answered
+    #asked: asked
+    asked: posted 
+    closed: closed
+    follow_a_tag: Follow a tag
+    more: More
+
+  write_article: #ask
+    title: Add Question
+    edit_title: Edit Question
+    default_reason: Edit question
+    default_first_reason: Add question
+    similar_questions: Similar questions
+    form:
+      fields:
+        revision:
+          label: Revision
+        title:
+          label: Title
+          placeholder: Be specific and imagine you're asking a question to another person
+          msg:
+            empty: Title cannot be empty.
+            range: Title up to 150 characters
+        body:
+          label: Body
+          msg:
+            empty: Body cannot be empty.
+        tags:
+          label: Tags
+          msg:
+            empty: Tags cannot be empty.
+        answer:
+          label: Answer
+          msg:
+            empty: Answer cannot be empty.
+        edit_summary:
+          label: Edit summary
+          placeholder: >-
+            Briefly explain your changes (corrected spelling, fixed grammar,
+            improved formatting)
+    btn_post_question: Post your question
+    btn_save_edits: Save edits
+    answer_question: Answer your own question
+    post_question&answer: Post your question and answer

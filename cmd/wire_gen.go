@@ -274,7 +274,7 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	articleController := controller_article.NewArticleController(articleService, answerService, rankService, siteInfoCommonService, captchaService, rateLimitMiddleware)
 	articleAPIRouter := router.NewArticleAPIRouter(articleController)
 	ginEngine := server.NewHTTPServer(debug, staticRouter, answerAPIRouter, swaggerRouter, uiRouter, authUserMiddleware, avatarMiddleware, shortIDMiddleware, templateRouter, pluginAPIRouter, uiConf, articleAPIRouter)
-	scheduledTaskManager := cron.NewScheduledTaskManager(siteInfoCommonService, questionService)
+	scheduledTaskManager := cron.NewScheduledTaskManager(siteInfoCommonService, questionService, articleService)
 	application := newApplication(serverConf, ginEngine, scheduledTaskManager)
 	return application, func() {
 		cleanup2()

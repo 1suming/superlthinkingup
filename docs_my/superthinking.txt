@@ -21,3 +21,20 @@ https://www.toolin.cn/sql2go
 wordpress数据表：
 https://curder.github.io/wordpress-study/guide/basic/project-tables.html
 
+测试号：
+accountuser1@sina.com
+
+文章列表 封面图片显示逻辑：
+https://blog.csdn.net/zcp528/article/details/108139781
+同wordpress一样，如果有指定缩略图，那么用指定，否则用preg match文章内容,如果还没有，则显示随机图片。
+
+
+什么是特色图片？
+特色图片（也称为帖子缩略图）是代表内容的主要文章图片。它们显眼地显示在您网站上的单个帖子、博客存档页面以及新闻、杂志和博客网站的主页上。
+
+WPJAM Thumbnail 这个插件通过以下顺序查找一篇文章的缩略图：
+
+首先是否设置了文章自己本身的特色图片。
+如果没有，就检查下这篇文章的标签是否有特色图片。
+如果没有，就检查下这篇文章是否有图片，有就获取第一张。
+如果还是没有，就检查下这篇文章所在的分类是否有特色图片。

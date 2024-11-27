@@ -303,10 +303,26 @@ export type QuestionOrderBy =
   | 'score'
   | 'unanswered';
 
+export type ArticleOrderBy =
+  | 'recommend'
+  | 'newest'
+  | 'active'
+  | 'hot'
+  | 'score'
+  | 'unanswered';
+
 export interface QueryQuestionsReq extends Paging {
   order: QuestionOrderBy;
   tag?: string;
   in_days?: number;
+}
+
+export interface QueryArticlesReq extends Paging {
+    order: ArticleOrderBy;
+    tag?: string;
+    in_days?: number;
+
+    tag_id?:string;
 }
 
 export type AdminQuestionStatus =

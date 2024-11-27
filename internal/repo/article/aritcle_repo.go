@@ -64,7 +64,7 @@ func NewArticleRepo(
 
 // AddArticle add article
 func (qr *articleRepo) AddArticle(ctx context.Context, article *entity.Article) (err error) {
-	article.ID, err = qr.uniqueIDRepo.GenUniqueIDStr(ctx, article.TableName())
+	article.ID, err = qr.uniqueIDRepo.GenUniqueIDStr(ctx, article.KeyName()) //@ms:不要用tablename article.TableName())
 	if err != nil {
 		return errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
 	}
@@ -349,6 +349,7 @@ func (qr *articleRepo) GetArticlePage(ctx context.Context, page, pageSize int,
 	articleList []*entity.Article, total int64, err error) {
 	articleList = make([]*entity.Article, 0)
 	session := qr.data.DB.Context(ctx)
+	session.Alias("article") //@ms:alias
 	status := []int{entity.ArticleStatusAvailable, entity.ArticleStatusClosed}
 	if showPending {
 		status = append(status, entity.ArticleStatusPending)

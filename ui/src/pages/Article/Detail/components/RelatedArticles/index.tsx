@@ -23,7 +23,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import { Icon } from '@/components';
-import { useSimilarQuestion } from '@/services';
+import { useSimilarArticle } from '@/services';
 import { pathFactory } from '@/router/pathFactory';
 
 interface Props {
@@ -31,11 +31,11 @@ interface Props {
 }
 const Index: FC<Props> = ({ id }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: 'related_question',
+    keyPrefix: 'related_article',
   });
 
-  const { data, isLoading } = useSimilarQuestion({
-    question_id: id,
+  const { data, isLoading } = useSimilarArticle({
+    article_id : id,
     page_size: 5,
   });
 
@@ -53,7 +53,7 @@ const Index: FC<Props> = ({ id }) => {
               action
               key={item.id}
               as={Link}
-              to={pathFactory.questionLanding(item.id, item.url_title)}>
+              to={pathFactory.articleLanding(item.id, item.url_title)}>
               <div className="link-dark">{item.title}</div>
               {item.answer_count > 0 && (
                 <div

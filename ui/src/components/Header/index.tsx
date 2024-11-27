@@ -33,9 +33,11 @@ import {
   useNavigate,
   useLocation,
   useMatch,
+  NavLink,
 } from 'react-router-dom';
 
 import classnames from 'classnames';
+
 
 
 import { userCenter, floppyNavigation } from '@/utils';
@@ -139,6 +141,9 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
 //     console.log(ex);
 //   });
 
+    const { pathname } = useLocation();
+    console.log("pathname:",pathname)
+
   return (
     <Navbar ref={siteHeadNavRef}
       variant={navbarStyle === 'theme-colored' ? 'dark' : ''}
@@ -212,9 +217,45 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
           </div>
         </div>
 
+
+
+
         <Navbar.Collapse id="navBarContent" className="me-auto">
           <hr className="hr lg-none mb-3" style={{ marginTop: '12px' }} />
-          <Col lg={8} className="ps-0">
+          <Col lg={4} className="ps-0">
+           <Nav className="nav-top">
+                 
+ 
+                <NavLink
+                    to="/"
+                    className={() =>
+                    pathname === '/' ? 'nav-link active' : 'nav-link'
+                    }>
+                    <span>首页</span>
+                </NavLink>
+
+                <NavLink
+                    to="/articles"
+                    className={() =>
+                    pathname === '/articles' ? 'nav-link active' : 'nav-link'
+                    }>
+                    <span>热文</span>
+                </NavLink>
+                <NavLink
+                    to="/questions"
+                    className={() =>
+                    pathname === '/questions' ? 'nav-link active' : 'nav-link'
+                    }>
+                    <span>精彩问答</span>
+                </NavLink>
+
+            </Nav>
+          </Col>
+
+
+
+
+          <Col lg={4} className="ps-0">
             <Form
               action="/search"
               className="w-100 maxw-400 position-relative"

@@ -81,19 +81,24 @@ const Index: FC = () => {
     console.log("二级菜单:",sideNavStickyTop);
 // className="`stick-top bg-body-tertiary`
 // position:sticky;失效原因：https://www.cnblogs.com/coco1s/p/14180476.html
-  return (
-    <Row className="flex-fill" style={ sideNavStickTopStyle }>
-         <Col xl={1} ></Col>
-         <Col xl={10} >
-        <nav id="second-article-sideNav" className="nav"   >
-            <NavLink to="/questions" className="nav-link">全部 </NavLink>
-            <a className="nav-link" href="#">思维模型</a>
-            <a className="nav-link" href="#">个人提升</a>
-        </nav>
-        </Col>
-        <Col xl={1} ></Col>
-    </Row>
-  );
+return (
+    <>
+    </>
+);
+
+//   return (
+//     <Row className="flex-fill" style={ sideNavStickTopStyle }>
+//          <Col xl={1} ></Col>
+//          <Col xl={10} >
+//         <nav id="second-article-sideNav" className="nav"   >
+//             <NavLink to="/questions" className="nav-link">全部 </NavLink>
+//             <a className="nav-link" href="#">思维模型</a>
+//             <a className="nav-link" href="#">个人提升</a>
+//         </nav>
+//         </Col>
+//         <Col xl={1} ></Col>
+//     </Row>
+//   );
 };
 
 export default Index;

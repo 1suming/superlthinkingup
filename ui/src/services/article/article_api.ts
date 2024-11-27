@@ -18,3 +18,8 @@ export const articleDetail = (id: string) => {
   };
   
 
+
+  export const saveArticle = (params: Type.QuestionParams) => {
+    return request.post('/answer/api/v1/article', params);
+  };
+  

@@ -22,6 +22,7 @@ package tag_common
 import (
 	"context"
 	"fmt"
+	"github.com/apache/incubator-answer/internal/base/constant"
 	"strconv"
 	"strings"
 
@@ -164,9 +165,14 @@ func (tr *tagCommonRepo) GetTagByID(ctx context.Context, tagID string, includeDe
 }
 
 // GetTagPage get tag page
-func (tr *tagCommonRepo) GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string) (
+func (tr *tagCommonRepo) GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tag_type int8) (
 	tagList []*entity.Tag, total int64, err error,
 ) {
+	//var tag_type int8
+	//tag_type = 0
+	//if len(option) > 0 {
+	//	tag_type = option[0]
+	//}
 	tagList = make([]*entity.Tag, 0)
 	session := tr.data.DB.Context(ctx)
 
@@ -196,6 +202,10 @@ func (tr *tagCommonRepo) GetTagPage(ctx context.Context, page, pageSize int, tag
 		session.Asc("slug_name")
 	case "newest":
 		session.Desc("created_at")
+	}
+	if tag_type == constant.TAG_TYPE_ARTICLE {
+		session.Where("tag_type", tag_type) //@csw
+		session.Asc("tag_sort")
 	}
 
 	total, err = pager.Help(page, pageSize, &tagList, tag, session)
@@ -288,6 +298,21 @@ func (tr *tagCommonRepo) UpdateTagsAttribute(ctx context.Context, tags []string,
 	}
 	session := tr.data.DB.Context(ctx).In("slug_name", tags).Cols(attribute).UseBool(attribute)
 	_, err = session.Update(bean)
+	if err != nil {
+		err = errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	return
+}
+
+// @cws
+func (tr *tagCommonRepo) GetTagListByType(ctx context.Context, tag_type int8) (tagList []*entity.Tag, err error) {
+	tagList = make([]*entity.Tag, 0)
+	session := tr.data.DB.Context(ctx)
+
+	session.Where("tag_type", tag_type) //@cws
+
+	session.Where(builder.Eq{"status": entity.TagStatusAvailable})
+	err = session.OrderBy("tag_sort asc").Find(&tagList)
 	if err != nil {
 		err = errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
 	}

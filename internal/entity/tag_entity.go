@@ -49,6 +49,10 @@ type Tag struct {
 	Reserved        bool      `xorm:"not null default false BOOL reserved"`
 	RevisionID      string    `xorm:"not null default 0 BIGINT(20) revision_id"`
 	UserID          string    `xorm:"not null default 0 BIGINT(20) user_id"`
+
+	TagType int8  `json:"tag_type" gorm:"tag_type"` // 0:默认,1:Article类型的
+	TagSort int64 `json:"tag_sort" gorm:"tag_sort"` // tag的顺序，越小越靠前
+
 }
 
 // TableName tag table name

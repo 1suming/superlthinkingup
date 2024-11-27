@@ -143,6 +143,7 @@ const Index = () => {
   };
 
   const getDetail = async () => {
+    console.log("getDetail func start")
     setIsLoading(true);
     try {
       const res = await questionDetail(qid);

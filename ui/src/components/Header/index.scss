@@ -79,6 +79,13 @@
     .nav-link {
       color: rgba(0, 0, 0, 0.65);
     }
+
+
+    .nav-link.active {
+        color: #000; //@cws
+    }
+
+    
     .placeholder-search {
       padding-left: 42px;
       box-shadow: none;
@@ -98,7 +105,8 @@
   }
 
   .maxw-400 {
-    max-width: 400px;;
+    // max-width: 400px;;
+    max-width:200px;//@cws
   }
 
   .search-wrap {
@@ -142,3 +150,5 @@
     color:#333;
     margin-left:5px;
 }
+
+ 

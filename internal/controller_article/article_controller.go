@@ -318,7 +318,7 @@ func (qc *ArticleController) ArticlePage(ctx *gin.Context) {
 	if handler.BindAndCheck(ctx, req) {
 		return
 	}
-	req.LoginUserID = middleware.GetLoginUserIDFromContext(ctx)
+	req.LoginUserID = middleware.GetLoginUserIDFromContext(ctx) //java里面获取用户信息就一条语句：SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
 	articles, total, err := qc.articleService.GetArticlePage(ctx, req)
 	if err != nil {

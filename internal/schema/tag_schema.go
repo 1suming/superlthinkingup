@@ -237,6 +237,8 @@ type GetTagWithPageReq struct {
 	QueryCond string `validate:"omitempty,oneof=popular name newest" form:"query_cond"`
 	// user id
 	UserID string `json:"-"`
+
+	TagType int `validate:"omitempty" form:"tag_type"`
 }
 
 // GetTagSynonymsReq get tag synonyms request

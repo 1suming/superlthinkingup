@@ -164,6 +164,7 @@ func (rs *RankService) CheckOperationObjectOwner(ctx context.Context, userID, ob
 	objectInfo, err := rs.objectInfoService.GetInfo(ctx, objectID)
 	if err != nil {
 		log.Error(err)
+		log.Errorf("objectInfoService.GetInfo error objectID:%+v", objectID)
 		return false
 	}
 	// if the user is this object creator, the user can operate this object.

@@ -24,7 +24,10 @@ package articlecommon
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"math"
+	"math/rand"
+	"regexp"
 	"time"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
@@ -348,19 +351,89 @@ func (qs *ArticleCommon) Info(ctx context.Context, articleID string, loginUserID
 	return resp, nil
 }
 
+// \b 是一个特殊的元字符，表示单词边界。它匹配一个单词的开始或结束的位置
+func RepImages(htmls string, needSize int) []string {
+	var imgRE = regexp.MustCompile(`<img[^>]+\bsrc=["']([^"']+)["']`)
+	imgs := imgRE.FindAllStringSubmatch(htmls, needSize) //imgRE.FindAllStringSubmatch(htmls, -1)
+	out := make([]string, len(imgs))
+	for i := range out {
+		out[i] = imgs[i][1]
+		//fmt.Println(strconv.Itoa(i), out[i])
+	}
+	return out
+}
+func RegFindImages(htmls string, needSize int) []string {
+	var imgRE = regexp.MustCompile(`<img[^>]+\bsrc=["']([^"']+)["']`)
+	imgs := imgRE.FindStringSubmatch(htmls) //imgRE.FindAllStringSubmatch(htmls, -1)
+	//fmt.Printf("imgs:%v \n", imgs)
+	log.Infof("RegFindImages   imgs:%v \n", imgs)
+
+	out := make([]string, 0)
+
+	if len(imgs) > 1 {
+		out = append(out, imgs[1])
+	}
+	return out
+}
+func GetArticleThumbnails(articleInfo *entity.Article) []schema.ArticleThumbnail {
+	/*
+		1. 首先是否设置了文章自己本身的特色图片。
+		2. 如果没有，就检查下这篇文章的标签是否有特色图片。
+		3. 如果没有，就检查下这篇文章是否有图片，有就获取第一张。
+		4. 如果还是没有，就检查下这篇文章所在的分类是否有特色图片。
+	*/
+	thumbnails := make([]schema.ArticleThumbnail, 0)
+	if articleInfo.Thumbnails != "" {
+		err := json.Unmarshal([]byte(articleInfo.Thumbnails), &thumbnails)
+		if err != nil {
+			log.Errorf("GetArticleThumbnails err:%v \n", err)
+		}
+	}
+	if len(thumbnails) != 0 {
+		log.Infof("thumbnails1:%+v", thumbnails)
+		return thumbnails
+	}
+
+	images := RegFindImages(articleInfo.ParsedText, 1)
+
+	for _, val := range images {
+		thumbnail := schema.ArticleThumbnail{
+			Url: val,
+		}
+		thumbnails = append(thumbnails, thumbnail)
+	}
+
+	if len(thumbnails) != 0 {
+		log.Infof("thumbnails2:%+v", thumbnails)
+		return thumbnails
+	}
+	randomNum := rand.Intn(41) //[0,n)之
+	imageUrl := fmt.Sprintf("%s%d%s", constant.OSS_BUCKET_NAME+"/images/postthumbnail/", randomNum, ".jpg")
+	thumbnail := schema.ArticleThumbnail{
+		Url: imageUrl,
+	}
+
+	thumbnails = append(thumbnails, thumbnail)
+	log.Infof("thumbnails3:%+v", thumbnails)
+	return thumbnails
+}
 func (qs *ArticleCommon) FormatArticlesPage(
 	ctx context.Context, articleList []*entity.Article, loginUserID string, orderCond string) (
 	formattedArticles []*schema.ArticlePageResp, err error) {
 	formattedArticles = make([]*schema.ArticlePageResp, 0)
 	articleIDs := make([]string, 0)
 	userIDs := make([]string, 0)
+
 	for _, articleInfo := range articleList {
+
+		thumbnails := GetArticleThumbnails(articleInfo)
+
 		t := &schema.ArticlePageResp{
 			ID:              articleInfo.ID,
 			CreatedAt:       articleInfo.CreatedAt.Unix(),
 			Title:           articleInfo.Title,
 			UrlTitle:        htmltext.UrlTitle(articleInfo.Title),
-			Description:     htmltext.FetchExcerpt(articleInfo.ParsedText, "...", 240),
+			Description:     htmltext.FetchExcerpt(articleInfo.ParsedText, "...", 80), //240),
 			Status:          articleInfo.Status,
 			ViewCount:       articleInfo.ViewCount,
 			UniqueViewCount: articleInfo.UniqueViewCount,
@@ -372,6 +445,8 @@ func (qs *ArticleCommon) FormatArticlesPage(
 			//LastAnswerID: articleInfo.LastAnswerID,
 			Pin:  articleInfo.Pin,
 			Show: articleInfo.Show,
+
+			Thumbnails: thumbnails,
 		}
 
 		articleIDs = append(articleIDs, articleInfo.ID)

@@ -91,7 +91,7 @@ const Index: FC<Props> = ({ redDot, userInfo, logOut }) => {
         </NavLink>
 
         <NavLink
-          to="/users/notifications/achievement"
+          to="/articles/write"
           title={t('achievement', { keyPrefix: 'notifications' })}
           className="icon-link nav-link d-flex align-items-center justify-content-center p-0 me-3 position-relative"
           style={ {width:"100px"}  }

@@ -360,8 +360,9 @@ type ArticlePageReq struct {
 
 	LoginUserID      string `json:"-"`
 	UserIDBeSearched string `json:"-"`
-	TagID            string `json:"-"`
-	ShowPending      bool   `json:"-"`
+	//TagID            string `json:"-"` //`json:"-"` // 指定json序列化/反序列化时忽略此字段
+	TagId       string `validate:"omitempty,gt=0" form:"tag_id"`
+	ShowPending bool   `json:"-"`
 }
 
 const (
@@ -369,6 +370,10 @@ const (
 	ArticlePageRespOperationTypeAnswered = "answered"
 	ArticlePageRespOperationTypeModified = "modified"
 )
+
+type ArticleThumbnail struct {
+	Url string `json:"url"`
+}
 
 type ArticlePageResp struct {
 	ID          string     `json:"id" `
@@ -399,6 +404,8 @@ type ArticlePageResp struct {
 	OperatedAt    int64                    `json:"operated_at"`
 	Operator      *ArticlePageRespOperator `json:"operator"`
 	OperationType string                   `json:"operation_type"`
+
+	Thumbnails []ArticleThumbnail `json:"thumbnails"`
 }
 
 type ArticlePageRespOperator struct {

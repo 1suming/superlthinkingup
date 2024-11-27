@@ -20,7 +20,7 @@
 import Article from './Article';
 import Answer from './Answer';
 import AnswerHead from './AnswerHead';
-import RelatedQuestions from './RelatedQuestions';
+import RelatedArticles from './RelatedArticles';
 import WriteAnswer from './WriteAnswer';
 import Alert from './Alert';
 import ContentLoader from './ContentLoader';
@@ -30,7 +30,8 @@ export {
     Article,
   Answer,
   AnswerHead,
-  RelatedQuestions,
+ // RelatedQuestions,
+ RelatedArticles,
   WriteAnswer,
   Alert,
   ContentLoader,

@@ -109,5 +109,10 @@ func NewHTTPServer(debug bool,
 	article_unAuthV1.Use(authUserMiddleware.Auth(), authUserMiddleware.EjectUserBySiteInfo())
 	articleRouter.RegisterUnAuthArticleAPIRouter(article_unAuthV1)
 
+	// register api that must be authenticated
+	article_authV1 := r.Group("/answer/api/v1")
+	article_authV1.Use(authUserMiddleware.MustAuthAndAccountAvailable())
+	articleRouter.RegisterArticleAPIRouter(article_authV1)
+
 	return r
 }

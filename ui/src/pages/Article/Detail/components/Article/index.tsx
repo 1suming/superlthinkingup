@@ -24,15 +24,23 @@ import { Button, OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 import {
   Tag,
-  Actions,
-  Operate,
-  UserCard,
-  Comment,
+//  Actions,
+ // Operate,
+//  UserCard,
+//  Comment,
   FormatTime,
   htmlRender,
   Icon,
   ImgViewer,
+
+  ArticleActions,
+  ArticleOperate,
+  ArticleComment,
+  ArticleUserCard,
+
 } from '@/components';
+
+
 import { useRenderHtmlPlugin } from '@/utils/pluginKit';
 import { formatCount, guard } from '@/utils';
 import { following } from '@/services';
@@ -47,7 +55,8 @@ interface Props {
 
 const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
   const { t } = useTranslation('translation', {
-    keyPrefix: 'question_detail',
+    // keyPrefix: 'question_detail',
+    keyPrefix: 'article_detail',
   });
   const [searchParams] = useSearchParams();
   const [followed, setFollowed] = useState(data?.is_followed);
@@ -87,7 +96,7 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
   }
 
   return (
-    <div>
+    <div className="article-all-wrapper">
       <h1 className="h3 mb-3 text-wrap text-break">
         {data?.pin === 2 && (
           <Icon
@@ -100,6 +109,7 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
           className="link-dark"
           reloadDocument
           to={pathFactory.questionLanding(data.id, data.url_title)}>
+
           {data.title}
           {data.status === 2
             ? ` [${t('closed', { keyPrefix: 'question' })}]`
@@ -110,13 +120,13 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
       <div className="d-flex flex-wrap align-items-center small mb-3 text-secondary">
         <FormatTime
           time={data.create_time}
-          preFix={t('Asked')}
+          preFix={t('created')}
           className="me-3"
         />
 
         <FormatTime
           time={data.update_time}
-          preFix={t('update')}
+          preFix={t('updated')}
           className="me-3"
         />
         {data?.view_count > 0 && (
@@ -139,7 +149,7 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
         />
       </ImgViewer>
 
-      <Actions
+      <ArticleActions
         className="mt-4"
         source="question"
         data={{
@@ -153,56 +163,19 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
         }}
       />
 
-      <div className="d-block d-md-flex flex-wrap mt-4 mb-3">
-        <div className="mb-3 mb-md-0 me-4 flex-grow-1">
-          <Operate
-            qid={data?.id}
-            type="question"
-            memberActions={data?.member_actions}
-            title={data.title}
-            hasAnswer={hasAnswer}
-            isAccepted={Boolean(data?.accepted_answer_id)}
-            callback={initPage}
-          />
-        </div>
-        <div style={{ minWidth: '196px' }} className="mb-3 me-4 mb-md-0">
-          {data.update_user_info &&
-          data.update_user_info?.username !== data.user_info?.username ? (
-            <UserCard
-              data={data?.update_user_info}
-              time={data.edit_time}
-              preFix={t('edit')}
-              isLogged={isLogged}
-              timelinePath={`/posts/${data.id}/timeline`}
-            />
-          ) : isLogged ? (
-            <Link to={`/posts/${data.id}/timeline`}>
-              <FormatTime
-                time={data.edit_time}
-                preFix={t('edit')}
-                className="link-secondary small"
-              />
-            </Link>
-          ) : (
-            <FormatTime
-              time={data.edit_time}
-              preFix={t('edit')}
-              className="text-secondary small"
-            />
-          )}
-        </div>
-        <div style={{ minWidth: '196px' }}>
-          <UserCard
+
+      <div className="d-block d-md-flex flex-wrap article-usercard">
+         <ArticleUserCard
             data={data?.user_info}
             time={data.create_time}
             preFix={t('asked')}
             isLogged={isLogged}
             timelinePath={`/posts/${data.id}/timeline`}
           />
-        </div>
+
       </div>
 
-      <Comment
+      <ArticleComment
         objectId={data?.id}
         mode="question"
         commentId={searchParams.get('commentId')}

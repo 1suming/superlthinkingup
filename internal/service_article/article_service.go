@@ -337,7 +337,11 @@ func (qs *ArticleService) AddArticle(ctx context.Context, req *schema.ArticleAdd
 	article.PostUpdateTime = now
 	article.Pin = entity.ArticleUnPin
 	article.Show = entity.ArticleShow
-	//article.UpdatedAt = nil
+	article.UpdatedAt = now
+
+	//@cws
+	article.PostDate = now
+
 	err = qs.articleRepo.AddArticle(ctx, article)
 	if err != nil {
 		return
@@ -1330,7 +1334,13 @@ func (qs *ArticleService) GetArticlePage(ctx context.Context, req *schema.Articl
 	}
 	// query by tag condition
 	var tagIDs = make([]string, 0)
-	if len(req.Tag) > 0 {
+	//@cws，如果有tag_id，按tag_id查，否则按tag name查
+	if len(req.TagId) > 0 {
+		req.TagId = strings.TrimSpace(req.TagId)
+	}
+	if len(req.TagId) > 0 {
+		tagIDs = append(tagIDs, req.TagId) //@cws
+	} else if len(req.Tag) > 0 {
 		tagInfo, exist, err := qs.tagCommon.GetTagBySlugName(ctx, strings.ToLower(req.Tag))
 		if err != nil {
 			return nil, 0, err

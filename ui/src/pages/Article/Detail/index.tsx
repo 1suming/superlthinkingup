@@ -42,7 +42,7 @@ import {
   Article,
   Answer,
   AnswerHead,
-  RelatedQuestions,
+  RelatedArticles,
   WriteAnswer,
   Alert,
   ContentLoader,
@@ -143,6 +143,7 @@ const Index = () => {
 //   };
 
   const getDetail = async () => {
+    console.log("getDetail func start")
     setIsLoading(true);
     try {
       const res = await articleDetail(qid);
@@ -177,6 +178,7 @@ const Index = () => {
   };
 
   const initPage = (type: string) => {
+    console.log("initPage func start")
     if (type === 'delete_question') {
       setTimeout(() => {
         navigate('/', { replace: true });
@@ -185,6 +187,7 @@ const Index = () => {
     }
     if (type === 'default') {
       scrollToDocTop();
+      console.log("default getDetail")
       getDetail();
       return;
     }
@@ -215,6 +218,7 @@ const Index = () => {
     if (!qid) {
       return;
     }
+    console.log("useEffect getDetail")
     getDetail();
     //@ms>:requestAnswers();
   }, [qid]);
@@ -262,7 +266,7 @@ const Index = () => {
       <Col className="page-right-side mt-4 mt-xl-0">
         <CustomSidebar />
        
-        <RelatedQuestions id={question?.id || ''} />
+        <RelatedArticles id={question?.id || ''} />
       </Col>
     
     </Row>

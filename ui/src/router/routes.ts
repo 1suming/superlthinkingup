@@ -42,6 +42,10 @@ export type RouteNode = UnionRouteNode & {
 };
 
 const routes: RouteNode[] = [
+
+ 
+
+
   {
     path: '/',
     page: 'pages/Layout',
@@ -62,10 +66,10 @@ const routes: RouteNode[] = [
         // side nav layout
         page: 'pages/SideNavLayout',
         children: [
-          {
-            index: true,
-            page: 'pages/Questions',
-          },
+        //   { //@cws ，不要设置为首页
+        //     index: true,
+        //     page: 'pages/Questions',
+        //   },
           {
             path: 'questions',
             page: 'pages/Questions',
@@ -503,12 +507,11 @@ const routes: RouteNode[] = [
                 children: [
                     {
                         index: true,
-                        path: '/articles',
-                        page: 'pages/Questions',
+                        page: 'pages/Article',
                     },
                     {
                         path: '/articles',
-                        page: 'pages/Questions',
+                        page: 'pages/Article',
                     },
 
                     {
@@ -522,6 +525,42 @@ const routes: RouteNode[] = [
                       {
                         path: 'articles/:qid/:slugPermalink/:aid',
                         page: 'pages/Article/Detail',
+                      },
+ 
+
+                ],
+            },
+
+        ],
+    },
+
+    {
+        path: '/',
+        page: 'pages/Layout', //page: 'pages/Article/Layout/ArticleRootLayout',
+        loader: async () => {
+            await guard.setupApp();
+            return null;
+        },
+        guard: () => {
+            const gr = guard.shouldLoginRequired();
+            if (!gr.ok) {
+                return gr;
+            }
+            return guard.notForbidden();
+        },
+        children: [
+            { 
+                // side nav layout // 'pages/SideNavLayout',
+                page: 'pages/SideNavLayout',
+                //page: 'pages/Article/Layout/ArticleSideNavLayout',
+                children: [
+                    
+                      {
+                        path: 'articles/write',
+                        page: 'pages/Article/Write',
+                        guard: () => {
+                          return guard.activated();
+                        },
                       },
 
                 ],

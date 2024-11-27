@@ -408,7 +408,7 @@ func (ts *TagService) GetTagWithPage(ctx context.Context, req *schema.GetTagWith
 	page := req.Page
 	pageSize := req.PageSize
 
-	tags, total, err := ts.tagCommonService.GetTagPage(ctx, page, pageSize, tag, req.QueryCond)
+	tags, total, err := ts.tagCommonService.GetTagPage(ctx, page, pageSize, tag, req.QueryCond, 0)
 	if err != nil {
 		return
 	}

@@ -4,29 +4,32 @@ import "time"
 
 // TaArticle 文章,参考wordpress的wp_articles表 ,ta_前缀表示table-article
 // TaArticle 文章,参考wordpress的wp_articles表 ,ta_前缀表示table-article
+// error: ID condition is error, expect 0 primarykeys, there are 1
+//为你没有定义Id为主键，所以ID()函数不认
+
 type Article struct {
-	ID             string    `json:"ID" gorm:"ID"`
-	UserID         string    `json:"user_id" gorm:"user_id"`
-	PostDate       time.Time `json:"post_date" gorm:"post_date"`               // 发布时间
-	PostUpdateTime time.Time `json:"post_update_time" gorm:"post_update_time"` // 修改时间
+	ID             string    `json:"ID"    xorm:"not null pk BIGINT(20) id" `
+	UserID         string    `json:"user_id" xorm:"user_id"`
+	PostDate       time.Time `json:"post_date" xorm:"post_date"`               // 发布时间
+	PostUpdateTime time.Time `json:"post_update_time" xorm:"post_update_time"` // 修改时间
 
 	OriginalText string `xorm:"not null MEDIUMTEXT original_text"`
 	ParsedText   string `xorm:"not null MEDIUMTEXT parsed_text"`
 
-	//Content         string    `json:"content" gorm:"content"`
-	Title           string    `json:"title" gorm:"title"`
-	Excerpt         string    `json:"excerpt" gorm:"excerpt"` // 摘录
-	Status          int       `json:"status" gorm:"status"`
-	CommentStatus   int8      `json:"comment_status" gorm:"comment_status"` // 评论状态（open/closed）
-	Password        string    `json:"password" gorm:"password"`             // 密码
-	SlugName        string    `json:"slug_name" gorm:"slug_name"`           // 文章缩略名
-	ContentFiltered string    `json:"content_filtered" gorm:"content_filtered"`
-	MenuOrder       int64     `json:"menu_order" gorm:"menu_order"`       // 排序ID
-	CommentCount    int64     `json:"comment_count" gorm:"comment_count"` // 评论总数
-	CreatedAt       time.Time `json:"created_at" gorm:"created_at"`
-	UpdatedAt       time.Time `json:"updated_at" gorm:"updated_at"`
-	Pin             int       `json:"pin" gorm:"pin"`
-	Show            int       `json:"show" gorm:"show"`
+	//Content         string    `json:"content" xorm:"content"`
+	Title           string    `json:"title" xorm:"title"`
+	Excerpt         string    `json:"excerpt" xorm:"excerpt"` // 摘录
+	Status          int       `json:"status" xorm:"status"`
+	CommentStatus   int8      `json:"comment_status" xorm:"comment_status"` // 评论状态（open/closed）
+	Password        string    `json:"password" xorm:"password"`             // 密码
+	SlugName        string    `json:"slug_name" xorm:"slug_name"`           // 文章缩略名
+	ContentFiltered string    `json:"content_filtered" xorm:"content_filtered"`
+	MenuOrder       int64     `json:"menu_order" xorm:"menu_order"`       // 排序ID
+	CommentCount    int64     `json:"comment_count" xorm:"comment_count"` // 评论总数
+	CreatedAt       time.Time `json:"created_at" xorm:"created_at"`
+	UpdatedAt       time.Time `json:"updated_at" xorm:"updated_at"`
+	Pin             int       `json:"pin" xorm:"pin"`
+	Show            int       `json:"show" xorm:"show"`
 
 	HotScore        int `xorm:"not null default 0 INT(11) hot_score"`
 	CollectionCount int `xorm:"not null default 0 INT(11) collection_count"`
@@ -39,6 +42,9 @@ type Article struct {
 	VoteCount       int `xorm:"not null default 0 INT(11) vote_count"`
 
 	RevisionID string `xorm:"not null default 0 BIGINT(20) revision_id"`
+
+	//缩略图
+	Thumbnails string `json:"thumbnails" xorm:"thumbnails"`
 }
 
 //post_date datetime NOT NULL  comment '发布时间',
@@ -50,6 +56,9 @@ type Article struct {
 // TableName 表名称
 func (Article) TableName() string {
 	return "ta_article"
+}
+func (Article) KeyName() string {
+	return "article"
 }
 
 const (

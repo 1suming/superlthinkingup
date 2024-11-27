@@ -46,11 +46,13 @@ type TagCommonRepo interface {
 	GetTagListByName(ctx context.Context, name string, recommend, reserved bool) (tagList []*entity.Tag, err error)
 	GetTagListByNames(ctx context.Context, names []string) (tagList []*entity.Tag, err error)
 	GetTagByID(ctx context.Context, tagID string, includeDeleted bool) (tag *entity.Tag, exist bool, err error)
-	GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string) (tagList []*entity.Tag, total int64, err error)
+	GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tag_type int8) (tagList []*entity.Tag, total int64, err error)
 	GetRecommendTagList(ctx context.Context) (tagList []*entity.Tag, err error)
 	GetReservedTagList(ctx context.Context) (tagList []*entity.Tag, err error)
 	UpdateTagsAttribute(ctx context.Context, tags []string, attribute string, value bool) (err error)
 	UpdateTagQuestionCount(ctx context.Context, tagID string, questionCount int) (err error)
+
+	GetTagListByType(ctx context.Context, tag_type int8) (tagList []*entity.Tag, err error)
 }
 
 type TagRepo interface {
@@ -403,9 +405,9 @@ func (ts *TagCommonService) GetTagListByIDs(ctx context.Context, ids []string) (
 }
 
 // GetTagPage get object tag
-func (ts *TagCommonService) GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string) (
+func (ts *TagCommonService) GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tag_type int8) (
 	tagList []*entity.Tag, total int64, err error) {
-	tagList, total, err = ts.tagCommonRepo.GetTagPage(ctx, page, pageSize, tag, queryCond)
+	tagList, total, err = ts.tagCommonRepo.GetTagPage(ctx, page, pageSize, tag, queryCond, tag_type)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -943,5 +945,15 @@ func (ts *TagCommonService) UpdateTag(ctx context.Context, req *schema.UpdateTag
 		})
 	}
 
+	return
+}
+
+// @ms:根据type获取tag
+func (ts *TagCommonService) GetTagListByType(ctx context.Context, tag_type int8) (tagList []*entity.Tag, err error) {
+	tagList, err = ts.tagCommonRepo.GetTagListByType(ctx, tag_type)
+	if err != nil {
+		return nil, err
+	}
+	//ts.TagsFormatRecommendAndReserved(ctx, tagList)
 	return
 }

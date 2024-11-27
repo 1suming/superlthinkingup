@@ -22,6 +22,7 @@ package cron
 import (
 	"context"
 	"fmt"
+	"github.com/apache/incubator-answer/internal/service_article"
 
 	"github.com/apache/incubator-answer/internal/service/content"
 	"github.com/apache/incubator-answer/internal/service/siteinfo_common"
@@ -33,16 +34,19 @@ import (
 type ScheduledTaskManager struct {
 	siteInfoService siteinfo_common.SiteInfoCommonService
 	questionService *content.QuestionService
+	articleService  *service_article.ArticleService
 }
 
 // NewScheduledTaskManager new scheduled task manager
 func NewScheduledTaskManager(
 	siteInfoService siteinfo_common.SiteInfoCommonService,
 	questionService *content.QuestionService,
+	articleService *service_article.ArticleService,
 ) *ScheduledTaskManager {
 	manager := &ScheduledTaskManager{
 		siteInfoService: siteInfoService,
 		questionService: questionService,
+		articleService:  articleService,
 	}
 	return manager
 }
@@ -64,6 +68,7 @@ func (s *ScheduledTaskManager) Run() {
 		ctx := context.Background()
 		fmt.Println("refresh hottest cron execution")
 		s.questionService.RefreshHottestCron(ctx)
+		s.articleService.RefreshHottestCron(ctx) //@cws
 	})
 	if err != nil {
 		log.Error(err)

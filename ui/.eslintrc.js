@@ -81,6 +81,7 @@ module.exports = {
     "no-useless-concat":"off",
     "prefer-template":"off",
     "prefer-const":"off",
+    "eqeqeq":"off",
     'import/order': [
       'warn',
       {

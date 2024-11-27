@@ -830,6 +830,10 @@ ui:
     http_50X: HTTP 错误 500
     http_403: HTTP 错误 403
     logout: 退出
+
+    articles: 文章
+    article: 文章
+
   notifications:
     title: 通知
     inbox: 收件箱
@@ -1149,11 +1153,12 @@ ui:
       review: 审查
       bookmark: 收藏夹
       moderation: 管理
+      create_center: 文章创作
     search:
       placeholder: 搜索
   footer:
     build_on: >-
-      由 <1>Apache Answer</1> 提供动力 - 驱动问答社区的开源软件。<br />用爱制造 © {{cc}}.
+      超级思维改变人生 - {{cc}}
   upload_img:
     name: 更改
     loading: 加载中...
@@ -1661,10 +1666,15 @@ ui:
     db_failed_desc: >-
       这或者意味着数据库信息在 <1>config.yaml</1> 文件不正确，或者无法与数据库服务器建立联系。这可能意味着你的主机数据库服务器故障。
   counts:
-    views: 次浏览
-    votes: 个点赞
-    answers: 个回答
+    # views: 次浏览
+    # votes: 个点赞
+    # answers: 个回答
+    views: 浏览
+    votes: 点赞
+    answers: 回答
+
     accepted: 已被采纳
+    article_comments: 评论
   page_error:
     http_error: HTTP 错误 {{ code }}
     desc_403: 您无权访问此页面。
@@ -2221,3 +2231,139 @@ ui:
     post_list: 这个帖子已经被显示
     post_unlist: 这个帖子已经被隐藏
     post_pending: 您的帖子正在等待审核。它将在它获得批准后可见。
+
+
+
+  #ms--------------------------
+
+
+  article_detail:
+    action: 操作
+    Asked: 提问于
+    asked: 提问于
+    update: 修改于
+    edit: 编辑于
+    commented: 评论
+    Views: 阅读次数
+    Follow: 关注此问题
+    Following: 已关注
+    follow_tip: 关注此问题以接收通知
+    answered: 回答于
+    closed_in: 关闭于
+    show_exist: 查看类似问题。
+    useful: 有用的
+    question_useful: 它是有用和明确的
+    question_un_useful: 它不明确或没用的
+    question_bookmark: 收藏该问题
+    answer_useful: 这是有用的
+    answer_un_useful: 它是没有用的
+    answers:
+      title: 个回答
+      score: 评分
+      newest: 最新
+      oldest: 最旧
+      btn_accept: 采纳
+      btn_accepted: 已被采纳
+    write_answer:
+      title: 你的回答
+      edit_answer: 编辑我的回答
+      btn_name: 提交你的回答
+      add_another_answer: 添加另一个回答
+      confirm_title: 继续回答
+      continue: 继续
+      confirm_info: >-
+        <p>你确定要提交一个新的回答吗？</p><p>作为替代，你可以通过编辑来完善和改进之前的回答。</p>
+      empty: 回答内容不能为空。
+      characters: 内容长度至少 6 个字符。
+      tips:
+        header_1: 感谢你的回答
+        li1_1: 请务必确定在 <strong>回答问题</strong>。提供详细信息并分享你的研究。
+        li1_2: 用参考资料或个人经历来支持你所做的任何陈述。
+        header_2: 但是 <strong>请避免</strong>...
+        li2_1: 请求帮助，寻求澄清，或答复其他答案。
+    reopen:
+      confirm_btn: 重新打开
+      title: 重新打开这个帖子
+      content: 确定要重新打开吗？
+    list:
+      confirm_btn: 列表显示
+      title: 列表中显示这个帖子
+      content: 确定要列表中显示这个帖子吗？
+    unlist:
+      confirm_btn: 列表隐藏
+      title: 从列表中隐藏这个帖子
+      content: 确定要从列表中隐藏这个帖子吗？
+    pin:
+      title: 置顶该帖子
+      content: 你确定要全局置顶吗？这个帖子将出现在所有帖子列表的顶部。
+      confirm_btn: 置顶
+
+    created: 发布于
+    updated: 更新于
+
+  related_article:
+    title: 相关文章
+    
+  article:
+    following_tags: 已关注的标签
+    edit: 编辑
+    save: 保存
+    follow_tag_tip: 关注标签来筛选你的问题列表。
+    hot_articles: 热门文章
+    all_articles: 全部文章
+    x_questions: "{{ count }} 个问题"
+    x_answers: "{{ count }} 个"
+    questions: 问题
+    answers: 回答
+    newest: 最新
+    active: 活跃
+    hot: 热门
+    recommend: 推荐
+    score: 评分
+    unanswered: 未回答
+    modified: 更新于
+    answered: 回答于
+    # asked: 提问于
+    asked: 发表于
+    closed: 已关闭
+    follow_a_tag: 关注一个标签
+    more: 更多
+
+
+
+  write_article: #ask:
+    title: 新增文章
+    edit_title: 编辑文章
+    default_reason: 编辑问题
+    default_first_reason: 新增问题
+    similar_questions: 相似问题
+    form:
+      fields:
+        revision:
+          label: 修订版本
+        title:
+          label: 标题
+          placeholder: 请详细描述你的问题，想象你在问一个人
+          msg:
+            empty: 标题不能为空。
+            range: 标题最多 150 个字符
+        body:
+          label: 内容
+          msg:
+            empty: 内容不能为空。
+        tags:
+          label: 标签
+          msg:
+            empty: 必须选择一个标签
+        answer:
+          label: 回答内容
+          msg:
+            empty: 回答内容不能为空
+        edit_summary:
+          label: 编辑备注
+          placeholder: >-
+            简单描述更改原因（更正拼写、修复语法、改进格式）
+    btn_post_question: 提交问题
+    btn_save_edits: 保存更改
+    answer_question: 回答自己的问题
+    post_question&answer: 提交问题和回答
