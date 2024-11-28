@@ -107,7 +107,7 @@ const ArticleList: FC<Props> = ({
         return (
             <div className="article-img-content-wrapper article-has-img">
                 <div className="img-wrapper">
-                    <a href="#"> 
+                    <a href={pathFactory.articleLanding(li.id, li.url_title)} target="_blank" rel="noreferrer"> 
                         <img
                                 src={firstImg.url}
                                 width={216}
@@ -129,6 +129,7 @@ const ArticleList: FC<Props> = ({
                         )}
                         <NavLink
                             to={pathFactory.articleLanding(li.id, li.url_title)}
+                            target="_blank" rel="noreferrer"
                             className="link-dark">
                             {li.title}
                             {li.status === 2 ? ` [${t('closed')}]` : ''}

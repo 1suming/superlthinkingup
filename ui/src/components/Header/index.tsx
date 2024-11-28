@@ -222,7 +222,7 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
 
         <Navbar.Collapse id="navBarContent" className="me-auto">
           <hr className="hr lg-none mb-3" style={{ marginTop: '12px' }} />
-          <Col lg={4} className="ps-0">
+          <Col lg={4} className="ps-0 nav-left-top-bar">
            <Nav className="nav-top">
                  
  

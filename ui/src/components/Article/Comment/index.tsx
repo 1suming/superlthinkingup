@@ -26,7 +26,7 @@ import classNames from 'classnames';
 import unionBy from 'lodash/unionBy';
 
 import * as Types from '@/common/interface';
-import { Modal } from '@/components';
+import { Modal,Avatar, } from '@/components';
 import { usePageUsers, useReportModal, useCaptchaModal } from '@/hooks';
 import {
   matchedUsers,
@@ -46,7 +46,7 @@ import {
 import { commentReplyStore } from '@/stores';
 import Reactions from '@/pages/Questions/Detail/components/Reactions';
 
-import { Form, ActionBar, Reply } from './components';
+import { Form, ActionBar, Reply,CommentInput, } from './components';
 
 import './index.scss';
 
@@ -63,6 +63,7 @@ const Comment = ({ objectId, mode, commentId }) => {
     page: pageIndex,
     page_size: pageSize,
   });
+  console.log("query coments:",data)
   const [comments, setComments] = useState<any>([]);
 
   const reportModal = useReportModal();
@@ -372,36 +373,65 @@ const Comment = ({ objectId, mode, commentId }) => {
     setVisibleComment(!visibleComment);
   };
 
+  console.log("currentReplyId:",currentReplyId)
+
   return (
     <>
-      <Reactions
+      {/* <Reactions
         objectId={objectId}
         showAddCommentBtn={comments.length === 0}
         handleClickComment={handleAddComment}
-      />
+      /> */}
+
+      <div className="comment-input">
+        <CommentInput 
+         className="mt-2"
+         value=""
+         type=""
+         mode={mode}
+         onSendReply={(value) => handleSendReply({ value, type: 'comment' })}
+         onCancel={() =>  {} }
+
+         />
+      </div>
       <div
         className={classNames(
-          'comments-wrap',
-          comments.length > 0 && 'bg-light px-3 py-2 rounded',
+          'comments-list-wrap ',
+          comments.length > 0 && ' py-2 rounded',
         )}>
         {comments.map((item) => {
           return (
-            <div
+            <div className="comment-item d-flex"> 
+                <div className="comment-list-user-head">
+                        <Avatar
+                            size="50px"
+                            avatar={item.user_avatar }
+                            alt={item.user_display_name}
+                            searchStr="s=96"
+                        />
+
+
+
+
+                </div>
+            
+             <div
               key={item.comment_id}
               id={item.comment_id}
-              className="py-2 comment-item">
-              {item.showEdit ? (
-                <Form
-                  className="mt-2"
-                  value={item.original_text}
-                  type="edit"
-                  mode={mode}
-                  onSendReply={(value) =>
-                    handleSendReply({ ...item, value, type: 'edit' })
-                  }
-                  onCancel={() => handleCancel(item.comment_id)}
-                />
-              ) : (
+              className=" comment-text-item flex-fill ">
+
+                <div className="comment-author-name">
+                 {item.user_status  !== 'deleted' ? (
+                    <Link
+                        to={`/users/${item.username}`}
+                        className="name-ellipsis"
+                        style={{ maxWidth: '200px' }}>
+                        {item.user_display_name}
+                    </Link>
+                    ) : (
+                    <span>{item.user_display_name}</span>
+                    )}
+                </div>
                 <div className="d-block">
                   {item.reply_user_display_name && (
                     <Link to="." className="small me-1 text-nowrap">
@@ -410,11 +440,11 @@ const Comment = ({ objectId, mode, commentId }) => {
                   )}
 
                   <div
-                    className="fmt small text-break text-wrap"
+                    className="fmt small text-break text-wrap comment-text"
                     dangerouslySetInnerHTML={{ __html: item.parsed_text }}
                   />
                 </div>
-              )}
+               
 
               {currentReplyId === item.comment_id ? (
                 <Reply
@@ -446,11 +476,12 @@ const Comment = ({ objectId, mode, commentId }) => {
                 />
               )}
             </div>
+         </div>
           );
         })}
 
         <div className={classNames(comments.length > 0 && 'py-2')}>
-          {comments.length > 0 && (
+          {/* {comments.length > 0 && (
             <Button
               variant="link"
               className="p-0 btn-no-border"
@@ -458,13 +489,13 @@ const Comment = ({ objectId, mode, commentId }) => {
               onClick={handleAddComment}>
               {t('btn_add_comment')}
             </Button>
-          )}
+          )} */}
           {data &&
             (pageIndex || 1) < Math.ceil((data?.count || 0) / pageSize) && (
               <Button
-                variant="link"
-                size="sm"
-                className="p-0 ms-3 btn-no-border"
+                variant="light"
+                size="lg"
+                className=""
                 onClick={() => {
                   setPageIndex(pageIndex + 1);
                 }}>

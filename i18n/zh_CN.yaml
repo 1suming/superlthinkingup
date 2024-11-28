@@ -2239,8 +2239,8 @@ ui:
 
   article_detail:
     action: 操作
-    Asked: 提问于
-    asked: 提问于
+    Asked: 发表于
+    asked: 发表于
     update: 修改于
     edit: 编辑于
     commented: 评论

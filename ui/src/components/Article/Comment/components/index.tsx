@@ -20,5 +20,6 @@
 import Form from './Form';
 import ActionBar from './ActionBar';
 import Reply from './Reply';
+import CommentInput   from './CommentInput';
 
-export { Form, ActionBar, Reply };
+export { Form, ActionBar, Reply,CommentInput };

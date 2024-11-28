@@ -78,11 +78,24 @@
     background: rgb(255, 255, 255);
     .nav-link {
       color: rgba(0, 0, 0, 0.65);
+    //   color:#222226;
+    //   padding-left:12px !important;
+    //   padding-right:12px !important;
+
+
+    }
+    .nav-left-top-bar{
+        .nav-link{
+            color:#222226;
+            padding-left:12px !important;
+            padding-right:12px !important;
+        }
     }
 
 
     .nav-link.active {
         color: #000; //@cws
+        border-bottom: 2px solid #da282a;
     }
 
     

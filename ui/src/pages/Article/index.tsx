@@ -140,7 +140,7 @@ const Questions: FC = () => {
          <Col  >
             <nav id="second-article-sideNav" className="nav"   >
                 
-                <a className={  classNames("nav-link",{"active": selectedTagId==="" }) } href="#" onClick={ event=> handleTagSelected(event, "0")}  >全部</a>
+                <a className={  classNames("nav-link",{"active": selectedTagId==="" }) } href="#" onClick={ event=> handleTagSelected(event, "")}  >全部</a>
                 { tags?.list?.map((tag) => (
 
                     <a className={  classNames("nav-link",{"active": selectedTagId=== tag.tag_id }) } href="#" key={tag.tag_id} data-key={tag.tag_id} onClick={ event=> handleTagSelected(event,tag.tag_id)}>{tag.slug_name}</a>

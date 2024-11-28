@@ -138,6 +138,8 @@ func (cs *CommentService) AddComment(ctx context.Context, req *schema.AddComment
 	objInfo.AnswerID = uid.DeShortID(objInfo.AnswerID)
 	if objInfo.ObjectType == constant.QuestionObjectType || objInfo.ObjectType == constant.AnswerObjectType {
 		comment.QuestionID = objInfo.QuestionID
+	} else if objInfo.ObjectType == constant.ArticleObjectType {
+		comment.QuestionID = objInfo.ObjectID
 	}
 
 	if len(req.ReplyCommentID) > 0 {
@@ -198,6 +200,11 @@ func (cs *CommentService) AddComment(ctx context.Context, req *schema.AddComment
 		activityMsg.ActivityTypeKey = constant.ActAnswerCommented
 		event = schema.NewEvent(constant.EventCommentCreate, req.UserID).TID(comment.ID).
 			CID(comment.ID, comment.UserID).AID(objInfo.AnswerID, objInfo.ObjectCreatorUserID)
+
+	case constant.ArticleObjectType:
+		activityMsg.ActivityTypeKey = constant.ActArticleCommented
+		event = schema.NewEvent(constant.EventCommentCreate, req.UserID).TID(comment.ID).
+			CID(comment.ID, comment.UserID).QID(objInfo.QuestionID, objInfo.ObjectCreatorUserID)
 	}
 	cs.activityQueueService.Send(ctx, activityMsg)
 	cs.eventQueueService.Send(ctx, event)
