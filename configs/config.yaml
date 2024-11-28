@@ -17,7 +17,7 @@
 
 server:
   http:
-    addr: 0.0.0.0:80
+    addr: 0.0.0.0:5001
 data:
   database:
     driver: "sqlite3"
@@ -30,12 +30,12 @@ swaggerui:
   show: true
   protocol: http
   host: 127.0.0.1
-  address: ':80'
+  address: ':5001'
 service_config:
   upload_path: "/data/uploads"
 ui:
   public_url: '/'
-  #api_url: '/' #REACT_APP_API_URL
-  api_url: 'http://127.0.0.1/'
+  api_url: '/' #REACT_APP_API_URL
+#  api_url: 'http://127.0.0.1/'
   base_url: ''
 
