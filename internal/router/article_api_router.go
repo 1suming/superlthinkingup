@@ -34,10 +34,10 @@ func (a *ArticleAPIRouter) RegisterArticleAPIRouter(r *gin.RouterGroup) {
 	// article
 	r.POST("/article", a.articleController.AddArticle)
 	//r.POST("/article/answer", a.articleController.AddArticleByAnswer)
-	//r.PUT("/article", a.articleController.UpdateArticle)
+	r.PUT("/article", a.articleController.UpdateArticle)
 	//r.PUT("/article/invite", a.articleController.UpdateArticleInviteUser)
-	//r.DELETE("/article", a.articleController.RemoveArticle)
-	//r.PUT("/article/status", a.articleController.CloseArticle)
+	r.DELETE("/article", a.articleController.RemoveArticle)
+	r.PUT("/article/status", a.articleController.CloseArticle)
 	//r.PUT("/article/operation", a.articleController.OperationArticle)
 	//r.PUT("/article/reopen", a.articleController.ReopenArticle)
 	//r.GET("/article/similar", a.articleController.GetSimilarArticles)

@@ -1,4 +1,4 @@
-import { UserInfoBase } from './interface';
+import { UserInfoBase,ImgCodeReq,Tag } from './interface';
 
 
 // export interface ArticleDetailRes {
@@ -36,5 +36,19 @@ import { UserInfoBase } from './interface';
     collected: boolean;
     answer_ids: string[];
   
+   
     [prop: string]: any;
+
+    content_format: number;
   }
+
+
+  export interface ArticleParams extends ImgCodeReq {
+    title: string;
+    url_title?: string;
+    content: string;
+    tags: Tag[];
+
+    content_format: number;
+  }
+  

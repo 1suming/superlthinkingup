@@ -76,6 +76,10 @@ import ArticleCounts from './Article/Counts';
 
 import HotArticles from './Article/HotArticles';
 
+
+import EditorTinyMCE from './EditorTinyMCE';
+
+
 export {
   Avatar,
   Header,
@@ -132,6 +136,8 @@ export {
   ArticleList,
   ArticleCounts,
   HotArticles,
+  
+  EditorTinyMCE,
   
 };
 export type { EditorRef, JSONSchema, UISchema };

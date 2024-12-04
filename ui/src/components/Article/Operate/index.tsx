@@ -70,8 +70,10 @@ const Index: FC<IProps> = ({
     callback?.('default');
   };
   const closeModal = useReportModal(refreshQuestion);
-  const editUrl =
-    type === 'answer' ? `/posts/${qid}/${aid}/edit` : `/posts/${qid}/edit`;
+//   const editUrl =
+//     type === 'answer' ? `/posts/${qid}/${aid}/edit` : `/posts/${qid}/edit`;
+    const editUrl =
+    type === 'answer' ? `/posts/${qid}/${aid}/edit` : `/articles/${qid}/edit`;
 
   const handleReport = () => {
     reportModal.onShow({

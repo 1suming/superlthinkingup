@@ -33,6 +33,10 @@ const (
 	ArticleOperationHide  = "hide"
 	ArticleOperationShow  = "show"
 )
+const (
+	ArticleContentFormat_MARKDOWN int8 = 0
+	ArticleContentFormat_HTML     int8 = 1
+)
 
 // RemoveArticleReq delete question request
 type RemoveArticleReq struct {
@@ -75,6 +79,8 @@ type ArticleAdd struct {
 	Title string `validate:"required,notblank,gte=6,lte=150" json:"title"`
 	// content
 	Content string `validate:"required,notblank,gte=6,lte=65535" json:"content"`
+
+	ContentFormat int8 `validate:"" json:"content_format"` //类型如果，如果是markdown默认0，如果是rich格式，则是1  0不要用validator
 	// html
 	HTML string `json:"-"`
 	// tags
@@ -89,7 +95,13 @@ type ArticleAdd struct {
 }
 
 func (req *ArticleAdd) Check() (errFields []*validator.FormErrorField, err error) {
-	req.HTML = converter.Markdown2HTML(req.Content)
+	if req.ContentFormat == ArticleContentFormat_HTML {
+		req.HTML = req.Content
+		//req.Content = "" //清空
+	} else {
+		req.HTML = converter.Markdown2HTML(req.Content)
+	}
+
 	for _, tag := range req.Tags {
 		if len(tag.OriginalText) > 0 {
 			tag.ParsedText = converter.Markdown2HTML(tag.OriginalText)
@@ -169,7 +181,9 @@ type ArticleUpdate struct {
 	// question title
 	Title string `validate:"required,notblank,gte=6,lte=150" json:"title"`
 	// content
-	Content string `validate:"required,notblank,gte=6,lte=65535" json:"content"`
+	Content       string `validate:"required,notblank,gte=6,lte=65535" json:"content"`
+	ContentFormat int8   `validate:"" json:"content_format"` //类型如果，如果是markdown默认0，如果是rich格式，则是1  0不要用validator
+
 	// html
 	HTML       string   `json:"-"`
 	InviteUser []string `validate:"omitempty"  json:"invite_user"`
@@ -200,7 +214,12 @@ type ArticleUpdateInviteUser struct {
 }
 
 func (req *ArticleUpdate) Check() (errFields []*validator.FormErrorField, err error) {
-	req.HTML = converter.Markdown2HTML(req.Content)
+	if req.ContentFormat == ArticleContentFormat_MARKDOWN { //@cws
+		req.HTML = converter.Markdown2HTML(req.Content)
+	} else {
+		req.HTML = req.Content
+	}
+
 	return nil, nil
 }
 
@@ -255,6 +274,9 @@ type ArticleInfoResp struct {
 	// MemberActions
 	MemberActions  []*PermissionMemberAction `json:"member_actions"`
 	ExtendsActions []*PermissionMemberAction `json:"extends_actions"`
+
+	ContentFormat int8 `json:"content_format"` //类型如果，如果是markdown默认0，如果是rich格式，则是1  0不要用validator
+
 }
 
 // UpdateArticleResp update question resp

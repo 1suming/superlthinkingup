@@ -19,7 +19,12 @@ export const articleDetail = (id: string) => {
   
 
 
-  export const saveArticle = (params: Type.QuestionParams) => {
+  export const saveArticle = (params: Type.ArticleParams) => {
     return request.post('/answer/api/v1/article', params);
   };
   
+  export const modifyArticle = (
+    params: Type.ArticleParams & { id: string; edit_summary: string },
+  ) => {
+    return request.put(`/answer/api/v1/article`, params);
+  };

@@ -22,6 +22,7 @@ package content
 import (
 	"context"
 	"encoding/json"
+
 	"time"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
@@ -50,13 +51,17 @@ import (
 	"github.com/jinzhu/copier"
 	"github.com/segmentfault/pacman/errors"
 	"github.com/segmentfault/pacman/log"
+
+	articlecommon "github.com/apache/incubator-answer/internal/service/article_common"
 )
 
 // RevisionService user service
 type RevisionService struct {
-	revisionRepo             revision.RevisionRepo
-	userCommon               *usercommon.UserCommon
-	questionCommon           *questioncommon.QuestionCommon
+	revisionRepo   revision.RevisionRepo
+	userCommon     *usercommon.UserCommon
+	questionCommon *questioncommon.QuestionCommon
+	articleCommon  *articlecommon.ArticleCommon
+
 	answerService            *AnswerService
 	objectInfoService        *object_info.ObjService
 	questionRepo             questioncommon.QuestionRepo
@@ -85,6 +90,9 @@ func NewRevisionService(
 	reportRepo report_common.ReportRepo,
 	reviewService *review.ReviewService,
 	reviewActivity activity.ReviewActivityRepo,
+
+	articleCommon *articlecommon.ArticleCommon,
+
 ) *RevisionService {
 	return &RevisionService{
 		revisionRepo:             revisionRepo,
@@ -101,6 +109,8 @@ func NewRevisionService(
 		reportRepo:               reportRepo,
 		reviewService:            reviewService,
 		reviewActivity:           reviewActivity,
+
+		articleCommon: articleCommon,
 	}
 }
 
@@ -387,6 +397,7 @@ func (rs *RevisionService) GetRevisionList(ctx context.Context, req *schema.GetR
 
 	resp = []schema.GetRevisionResp{}
 	_ = copier.Copy(&rev, req)
+	log.Infof("GetRevisionList:%+v", req)
 
 	revs, err = rs.revisionRepo.GetRevisionList(ctx, &rev)
 	if err != nil {
@@ -418,13 +429,18 @@ func (rs *RevisionService) GetRevisionList(ctx context.Context, req *schema.GetR
 
 func (rs *RevisionService) parseItem(ctx context.Context, item *schema.GetRevisionResp) {
 	var (
-		err          error
-		question     entity.QuestionWithTagsRevision
+		err      error
+		question entity.QuestionWithTagsRevision
+		article  entity.ArticleWithTagsRevision
+
 		questionInfo *schema.QuestionInfoResp
-		answer       entity.Answer
-		answerInfo   *schema.AnswerInfo
-		tag          entity.Tag
-		tagInfo      *schema.GetTagResp
+
+		answer     entity.Answer
+		answerInfo *schema.AnswerInfo
+		tag        entity.Tag
+		tagInfo    *schema.GetTagResp
+
+		articleInfo *schema.ArticleInfoResp
 	)
 
 	shortID := handler.GetEnableShortID(ctx)
@@ -442,6 +458,18 @@ func (rs *RevisionService) parseItem(ctx context.Context, item *schema.GetRevisi
 			questionInfo.ID = uid.EnShortID(questionInfo.ID)
 		}
 		item.ContentParsed = questionInfo
+
+	case constant.ObjectTypeStrMapping[constant.ArticleObjectType]: //@cws
+		err = json.Unmarshal([]byte(item.Content), &article)
+		if err != nil {
+			break
+		}
+		articleInfo = rs.articleCommon.ShowFormatWithTag(ctx, &article)
+		if shortID {
+			articleInfo.ID = uid.EnShortID(articleInfo.ID)
+		}
+		item.ContentParsed = articleInfo
+
 	case constant.ObjectTypeStrMapping["answer"]:
 		err = json.Unmarshal([]byte(item.Content), &answer)
 		if err != nil {

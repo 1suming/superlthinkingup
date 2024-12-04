@@ -20,15 +20,14 @@
 package server
 
 import (
-	"html/template"
-	"io/fs"
-
 	brotli "github.com/anargu/gin-brotli"
 	"github.com/apache/incubator-answer/internal/base/middleware"
 	"github.com/apache/incubator-answer/internal/router"
 	"github.com/apache/incubator-answer/plugin"
 	"github.com/apache/incubator-answer/ui"
 	"github.com/gin-gonic/gin"
+	"html/template"
+	"io/fs"
 )
 
 // NewHTTPServer new http server.
@@ -52,6 +51,26 @@ func NewHTTPServer(debug bool,
 		gin.SetMode(gin.ReleaseMode)
 	}
 	r := gin.New()
+
+	//Gin框架，body参数只能读取一次 https://blog.csdn.net/impressionw/article/details/84194783
+
+	//formatter := func(p gin.LogFormatterParams) string {
+	//	return fmt.Sprintf("[HTTP] %s %s %s %d %s\n",
+	//		p.TimeStamp.Format("2006-01-02_15:04:05"),
+	//		p.Method,
+	//		p.Path,
+	//		p.StatusCode,
+	//		p.ClientIP,
+	//
+	//	)
+	//}
+	//conf := gin.LoggerConfig{
+	//	SkipPaths: []string{},
+	//	Output:    os.Stderr,
+	//	Formatter: formatter,
+	//}
+	r.Use(middleware.LoggerWithConfig()) //@cws
+
 	r.Use(brotli.Brotli(brotli.DefaultCompression), middleware.ExtractAndSetAcceptLanguage, shortIDMiddleware.SetShortIDFlag())
 	r.GET("/healthz", func(ctx *gin.Context) { ctx.String(200, "OK") })
 

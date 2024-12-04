@@ -66,8 +66,12 @@ func (rs *RevisionService) AddRevision(ctx context.Context, req *schema.AddRevis
 	req.ObjectID = uid.DeShortID(req.ObjectID)
 	rev := &entity.Revision{}
 	_ = copier.Copy(rev, req)
+	log.Infof("revisionRepo.AddRevision start")
 	err = rs.revisionRepo.AddRevision(ctx, rev, autoUpdateRevisionID)
 	if err != nil {
+
+		log.Infof("revisionRepo.AddRevision:%+v", err)
+
 		return "", err
 	}
 	return rev.ID, nil

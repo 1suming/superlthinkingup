@@ -2334,8 +2334,8 @@ ui:
   write_article: #ask:
     title: 新增文章
     edit_title: 编辑文章
-    default_reason: 编辑问题
-    default_first_reason: 新增问题
+    default_reason: 编辑文章
+    default_first_reason: 新增文章
     similar_questions: 相似问题
     form:
       fields:

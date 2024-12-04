@@ -82,6 +82,8 @@ module.exports = {
     "prefer-template":"off",
     "prefer-const":"off",
     "eqeqeq":"off",
+    "object-shorthand":"off",
+    "prefer-destructuring":"off",
     'import/order': [
       'warn',
       {

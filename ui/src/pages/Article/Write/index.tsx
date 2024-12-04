@@ -19,7 +19,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Row, Col, Form, Button, Card } from 'react-bootstrap';
-import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, useSearchParams,NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import dayjs from 'dayjs';
@@ -29,14 +29,14 @@ import debounce from 'lodash/debounce';
 import fm from 'front-matter';
 
 import { usePageTags, usePromptWithUnload } from '@/hooks';
-import { Editor, EditorRef, TagSelector } from '@/components';
+import { Editor, EditorRef, TagSelector ,EditorTinyMCE} from '@/components';
 import type * as Type from '@/common/interface';
 import { DRAFT_QUESTION_STORAGE_KEY } from '@/common/constants';
 import {
 //   saveQuestion,
   saveArticle,//
-  questionDetail,
-  modifyQuestion,
+  articleDetail,
+  modifyArticle,
   useQueryRevisions,
   queryQuestionByTitle,
   getTagsBySlugName,
@@ -59,6 +59,8 @@ interface FormDataItem {
   content: Type.FormValue<string>;
   answer_content: Type.FormValue<string>;
   edit_summary: Type.FormValue<string>;
+
+  content_format: Type.FormValue<number>;
 }
 
 const saveDraft = new SaveDraft({ type: 'question' });
@@ -90,6 +92,12 @@ const Ask = () => {
       isInvalid: false,
       errorMsg: '',
     },
+    //markdown或html
+    content_format: {
+        value: 0,
+        isInvalid: false,
+        errorMsg: '',
+      },
   };
   const { t } = useTranslation('translation', { keyPrefix: 'write_article' });
   const [formData, setFormData] = useState<FormDataItem>(initFormData);
@@ -98,6 +106,21 @@ const Ask = () => {
   const [blockState, setBlockState] = useState(false);
   const [focusType, setForceType] = useState('');
   const [hasDraft, setHasDraft] = useState(false);
+
+  enum EnumEditorType{
+    Default=1,
+    TinyMCE=2,
+    
+}
+enum ArticleContentFormat {
+	MARKDOWN  = 0,
+	HTML      = 1,
+};
+
+
+const [editorType,setEditorType] = useState(EnumEditorType.TinyMCE);//@cws编辑器类型
+
+
   const resetForm = () => {
     setFormData(initFormData);
     setCheckState(false);
@@ -122,7 +145,7 @@ const Ask = () => {
     });
   };
 
-  const isEdit = qid !== undefined;
+  const isEdit = qid !== undefined; //@ms:是否编辑
 
   const saveCaptcha = useCaptchaPlugin('question');
   const editCaptcha = useCaptchaPlugin('edit');
@@ -224,14 +247,24 @@ const Ask = () => {
   });
 
   const { data: revisions = [] } = useQueryRevisions(qid);
+//   console.log("http revisions:",revisions)
 
   useEffect(() => {
     if (!isEdit) {
       return;
     }
-    questionDetail(qid).then((res) => {
+    articleDetail(qid).then((res) => {
+        console.log("http res: articleDetail",res)
       formData.title.value = res.title;
-      formData.content.value = res.content;
+      formData.content_format.value =res.content_format 
+      if(res.content_format == ArticleContentFormat.MARKDOWN){
+        setEditorType(EnumEditorType.Default)
+        formData.content.value = res.content;
+      }else if(res.content_format == ArticleContentFormat.HTML){
+        setEditorType(EnumEditorType.TinyMCE)
+        formData.content.value=res.html; //如果是html格式的，存在html里面。
+      }
+     
       formData.tags.value = res.tags.map((item) => {
         return {
           ...item,
@@ -239,6 +272,9 @@ const Ask = () => {
           original_text: '',
         };
       });
+
+      
+
       setImmData({ ...formData });
       setFormData({ ...formData });
     });
@@ -266,6 +302,7 @@ const Ask = () => {
     }
   };
   const handleContentChange = (value: string) => {
+     console.log("handleContentChange vlaue:")//,value)
     setFormData({
       ...formData,
       content: { value, errorMsg: '', isInvalid: false },
@@ -307,15 +344,16 @@ const Ask = () => {
       id: qid,
       edit_summary: formData.edit_summary.value,
     };
+    console.log("submitModifyQuestion final ep:",ep)
     const imgCode = editCaptcha?.getCaptcha();
     if (imgCode?.verify) {
       ep.captcha_code = imgCode.captcha_code;
       ep.captcha_id = imgCode.captcha_id;
     }
-    modifyQuestion(ep)
+    modifyArticle(ep)
       .then(async (res) => {
         await editCaptcha?.close();
-        navigate(pathFactory.questionLanding(qid, res?.url_title), {
+        navigate(pathFactory.articleLanding(qid, res?.url_title), {
           state: { isReview: res?.wait_for_review },
         });
       })
@@ -341,6 +379,7 @@ const Ask = () => {
     }
     let res;
     if (checked) {
+        console.log("saveQuestionWithAnswer true");
       res = await saveQuestionWithAnswer({
         ...params,
         answer_content: formData.answer_content.value,
@@ -386,10 +425,19 @@ const Ask = () => {
     event.preventDefault();
     event.stopPropagation();
 
-    const params: Type.QuestionParams = {
+    let  content_format:ArticleContentFormat = ArticleContentFormat.MARKDOWN
+    if(editorType == EnumEditorType.TinyMCE ){
+        content_format =ArticleContentFormat.HTML
+    } else if(editorType == EnumEditorType.Default ){
+        content_format=ArticleContentFormat.MARKDOWN
+    }
+    console.log("content_format:",content_format)
+    const params: Type.ArticleParams = {
       title: formData.title.value,
       content: formData.content.value,
       tags: formData.tags.value,
+
+      content_format: content_format,
     };
 
     if (isEdit) {
@@ -413,9 +461,13 @@ const Ask = () => {
   };
 
   const handleSelectedRevision = (e) => {
+//    console.log("handleSelectedRevision选择指定版本 revisions:",revisions)
     const index = e.target.value;
     const revision = revisions[index];
+    console.log("handleSelectedRevision选择指定版本 revision",revision)
     formData.content.value = revision.content?.content || '';
+    // console.log("revision.content:", formData.content.value )
+
     setImmData({ ...formData });
     setFormData({ ...formData });
   };
@@ -427,6 +479,12 @@ const Ask = () => {
   usePageTags({
     title: pageTitle,
   });
+  
+  const handleChangeEditorType = (evt)=>{
+     evt.preventDefault();
+     setEditorType(editorType==EnumEditorType.Default? EnumEditorType.TinyMCE:EnumEditorType.Default);
+  }
+
   return (
     <div className="pt-4 mb-5">
       <h3 className="mb-4">{isEdit ? t('edit_title') : t('title')}</h3>
@@ -473,8 +531,27 @@ const Ask = () => {
               {bool && <SearchQuestion similarQuestions={similarQuestions} />}
             </Form.Group>
 
+
+         
+
             <Form.Group controlId="content">
-              <Form.Label>{t('form.fields.body.label')}</Form.Label>
+                <div className="d-flex">
+                     <Form.Label>{t('form.fields.body.label')}</Form.Label>
+                     <NavLink
+                        className=" ms-3 "
+                            to="#"
+                            onClick={handleChangeEditorType}
+                            >
+                            <span id="switchEditorTypeBtn">切换为 { editorType==EnumEditorType.Default? "可视化编辑器 ":"MarkDown编辑器" } </span>
+                        </NavLink>
+                 </div>
+              {editorType==EnumEditorType.TinyMCE ? (
+                    <EditorTinyMCE 
+                        onChange={handleContentChange}
+                        editorPlaceholder=""
+                        value={formData.content.value}
+                    />
+              ):(
               <Editor
                 value={formData.content.value}
                 onChange={handleContentChange}
@@ -492,6 +569,7 @@ const Ask = () => {
                 }}
                 ref={editorRef}
               />
+             )}
               <Form.Control.Feedback type="invalid">
                 {formData.content.errorMsg}
               </Form.Control.Feedback>

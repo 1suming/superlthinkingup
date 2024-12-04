@@ -607,6 +607,7 @@ func (qc *ArticleController) AddArticleByAnswer(ctx *gin.Context) {
 // @Success 200 {object} handler.RespBody
 // @Router /answer/api/v1/article [put]
 func (qc *ArticleController) UpdateArticle(ctx *gin.Context) {
+
 	req := &schema.ArticleUpdate{}
 	errFields := handler.BindAndCheckReturnErr(ctx, req)
 	if ctx.IsAborted() {
@@ -614,6 +615,9 @@ func (qc *ArticleController) UpdateArticle(ctx *gin.Context) {
 	}
 	req.ID = uid.DeShortID(req.ID)
 	req.UserID = middleware.GetLoginUserIDFromContext(ctx)
+
+	log.Infof("UpdateArticle a:%s", req.Content)
+	log.Infof("UpdateArticle html:%s", req.HTML)
 	canList, requireRanks, err := qc.rankService.CheckOperationPermissionsForRanks(ctx, req.UserID, []string{
 		permission.ArticleEdit,
 		permission.ArticleDelete,

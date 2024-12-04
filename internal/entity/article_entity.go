@@ -45,6 +45,8 @@ type Article struct {
 
 	//缩略图
 	Thumbnails string `json:"thumbnails" xorm:"thumbnails"`
+
+	OriginalTextFormat int8 `json:"original_text_format" xorm:"original_text_format"`
 }
 
 //post_date datetime NOT NULL  comment '发布时间',
@@ -54,8 +56,10 @@ type Article struct {
 // TableName 表名称
 
 // TableName 表名称
+const ARTICLE_TABLE_NAME = "ta_article"
+
 func (Article) TableName() string {
-	return "ta_article"
+	return ARTICLE_TABLE_NAME
 }
 func (Article) KeyName() string {
 	return "article"
@@ -103,3 +107,4 @@ type ArticleWithTagsRevision struct {
 //	Reserved        bool   `xorm:"not null default false BOOL reserved"`
 //	RevisionID      string `xorm:"not null default 0 BIGINT(20) revision_id"`
 //}
+// QuestionWithTagsRevision question

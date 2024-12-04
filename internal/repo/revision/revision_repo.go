@@ -21,6 +21,7 @@ package revision
 
 import (
 	"context"
+	"github.com/segmentfault/pacman/log"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
 	"github.com/apache/incubator-answer/internal/base/data"
@@ -62,6 +63,7 @@ func (rr *revisionRepo) AddRevision(ctx context.Context, revision *entity.Revisi
 
 	revision.ObjectType = objectTypeNumber
 	if !rr.allowRecord(revision.ObjectType) {
+		log.Info("not rr.allowRecord", revision.ObjectType)
 		return nil
 	}
 	_, err = rr.data.DB.Transaction(func(session *xorm.Session) (interface{}, error) {
@@ -86,7 +88,8 @@ func (rr *revisionRepo) AddRevision(ctx context.Context, revision *entity.Revisi
 
 // UpdateObjectRevisionId updates the object.revision_id field
 func (rr *revisionRepo) UpdateObjectRevisionId(ctx context.Context, revision *entity.Revision, session *xorm.Session) (err error) {
-	tableName, err := obj.GetObjectTypeStrByObjectID(revision.ObjectID)
+	objectTypeStr, err := obj.GetObjectTypeStrByObjectID(revision.ObjectID)
+	tableName := obj.ConvertObjectTypeStrToTableName(objectTypeStr) //@cws
 	if err != nil {
 		return errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
 	}
@@ -183,6 +186,8 @@ func (rr *revisionRepo) allowRecord(objectType int) (ok bool) {
 		return true
 	case constant.ObjectTypeStrMapping["tag"]:
 		return true
+	case constant.ObjectTypeStrMapping["article"]:
+		return true //@cws 允许记录版本
 	default:
 		return false
 	}

@@ -38,3 +38,15 @@ WPJAM Thumbnail 这个插件通过以下顺序查找一篇文章的缩略图：
 如果没有，就检查下这篇文章的标签是否有特色图片。
 如果没有，就检查下这篇文章是否有图片，有就获取第一张。
 如果还是没有，就检查下这篇文章所在的分类是否有特色图片。
+
+客户端
+cd ./ui
+pnpm pre-install
+pnpm install
+pnpm build
+cd ..
+npm build会在build文件夹生成一堆文件
+
+pnpm 使用硬链接来链接依赖项，而 npm 将依赖项复制到项目目录中。
+
+pnpm run start

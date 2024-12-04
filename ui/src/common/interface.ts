@@ -38,7 +38,7 @@ export interface Paging {
   page_size?: number;
 }
 
-export type ReportType = 'question' | 'answer' | 'comment' | 'user';
+export type ReportType = 'question' | 'answer' | 'comment' | 'user' | 'article';
 export type ReportAction = 'close' | 'flag' | 'review';
 export interface ReportParams {
   type: ReportType;

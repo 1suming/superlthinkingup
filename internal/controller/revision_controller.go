@@ -169,10 +169,13 @@ func (rc *RevisionController) CheckCanUpdateRevision(ctx *gin.Context) {
 	switch objectTypeStr {
 	case constant.QuestionObjectType:
 		action = permission.QuestionEdit
+	case constant.ArticleObjectType:
+		action = permission.ArticleEdit
 	case constant.AnswerObjectType:
 		action = permission.AnswerEdit
 	case constant.TagObjectType:
 		action = permission.TagEdit
+
 	default:
 		handler.HandleResponse(ctx, errors.BadRequest(reason.ObjectNotFound), nil)
 		return

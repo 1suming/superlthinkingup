@@ -22,6 +22,7 @@ package obj
 import (
 	"github.com/apache/incubator-answer/internal/base/constant"
 	"github.com/apache/incubator-answer/internal/base/reason"
+	"github.com/apache/incubator-answer/internal/entity"
 	"github.com/apache/incubator-answer/pkg/converter"
 	"github.com/segmentfault/pacman/errors"
 )
@@ -37,6 +38,13 @@ func GetObjectTypeStrByObjectID(objectID string) (objectTypeStr string, err erro
 		return objectTypeStr, nil
 	}
 	return "", errors.BadRequest(reason.ObjectNotFound)
+}
+func ConvertObjectTypeStrToTableName(objectTypeStr string) (tableName string) {
+	tableName = objectTypeStr
+	if objectTypeStr == constant.ArticleObjectType { //如果是article，表的名字和object_type类型不一致，需要转下
+		tableName = entity.ARTICLE_TABLE_NAME
+	}
+	return
 }
 
 // GetObjectTypeNumberByObjectID get object type by object id

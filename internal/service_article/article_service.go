@@ -326,6 +326,7 @@ func (qs *ArticleService) AddArticle(ctx context.Context, req *schema.ArticleAdd
 	article.UserID = req.UserID
 	article.Title = req.Title
 	article.OriginalText = req.Content
+	log.Infof("addArticle content:%s", req.Content)
 	article.ParsedText = req.HTML
 	//article.AcceptedAnswerID = "0"
 	//article.LastAnswerID = "0"
@@ -341,6 +342,7 @@ func (qs *ArticleService) AddArticle(ctx context.Context, req *schema.ArticleAdd
 
 	//@cws
 	article.PostDate = now
+	article.OriginalTextFormat = req.ContentFormat
 
 	err = qs.articleRepo.AddArticle(ctx, article)
 	if err != nil {
@@ -826,7 +828,8 @@ func (qs *ArticleService) UpdateArticle(ctx context.Context, req *schema.Article
 		err = errors.BadRequest(reason.ArticleCannotUpdate)
 		return nil, err
 	}
-
+	log.Infof("UpdateArticle b:%s", req.Content)
+	log.Infof("UpdateArticle b html:%s", req.HTML)
 	now := time.Now()
 	article := &entity.Article{}
 	article.Title = req.Title
@@ -948,6 +951,7 @@ func (qs *ArticleService) UpdateArticle(ctx context.Context, req *schema.Article
 	infoJSON, _ := json.Marshal(articleWithTagsRevision)
 	revisionDTO.Content = string(infoJSON)
 	revisionID, err := qs.revisionService.AddRevision(ctx, revisionDTO, true)
+	log.Infof("AddRevision revisionID:%+v err:%+v", revisionID, err)
 	if err != nil {
 		return
 	}

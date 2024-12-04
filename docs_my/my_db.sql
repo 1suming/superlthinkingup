@@ -41,6 +41,7 @@ create table ta_article (
       `unique_view_count` int NOT NULL DEFAULT '0',
   `vote_count` int NOT NULL DEFAULT '0',
 
+  `thumbnails` varchar(255) comment '文章缩略图',
 
 
                             PRIMARY KEY  (ID),
@@ -50,7 +51,7 @@ create table ta_article (
 ) comment  "文章,参考wordpress的wp_articles表 ,ta_前缀表示table-article";
 
 alter table ta_article add  column `view_count` int NOT NULL DEFAULT '0',
-  `hot_score` int NOT NULL DEFAULT '0',
+
 alter table ta_article add  column `hot_score` int NOT NULL DEFAULT '0',
 alter table ta_article add  column `unique_view_count` int NOT NULL DEFAULT '0',
 alter table ta_article add  column `vote_count` int NOT NULL DEFAULT '0'
@@ -59,8 +60,10 @@ alter table ta_article add  column `vote_count` int NOT NULL DEFAULT '0'
 	KEY article_parent (article_parent),
 
 
-alter table ta_article add  column `thumbnails` json comment '文章缩略图';
+-- alter table ta_article add  column `thumbnails` json comment '文章缩略图';
+alter table ta_article  modify  column `thumbnails` varchar(256)  not null default '' comment '文章缩略图';
 
+alter table ta_article add  column `original_text_format` tinyint NOT NULL DEFAULT '0' comment 'text原始格式,0:markdown,1:html';
 
 
 	-- article_type varchar(20) NOT NULL default 'article' comment '：文章类型（post/page等）',

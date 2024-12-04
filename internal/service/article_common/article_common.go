@@ -745,6 +745,8 @@ func (qs *ArticleCommon) ShowFormat(ctx context.Context, data *entity.Article) *
 	//	}
 	//
 	//}
+	info.ContentFormat = data.OriginalTextFormat
+
 	info.Tags = make([]*schema.TagResp, 0)
 	return &info
 }

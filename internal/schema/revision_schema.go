@@ -39,6 +39,9 @@ type AddRevisionDTO struct {
 	Log string
 	// status
 	Status int
+
+	//ContentFormat int8 //@cws类型如果，如果是markdown默认0，如果是rich格式，则是1  0不要用validator
+
 }
 
 // GetRevisionListReq get revision list all request

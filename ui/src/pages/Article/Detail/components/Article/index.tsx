@@ -54,6 +54,7 @@ interface Props {
 }
 
 const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
+    console.log("article data:",data)
   const { t } = useTranslation('translation', {
     // keyPrefix: 'question_detail',
     keyPrefix: 'article_detail',
@@ -165,6 +166,19 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
 
 
       <div className="d-block d-md-flex flex-wrap article-usercard">
+         <div className="mb-3 mb-md-0 me-4 flex-grow-1">
+          <ArticleOperate
+            qid={data?.id}
+            type="question"
+            memberActions={data?.member_actions}
+            title={data.title}
+            hasAnswer={hasAnswer}
+            isAccepted={Boolean(data?.accepted_answer_id)}
+            callback={initPage}
+          />
+        </div>
+
+
          <ArticleUserCard
             data={data?.user_info}
             time={data.create_time}

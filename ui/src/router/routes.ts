@@ -555,8 +555,24 @@ const routes: RouteNode[] = [
                 //page: 'pages/Article/Layout/ArticleSideNavLayout',
                 children: [
                     
+                 
+
                       {
                         path: 'articles/write',
+                        page: 'pages/Article/Write',
+                        guard: () => {
+                          return guard.activated();
+                        },
+                      },
+                           // {
+                    //     path: 'posts/:qid/edit',
+                    //     page: 'pages/Questions/Ask',
+                    //     guard: () => {
+                    //       return guard.activated();
+                    //     },
+                    //   },
+                      {
+                        path: 'articles/:qid/edit',
                         page: 'pages/Article/Write',
                         guard: () => {
                           return guard.activated();
