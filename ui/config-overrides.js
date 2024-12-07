@@ -136,7 +136,7 @@ module.exports = {
     }
 
     const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-   // if (process.env.ANALYZE) {
+    if (process.env.ANALYZE) {
         config.plugins.push(new BundleAnalyzerPlugin({
 
             // analyzerMode: 'static',
@@ -147,7 +147,7 @@ module.exports = {
             }
             
         ));
-    // } else {
+   } //else {
     //     config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== 'BundleAnalyzerPlugin');
     // }
 
