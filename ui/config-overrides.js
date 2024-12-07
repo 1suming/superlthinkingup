@@ -61,7 +61,7 @@ module.exports = {
         },
         mix2: {
           name: 'chunk-mix2',
-          test: /[\/]node_modules[\/](i18next|lodash|marked|next-share)[\/]/,
+          test: /[\\/]node_modules[\\/](i18next|lodash|marked|next-share)[\\/]/,
           filename: 'static/js/[name].[contenthash:8].chunk.js',
           priority: 13,
           reuseExistingChunk: true,
@@ -70,7 +70,7 @@ module.exports = {
         },
         mix3: {
           name: 'chunk-mix3',
-          test: /[\/]node_modules[\/](@remix-run|@restart|axios|diff)[\/]/,
+          test: /[\\/]node_modules[\\/](@remix-run|@restart|axios|diff)[\\/]/,
           filename: 'static/js/[name].[contenthash:8].chunk.js',
           priority: 12,
           reuseExistingChunk: true,
@@ -79,25 +79,27 @@ module.exports = {
         },
         codemirror: {
           name: 'codemirror',
-          test: /[\/]node_modules[\/](\@codemirror)[\/]/,
+          test: /[\\/]node_modules[\\/](\@codemirror)[\\/]/,
           priority: 10,
           reuseExistingChunk: true,
           minChunks: process.env.NODE_ENV === 'production' ? 1 : 2,
           chunks: 'initial',
           enforce: true,
+        //   filename: 'static/js/[name].[contenthash:8].chunk.js',
         },
         lezer: {
           name: 'lezer',
-          test: /[\/]node_modules[\/](\@lezer)[\/]/,
+          test: /[\\/]node_modules[\\/](\@lezer)[\\/]/,
           priority: 9,
           reuseExistingChunk: true,
           minChunks: process.env.NODE_ENV === 'production' ? 1 : 2,
           chunks: 'initial',
           enforce: true,
+          filename: 'static/js/[name].[contenthash:8].chunk.js', //@my add
         },
         reactDom: {
           name: 'react-dom',
-          test: /[\/]node_modules[\/](react-dom)[\/]/,
+          test: /[\\/]node_modules[\\/](react-dom)[\\/]/,
           filename: 'static/js/[name].[contenthash:8].chunk.js',
           priority: 8,
           reuseExistingChunk: true,
@@ -107,12 +109,23 @@ module.exports = {
         nodesInitial: {
           name: 'chunk-nodesInitial',
           filename: 'static/js/[name].[contenthash:8].chunk.js',
-          test: /[\/]node_modules[\/]/,
+          test: /[\\/]node_modules[\\/]/,
           priority: 1,
           minChunks: 1,
           chunks: 'initial',
           reuseExistingChunk: true,
         },
+
+        tinymce: {
+            name: 'tinymce',
+            test: /[\\/]node_modules[\\/](\@tinymce)[\\/]/,
+            priority: 30,
+            reuseExistingChunk: true,
+            minChunks: process.env.NODE_ENV === 'production' ? 1 : 2,
+            chunks: 'initial',
+            enforce: true,
+          },
+
       },
     })(config);
 
@@ -121,6 +134,23 @@ module.exports = {
     if (moduleScopePlugin) {
       moduleScopePlugin.allowedPaths.push(i18nPath);
     }
+
+    const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+   // if (process.env.ANALYZE) {
+        config.plugins.push(new BundleAnalyzerPlugin({
+
+            // analyzerMode: 'static',
+           
+
+              reportFilename: 'report.html',
+              openAnalyzer: true, // 自动打开浏览器
+            }
+            
+        ));
+    // } else {
+    //     config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== 'BundleAnalyzerPlugin');
+    // }
+
 
     return config;
   },
