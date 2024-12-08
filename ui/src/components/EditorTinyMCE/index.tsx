@@ -193,9 +193,9 @@ https://segmentfault.com/q/1010000003968051
                 console.log(" args.content new:", newContent)
                args.content = newContent;
 
-               //移动光标到末尾
-               editor.selection.select(editor.getBody(),true);
-                editor.selection.collapse(false);
+               //移动光标到末尾 ,加下面2行总是会把粘贴内容放到最后面
+            //    editor.selection.select(editor.getBody(),true);
+            //     editor.selection.collapse(false);
 
 
                 // args.preventDefault()
