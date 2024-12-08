@@ -22,7 +22,9 @@ import { Outlet, useLocation, ScrollRestoration } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 
 import { SWRConfig } from 'swr';
-import { throttle, debounce } from 'lodash';
+//import { throttle, debounce } from 'lodash';
+import debounce from 'lodash/debounce'; //@cws 按需加载
+import throttle from 'lodash/throttle';
 
 import { toastStore, loginToContinueStore, errorCodeStore,myGlobalInfoStore } from '@/stores';
 import {

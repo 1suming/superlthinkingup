@@ -75,6 +75,7 @@ const Index: FC<IProps> = ({
     const editUrl =
     type === 'answer' ? `/posts/${qid}/${aid}/edit` : `/articles/${qid}/edit`;
 
+    console.log("@memberActions:",memberActions)
   const handleReport = () => {
     reportModal.onShow({
       type,

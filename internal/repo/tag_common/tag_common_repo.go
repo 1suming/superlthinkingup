@@ -205,7 +205,7 @@ func (tr *tagCommonRepo) GetTagPage(ctx context.Context, page, pageSize int, tag
 	}
 	if tag_type == constant.TAG_TYPE_ARTICLE {
 		session.Where("tag_type", tag_type) //@csw
-		session.Asc("tag_sort")
+		session.Desc("tag_sort")
 	}
 
 	total, err = pager.Help(page, pageSize, &tagList, tag, session)
