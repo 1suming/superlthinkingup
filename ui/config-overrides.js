@@ -28,6 +28,8 @@ const i18nPath = path.resolve(__dirname, "../i18n");
 
 module.exports = {
   webpack: function(config, env) {
+    console.log("process.env.NODE_ENV:",process.env.NODE_ENV)
+    console.log("@process.env.REACT_APP_API_URL:", process.env.REACT_APP_API_URL)
     addWebpackAlias({
       "@": path.resolve(__dirname, "src"),
       "@i18n": i18nPath
@@ -148,13 +150,14 @@ module.exports = {
             
         ));
    } //else {
-    //     config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== 'BundleAnalyzerPlugin');
-    // }
+//     //     config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== 'BundleAnalyzerPlugin');
+//     // }
 
 
     return config;
   },
   devServer: function(configFunction) {
+    console.log("@@process.env.REACT_APP_API_URL",process.env.REACT_APP_API_URL)
     return function(proxy, allowedHost) {
       const config = configFunction(proxy, allowedHost);
       config.proxy = [
