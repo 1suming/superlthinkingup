@@ -1,5 +1,6 @@
 import React, { memo ,useRef,useEffect,useState} from 'react';
 import { Editor } from '@tinymce/tinymce-react';
+import { myGlobalInfoStore } from '@/stores';
 
 function EditorTinyMCE ({
         editorPlaceholder = '',
@@ -15,6 +16,7 @@ function EditorTinyMCE ({
     const [contentValue, setContentValue] = useState(value ?? '');
     useEffect(() => setContentValue(value ?? ''), [value]);
 
+    const {isSideNavSticky,sideNavStickyTop}= myGlobalInfoStore()
 
     console.log("editorTinyMCE value:")
     const tinyMceKey = 'pm4bf4u8cw7y3w24vo5vrwmh09tgj9qcgns63w0293niwzpk'
@@ -157,6 +159,7 @@ urlconverter_callback
                 //     })
                 //    editor.on('PastePostProcess', function(data) {
 
+                
 
             },
 
@@ -199,6 +202,8 @@ https://segmentfault.com/q/1010000003968051
               // editor.insertContent(newContent);
 
             },
+            toolbar_sticky: true,
+            toolbar_sticky_offset:sideNavStickyTop,
 
           }}
         
