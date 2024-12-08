@@ -145,7 +145,7 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
       <ImgViewer>
         <article
           ref={ref}
-          className="fmt text-break text-wrap mt-4"
+          className="fmt text-break text-wrap mt-4 article-body-content"
           dangerouslySetInnerHTML={{ __html: data?.html }}
         />
       </ImgViewer>
