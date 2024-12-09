@@ -51,6 +51,6 @@ lint: generate
 
 all: clean build
 
-# add my run
+# add my run @$(GO) 有环境变量，运行有点问题，改用直接用go
 run:
-	nohup @$(GO) run $(GO_FLAGS)  cmd/answer/main.go  run -C ./answer-data &
+	nohup "$(shell which go)" run $(GO_FLAGS)  cmd/answer/main.go  run -C ./answer-data &
