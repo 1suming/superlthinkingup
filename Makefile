@@ -50,3 +50,7 @@ lint: generate
 	@gofmt -w -l .
 
 all: clean build
+
+# add my run
+run:
+	@$(GO) run $(GO_FLAGS)  cmd/answer/main.go  run -C ./answer-data
