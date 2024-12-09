@@ -82,7 +82,8 @@ func (tr *tagCommonRepo) GetTagListByName(ctx context.Context, name string, reco
 	cond := &entity.Tag{}
 	session := tr.data.DB.Context(ctx)
 	if len(name) > 0 {
-		session.Where("slug_name LIKE ? OR display_name LIKE ?", strings.ToLower(name)+"%", name+"%")
+		//session.Where("slug_name LIKE ? OR display_name LIKE ?", strings.ToLower(name)+"%", name+"%")
+		session.Where("slug_name LIKE ? OR display_name LIKE ?", "%"+strings.ToLower(name)+"%", "%"+name+"%")
 	}
 	var columns []string
 	if recommend {
