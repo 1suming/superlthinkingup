@@ -54,6 +54,6 @@ const (
 	RedDotCacheTime                            = 30 * 24 * time.Hour
 
 	//@ms:
-	SiteMapArticleCacheKeyPrefix = "answer:sitemap:question:%d"
+	SiteMapArticleCacheKeyPrefix = "answer:sitemap:article:%d" //@cws，要改成aritcle "answer:sitemap:question:%d"
 	SiteMapArticleCacheTime      = time.Hour
 )
