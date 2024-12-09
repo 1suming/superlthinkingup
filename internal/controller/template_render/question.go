@@ -56,8 +56,16 @@ func (t *TemplateRenderController) Sitemap(ctx *gin.Context) {
 		return
 	}
 
+	articles, err := t.articleRepo.SitemapArticles(ctx, 1, constant.SitemapMaxSize)
+	if err != nil {
+		log.Errorf("get sitemap articles failed: %s", err)
+		return
+	}
+	totalCnt := len(questions) + len(articles)
+
 	ctx.Header("Content-Type", "application/xml")
-	if len(questions) < constant.SitemapMaxSize {
+	//	if len(questions) < constant.SitemapMaxSize {
+	if totalCnt < constant.SitemapMaxSize {
 		ctx.HTML(
 			http.StatusOK, "sitemap.xml", gin.H{
 				"xmlHeader": template.HTML(`<?xml version="1.0" encoding="UTF-8"?>`),
@@ -65,6 +73,8 @@ func (t *TemplateRenderController) Sitemap(ctx *gin.Context) {
 				"general":   general,
 				"hastitle": siteInfo.Permalink == constant.PermalinkQuestionIDAndTitle ||
 					siteInfo.Permalink == constant.PermalinkQuestionIDAndTitleByShortID,
+
+				"articles": articles,
 			},
 		)
 		return

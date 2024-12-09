@@ -260,7 +260,7 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	authUserMiddleware := middleware.NewAuthUserMiddleware(authService, siteInfoCommonService)
 	avatarMiddleware := middleware.NewAvatarMiddleware(serviceConf, uploaderService)
 	shortIDMiddleware := middleware.NewShortIDMiddleware(siteInfoCommonService)
-	templateRenderController := templaterender.NewTemplateRenderController(questionService, userService, tagService, answerService, commentService, siteInfoCommonService, questionRepo)
+	templateRenderController := templaterender.NewTemplateRenderController(questionService, userService, tagService, answerService, commentService, siteInfoCommonService, questionRepo, articleRepo)
 	templateController := controller.NewTemplateController(templateRenderController, siteInfoCommonService, eventQueueService, userService)
 	templateRouter := router.NewTemplateRouter(templateController, templateRenderController, siteInfoController, authUserMiddleware)
 	connectorController := controller.NewConnectorController(siteInfoCommonService, emailService, userExternalLoginService)

@@ -20,6 +20,18 @@
 
 -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  {{ range .articles }}
+  <url>
+    {{if $.hastitle}}
+    <loc>{{$.general.SiteUrl}}/articles/{{.ID}}/{{.Title}}</loc>
+    {{else}}
+    <loc>{{$.general.SiteUrl}}/articles/{{.ID}}</loc>
+    {{end}}
+    <lastmod>{{.UpdateTime}}</lastmod>
+  </url>
+  {{ end }}
+  
   {{ range .list }}
   <url>
   {{if $.hastitle}}
@@ -30,4 +42,7 @@
     <lastmod>{{.UpdateTime}}</lastmod>
   </url>
   {{ end }}
+
+
+
 </urlset>

@@ -20,6 +20,7 @@
 package templaterender
 
 import (
+	articlecommon "github.com/apache/incubator-answer/internal/service/article_common"
 	"math"
 
 	"github.com/apache/incubator-answer/internal/service/content"
@@ -46,6 +47,7 @@ type TemplateRenderController struct {
 	commentService  *comment.CommentService
 	siteInfoService siteinfo_common.SiteInfoCommonService
 	questionRepo    questioncommon.QuestionRepo
+	articleRepo     articlecommon.ArticleRepo
 }
 
 func NewTemplateRenderController(
@@ -56,6 +58,7 @@ func NewTemplateRenderController(
 	commentService *comment.CommentService,
 	siteInfoService siteinfo_common.SiteInfoCommonService,
 	questionRepo questioncommon.QuestionRepo,
+	articleRepo articlecommon.ArticleRepo,
 ) *TemplateRenderController {
 	return &TemplateRenderController{
 		questionService: questionService,
@@ -65,6 +68,8 @@ func NewTemplateRenderController(
 		commentService:  commentService,
 		questionRepo:    questionRepo,
 		siteInfoService: siteInfoService,
+
+		articleRepo: articleRepo,
 	}
 }
 
