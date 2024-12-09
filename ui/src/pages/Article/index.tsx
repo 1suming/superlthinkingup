@@ -58,6 +58,8 @@ const Questions: FC = () => {
   const curOrder = (urlSearchParams.get('order') ||
     QUESTION_ORDER_KEYS[0]) as Type.QuestionOrderBy;
 
+const querySelectedTagId=urlSearchParams.get('tag_id') || "";
+
     const TAG_TYPE_ARTICLE=1;
 
     //---tag
@@ -78,7 +80,7 @@ const Questions: FC = () => {
     console.log("my tags:",tags)
 
    
- const [selectedTagId,setselectedTagId] = useState("")
+ const [selectedTagId,setselectedTagId] = useState(querySelectedTagId)
 
   const reqParams: Type.QueryArticlesReq = {
     page_size: 20,
@@ -97,7 +99,7 @@ const Questions: FC = () => {
 
 
   const isIndexPage = useMatch('/');
-  let pageTitle = t('questions', { keyPrefix: 'page_title' });
+  let pageTitle = t('articles', { keyPrefix: 'page_title' });
   let slogan = '';
   const { siteInfo } = siteInfoStore();
   if (isIndexPage) {

@@ -122,20 +122,95 @@ CREATE TABLE `ta_comment` (
 alter table user add  column `article_count` int NOT NULL DEFAULT '0' comment '文章数';
 
 
-INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.add', '1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.audit', '1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.close', '-1');
-INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.delete', '-1');
-INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.edit', '1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.edit_without_review', '1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.hide', '-1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.pin', '-1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.reopen', '-1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.show', '-1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.undeleted', '-1');
-INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.unpin', '-1');
-INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.vote_down', '125');
-INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.vote_up', '1');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.add');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.edit');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.edit_without_review');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.delete');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.close');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.reopen');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.vote_up');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.vote_down');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.audit');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.pin');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.hide');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.unpin');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.show');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (2, 'article.undeleted');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.add');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.edit');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.edit_without_review');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.delete');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.close');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.reopen');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.vote_up');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.vote_down');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.audit');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.pin');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.hide');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.unpin');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.show');
+INSERT INTO role_power_rel (`role_id`, `power_type`) VALUES (3, 'article.undeleted');
+
+
+INSERT INTO config (`key`, `value`) VALUES ('article.voted_up', '10');
+INSERT INTO config (`key`, `value`) VALUES ('article.voted_down_cancel', '2');
+INSERT INTO config (`key`, `value`) VALUES ('article.vote_down_cancel', '1');
+INSERT INTO config (`key`, `value`) VALUES ('article.voted_down', '-2');
+INSERT INTO config (`key`, `value`) VALUES ('article.voted_up_cancel', '-10');
+INSERT INTO config (`key`, `value`) VALUES ('article.vote_down', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.vote_up', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.vote_up_cancel', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.follow', '0');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.add', '1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.edit', '1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.delete', '-1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.vote_up', '1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.vote_down', '125');
+INSERT INTO config (`key`, `value`) VALUES ('article.flag.reasons', '[\"reason.spam\",\"reason.rude_or_abusive\",\"reason.something\",\"reason.a_duplicate\"]');
+INSERT INTO config (`key`, `value`) VALUES ('article.close.reasons', '[\"reason.a_duplicate\",\"reason.community_specific\",\"reason.not_clarity\",\"reason.something\"]');
+INSERT INTO config (`key`, `value`) VALUES ('article.status.reasons', '[\"reason.normal\",\"reason.closed\",\"reason.deleted\"]');
+INSERT INTO config (`key`, `value`) VALUES ('article.review.reasons', '[\"reason.looks_ok\",\"reason.needs_edit\",\"reason.needs_close\",\"reason.needs_delete\"]');
+INSERT INTO config (`key`, `value`) VALUES ('article.asked', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.closed', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.reopened', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.answered', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.commented', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.accept', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.edited', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.rollback', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.deleted', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.undeleted', '0');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.edit_without_review', '1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.audit', '1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.close', '-1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.reopen', '-1');
+INSERT INTO config (`key`, `value`) VALUES ('article.pin', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.unpin', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.show', '0');
+INSERT INTO config (`key`, `value`) VALUES ('article.hide', '0');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.pin', '-1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.unpin', '-1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.show', '-1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.hide', '-1');
+INSERT INTO config (`key`, `value`) VALUES ('rank.article.undeleted', '-1');
+
+
+
+
+-- INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.add', '1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.audit', '1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.close', '-1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.delete', '-1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.edit', '1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.edit_without_review', '1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.hide', '-1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.pin', '-1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.reopen', '-1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.show', '-1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.undeleted', '-1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ( 'rank.article.unpin', '-1');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.vote_down', '125');
+-- INSERT INTO `config` ( `key`, `value`) VALUES ('rank.article.vote_up', '1');
 
 
 再原本的tag上增加tag_type类型，和 order_

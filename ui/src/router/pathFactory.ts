@@ -23,7 +23,11 @@ const tagLanding = (slugName: string) => {
   const r = slugName ? `/tags/${encodeURIComponent(slugName)}` : '/tags';
   return r;
 };
-
+const articleTagLanding = (tag_id: string) => {
+  
+    return `/articles?tag_id=${tag_id}`;
+     
+};
 const tagInfo = (slugName: string) => {
   const r = slugName ? `/tags/${encodeURIComponent(slugName)}/info` : '/tags';
   return r;
@@ -82,4 +86,5 @@ export const pathFactory = {
   answerLanding,
 
   articleLanding,//@ms:
+  articleTagLanding,
 };

@@ -30,6 +30,7 @@ interface IProps {
   href?: string;
   className?: string;
   textClassName?: string;
+  tagType?: string ;//@cws tag的类型
 }
 
 const Index: FC<IProps> = ({
@@ -37,9 +38,18 @@ const Index: FC<IProps> = ({
   href,
   className = '',
   textClassName = '',
+  tagType='question'  //@cws tag的类型 
 }) => {
-  href ||= pathFactory.tagLanding(data.slug_name);
-
+    if(tagType==='answer'){
+        href ||= pathFactory.tagLanding(data.slug_name);
+    }else if( tagType==='article'){
+        console.log("article tag",data);
+        href ||= pathFactory.articleTagLanding(data.id || "");
+    }
+    else{
+        href="";
+    }
+ 
   return (
     <Link
       to={href}

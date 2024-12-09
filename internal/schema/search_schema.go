@@ -161,7 +161,8 @@ type SearchObjectUser struct {
 }
 
 type TagResp struct {
-	ID          string `json:"-"`
+	//ID          string `json:"-"` //@cws id传过去
+	ID          string `json:"id"`
 	SlugName    string `json:"slug_name"`
 	DisplayName string `json:"display_name"`
 	// if main tag slug name is not empty, this tag is synonymous with the main tag

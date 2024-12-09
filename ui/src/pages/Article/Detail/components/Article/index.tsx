@@ -106,7 +106,7 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
             title={t('pinned', { keyPrefix: 'btns' })}
           />
         )}
-        <Link
+        {/* <Link
           className="link-dark"
           reloadDocument
           to={pathFactory.questionLanding(data.id, data.url_title)}>
@@ -115,7 +115,12 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
           {data.status === 2
             ? ` [${t('closed', { keyPrefix: 'question' })}]`
             : ''}
-        </Link>
+        </Link> */}
+        {data.title}
+          {data.status === 2
+            ? ` [${t('closed', { keyPrefix: 'question' })}]`
+            : ''}
+
       </h1>
 
       <div className="d-flex flex-wrap align-items-center small mb-3 text-secondary">
@@ -139,7 +144,7 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
       </div>
       <div className="m-n1">
         {data?.tags?.map((item: any) => {
-          return <Tag className="m-1" key={item.slug_name} data={item} />;
+          return <Tag className="m-1" key={item.slug_name} data={item}  tagType='article'/>;
         })}
       </div>
       <ImgViewer>

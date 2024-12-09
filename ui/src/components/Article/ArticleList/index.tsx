@@ -97,7 +97,7 @@ const ArticleList: FC<Props> = ({
                         {li.status === 2 ? ` [${t('closed')}]` : ''}
                     </NavLink>
                     </h2>
-                    <p className="article-decription">{li.description}</p>
+                    <p className="article-decription"  dangerouslySetInnerHTML={{ __html: li.description }} />
                 </div>
            
         )
@@ -135,7 +135,7 @@ const ArticleList: FC<Props> = ({
                             {li.status === 2 ? ` [${t('closed')}]` : ''}
                         </NavLink>
                         </h2>
-                        <p className="article-decription">{li.description}</p>
+                        <p className="article-decription" dangerouslySetInnerHTML={{ __html: li.description }} />
                 </div>
             </div>
 
@@ -202,7 +202,7 @@ const ArticleList: FC<Props> = ({
                   {Array.isArray(li.tags)
                     ? li.tags.map((tag) => {
                         return (
-                          <Tag key={tag.slug_name} className="m-1" data={tag} />
+                          <Tag key={tag.slug_name} className="m-1" data={tag} tagType='article' />
                         );
                       })
                     : null}

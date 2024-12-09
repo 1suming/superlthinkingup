@@ -304,8 +304,12 @@ func (qs *ArticleCommon) Info(ctx context.Context, articleID string, loginUserID
 					Recommend:       tag.Recommend,
 					Reserved:        tag.Reserved,
 				})
+
 			}
 		}
+	}
+	for _, v := range resp.Tags {
+		log.Infof("my_tags id:%+v", *v)
 	}
 
 	userIds := make([]string, 0)

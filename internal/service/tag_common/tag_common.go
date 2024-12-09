@@ -435,6 +435,7 @@ func (ts *TagCommonService) TagFormat(ctx context.Context, tags []*entity.Tag) (
 	objTags = make([]*schema.TagResp, 0)
 	for _, tagInfo := range tags {
 		objTags = append(objTags, &schema.TagResp{
+			ID:              tagInfo.ID,
 			SlugName:        tagInfo.SlugName,
 			DisplayName:     tagInfo.DisplayName,
 			MainTagSlugName: tagInfo.MainTagSlugName,
