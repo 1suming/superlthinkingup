@@ -53,4 +53,4 @@ all: clean build
 
 # add my run
 run:
-	@$(GO) run $(GO_FLAGS)  cmd/answer/main.go  run -C ./answer-data
+	nohup @$(GO) run $(GO_FLAGS)  cmd/answer/main.go  run -C ./answer-data &
