@@ -205,6 +205,12 @@ https://segmentfault.com/q/1010000003968051
             toolbar_sticky: true,
             toolbar_sticky_offset:sideNavStickyTop,
 
+            /*指定在WebKit中粘贴时要保留的样式。webkit有一个（讨厌的）bug，它将一个元素的所有css属性计算出来后，强行塞入style属性里，以至于生成的代码及其混乱且低效。
+该选项默认为："none"，即全部干掉！也可以指定为"all"全部保留，或指定只保留特定的样式。
+取值："none" / "all" / string（要保留的样式）*/
+            paste_webkit_styles: 'color font-size', // 粘贴时，保留的样式 ,保留color font-size，不然粘贴过来的颜色会丢失 ,<font style=xx>aaa></font>这样的会丢失，只剩下aaa
+
+
           }}
         
 
