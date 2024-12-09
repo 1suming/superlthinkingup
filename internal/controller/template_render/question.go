@@ -62,6 +62,9 @@ func (t *TemplateRenderController) Sitemap(ctx *gin.Context) {
 		return
 	}
 	totalCnt := len(questions) + len(articles)
+	for _, v := range articles {
+		log.Infof("sitemap articles::%+v", v)
+	}
 
 	ctx.Header("Content-Type", "application/xml")
 	//	if len(questions) < constant.SitemapMaxSize {
