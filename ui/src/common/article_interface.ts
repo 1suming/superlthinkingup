@@ -51,4 +51,9 @@ import { UserInfoBase,ImgCodeReq,Tag } from './interface';
 
     content_format: number;
   }
+
+  export interface ArticleOperationReq {
+    id: string;
+    operation: 'pin' | 'unpin' | 'hide' | 'show';
+  }
   

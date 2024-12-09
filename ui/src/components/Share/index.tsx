@@ -28,7 +28,7 @@ import { BASE_ORIGIN } from '@/router/alias';
 import { loggedUserInfoStore } from '@/stores';
 
 interface IProps {
-  type: 'answer' | 'question';
+  type: 'answer' | 'question' |'article',
   qid: any;
   aid?: any;
   title: string;
@@ -41,10 +41,19 @@ const Index: FC<IProps> = ({ type, qid, aid, title }) => {
   const [showTip, setShowTip] = useState(false);
   const [canSystemShare, setSystemShareState] = useState(false);
   const { t } = useTranslation();
-  let baseUrl =
-    type === 'question'
-      ? `${BASE_ORIGIN}/questions/${qid}`
-      : `${BASE_ORIGIN}/questions/${qid}/${aid}`;
+  let baseUrl =""
+  if(type === 'question'){
+    baseUrl = `${BASE_ORIGIN}/questions/${qid}`
+    
+  }else if(type === 'answer'){
+    baseUrl = `${BASE_ORIGIN}/questions/${qid}/${aid}`;
+  }else if(type=='article'){
+        baseUrl = `${BASE_ORIGIN}/articles/${qid}`
+  }
+
+    //   ? `${BASE_ORIGIN}/questions/${qid}`
+    //   : `${BASE_ORIGIN}/questions/${qid}/${aid}`;
+
   if (user.id) {
     baseUrl = `${baseUrl}?share=${user.username}`;
   }

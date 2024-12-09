@@ -28,3 +28,21 @@ export const articleDetail = (id: string) => {
   ) => {
     return request.put(`/answer/api/v1/article`, params);
   };
+
+  export const deleteArticle = (params: {
+    id: string;
+    captcha_code?: string;
+    captcha_id?: string;
+  }) => {
+    return request.delete('/answer/api/v1/article', params);
+  };
+
+  export const unDeleteArticle = (qid) => {
+    return request.post('/answer/api/v1/article/recover', {
+      question_id: qid,
+    });
+  };
+
+  export const articleOperation = (params: Type.ArticleOperationReq) => {
+    return request.put('/answer/api/v1/article/operation', params);
+  };

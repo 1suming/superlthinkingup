@@ -174,7 +174,7 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
          <div className="mb-3 mb-md-0 me-4 flex-grow-1">
           <ArticleOperate
             qid={data?.id}
-            type="question"
+            type="article"
             memberActions={data?.member_actions}
             title={data.title}
             hasAnswer={hasAnswer}

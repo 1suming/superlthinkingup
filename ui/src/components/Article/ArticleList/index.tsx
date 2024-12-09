@@ -198,7 +198,7 @@ const ArticleList: FC<Props> = ({
                     className="mt-2 mt-md-0"
                   />
                 </div>
-                <div className="question-tags m-n1">
+                {/* <div className="question-tags m-n1">
                   {Array.isArray(li.tags)
                     ? li.tags.map((tag) => {
                         return (
@@ -206,7 +206,7 @@ const ArticleList: FC<Props> = ({
                         );
                       })
                     : null}
-                </div>
+                </div> */}
               </ListGroup.Item>
             );
           })

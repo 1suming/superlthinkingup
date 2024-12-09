@@ -1422,6 +1422,7 @@ ui:
     tip_answer_deleted: 该回答已被删除
     undelete_title: 撤销删除本帖
     undelete_desc: 你确定你要撤销删除吗？
+
   btns:
     confirm: 确认
     cancel: 取消
@@ -2232,6 +2233,8 @@ ui:
     post_unlist: 这个帖子已经被隐藏
     post_pending: 您的帖子正在等待审核。它将在它获得批准后可见。
 
+
+    article_deleted: 该文章已被删除。
 
 
   #ms--------------------------

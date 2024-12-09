@@ -152,6 +152,11 @@ module.exports = {
    } //else {
 //     //     config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== 'BundleAnalyzerPlugin');
 //     // }
+/*
+打包不生成 source-map 文件
+在 配置文件 config-overrides.js 添加 process.env.GENERATE_SOURCEMAP = "false";
+或者在项目更目录下创建文件 .env, 写入: GENERATE_SOURCEMAP=false 即可.
+*/
 
 
     return config;

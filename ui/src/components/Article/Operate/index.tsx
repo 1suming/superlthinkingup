@@ -29,19 +29,22 @@ import { QuestionOperationReq } from '@/common/interface';
 import Share from '../../Share';
 import {
   deleteQuestion,
+  deleteArticle,
   deleteAnswer,
   editCheck,
   reopenQuestion,
-  questionOperation,
+  questionOperation, articleOperation,
   unDeleteAnswer,
   unDeleteQuestion,
+  unDeleteArticle,
+
 } from '@/services';
 import { tryNormalLogged } from '@/utils/guard';
 import { floppyNavigation } from '@/utils';
 import { toastStore } from '@/stores';
 
 interface IProps {
-  type: 'answer' | 'question';
+  type: 'answer' | 'question' | 'article';
   qid: string;
   aid?: string;
   title: string;
@@ -116,6 +119,30 @@ const Index: FC<IProps> = ({
       });
   };
 
+  const submitDeleteArticle = () => {
+    const req = {
+      id: qid,
+      captcha_code: undefined,
+      captcha_id: undefined,
+    };
+    dCaptcha?.resolveCaptchaReq(req);
+
+    deleteArticle(req)
+      .then(async () => {
+        await dCaptcha?.close();
+        toast.onShow({
+          msg: t('article_deleted', { keyPrefix: 'messages' }),
+          variant: 'success',
+        });
+        callback?.('delete_question');
+      })
+      .catch((ex) => {
+        if (ex.isError) {
+          dCaptcha?.handleCaptchaError(ex.list);
+        }
+      });
+  };
+
   const submitDeleteAnswer = () => {
     const req = {
       id: aid,
@@ -161,6 +188,26 @@ const Index: FC<IProps> = ({
       });
     }
 
+    if (type === 'article') {
+        Modal.confirm({
+          title: t('title'),
+          content: hasAnswer ? t('article') : t('other'),
+          cancelBtnVariant: 'link',
+          confirmBtnVariant: 'danger',
+          confirmText: t('delete', { keyPrefix: 'btns' }),
+          onConfirm: () => {
+            if (!dCaptcha) {
+                submitDeleteArticle();
+              return;
+            }
+            dCaptcha.check(() => {
+                submitDeleteArticle();
+            });
+          },
+        });
+      }
+
+
     if (type === 'answer' && aid) {
       Modal.confirm({
         title: t('title'),
@@ -194,6 +241,12 @@ const Index: FC<IProps> = ({
             callback?.('default');
           });
         }
+        if (type === 'article') {
+            unDeleteArticle(qid).then(() => {
+              callback?.('default');
+            });
+          }
+  
 
         if (type === 'answer') {
           unDeleteAnswer(aid).then(() => {
@@ -239,7 +292,12 @@ const Index: FC<IProps> = ({
   };
 
   const handleCommon = async (params) => {
-    await questionOperation(params);
+    if(type=="article"){
+        await articleOperation(params);
+    }else{
+        await questionOperation(params);
+    }
+    
     let msg = '';
     if (params.operation === 'pin') {
       msg = t('post_pin', { keyPrefix: 'messages' });
