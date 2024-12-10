@@ -33,9 +33,15 @@ import (
 func (t *TemplateRenderController) Index(ctx *gin.Context, req *schema.QuestionPageReq) ([]*schema.QuestionPageResp, int64, error) {
 	return t.questionService.GetQuestionPage(ctx, req)
 }
+func (t *TemplateRenderController) ArticleIndex(ctx *gin.Context, req *schema.ArticlePageReq) ([]*schema.ArticlePageResp, int64, error) {
+	return t.articleService.GetArticlePage(ctx, req)
+}
 
 func (t *TemplateRenderController) QuestionDetail(ctx *gin.Context, id string) (resp *schema.QuestionInfoResp, err error) {
 	return t.questionService.GetQuestion(ctx, id, "", schema.QuestionPermission{})
+}
+func (t *TemplateRenderController) ArticleDetail(ctx *gin.Context, id string) (resp *schema.ArticleInfoResp, err error) {
+	return t.articleService.GetArticle(ctx, id, "", schema.ArticlePermission{})
 }
 
 func (t *TemplateRenderController) Sitemap(ctx *gin.Context) {

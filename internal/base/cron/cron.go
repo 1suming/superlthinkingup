@@ -59,6 +59,7 @@ func (s *ScheduledTaskManager) Run() {
 		ctx := context.Background()
 		fmt.Println("sitemap cron execution")
 		s.questionService.SitemapCron(ctx)
+		s.articleService.SitemapCron(ctx) //@cws
 	})
 	if err != nil {
 		log.Error(err)

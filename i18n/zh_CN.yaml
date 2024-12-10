@@ -420,7 +420,13 @@ backend:
     deleted_title:
       other: 删除的问题
     questions_title:
-      other: 问题
+      other: 问题 #Other，是默认的key,如果没有指定的话
+
+  article: #cws
+    deleted_title:
+      other: 删除的文章
+    articles_title:
+      other: 文章
   tag:
     tags_title:
       other: 标签
@@ -1142,6 +1148,7 @@ ui:
     tag_required_text: 必选标签（至少一个）
   header:
     nav:
+      article: 热文
       question: 问题
       tag: 标签
       user: 用户
