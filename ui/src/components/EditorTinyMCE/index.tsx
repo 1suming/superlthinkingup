@@ -208,24 +208,48 @@ https://segmentfault.com/q/1010000003968051
     //     newContent = newContent.replace(/ class=([-\w]+)/gi, removeClasses);
 
 
-        // let removeAttributes=function(htmlString) {
-        //     // 正则表达式匹配 HTML 标签和属性 https://www.17golang.com/article/158281.html
-        //     // let pattern = /<[^>]+?(\s+[^>]*?)?>/gi;
+//         let removeAttributes=function(htmlString) {
+//             // 正则表达式匹配 HTML 标签和属性 https://www.17golang.com/article/158281.html
+//             // let pattern = /<[^>]+?(\s+[^>]*?)?>/gi;
 
-        //     let pattern = /<[^>]+?(\s+[^>]*?)?>/gi;
+//             let pattern = /<[^>]+?(\s+[^>]*?)?>/gi;
+// /*
+// 先匹配循环style字段,拿到样式值，再做替换。
+// 匹配style的正则：
+
+// reg = /style="[^=>]*"/g
+// 1
+// '
+// 运行运行
+// 可以用replace方法
+
+// let str = '<p style="font-size:20px;color:#333">这是一段文字</p>'
+// str.replace(/style="[^=>]*"/g,function(match,course){
+// 	console.log(match,course)
+// 	//逻辑处理
+// })
+// */
            
-        //     // 使用字符串替换将匹配到的标签和属性清除
-        //     let cleanString = htmlString.replace(pattern, function(match) {
-                
-        //        return match.replace(/(\s+\w+(="[^"]*")?)/gi, '');
-        //     });
+//             // 使用字符串替换将匹配到的标签和属性清除
+//             let cleanString = htmlString.replace(pattern, function(match) {
+//                 console.log("---match:",match)
+//                 let reg_style = /style="[^=>]*"/gi
+//                 let no_reg_style= /((?!style).)+="[^=>]*"/gi ;///^((?!hello).)+$/
+//                 //((?!hede).)*。
+//                 let result_style= match.match(reg_style)
+//                 /*
+//                 ---match: <p data-module-type="internal" data-text-node="1" style="color: #333333; font-size: 18px !important; background-color: #ffffff;">
+//              --match: </p>
+// */
+//                return match.replace(/(\s+\w+(="[^"]*")?)/gi, '');
+//             });
            
-        //     return cleanString;
-        //   }
-        //   newContent = removeAttributes(newContent);
+//             return cleanString;
+//           }
+//           newContent = removeAttributes(newContent);
 
 
-    // }
+//     // }
 
 
                args.content = newContent;
