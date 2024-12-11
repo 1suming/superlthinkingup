@@ -49,7 +49,7 @@ export const QUESTION_ORDER_KEYS: Type.QuestionOrderBy[] = [
   'recommend',
 ];
 interface Props {
-  source: 'questions' | 'tag';
+  source: 'articles'|'questions' | 'tag';
   order?: Type.QuestionOrderBy;
   data;
   orderList?: Type.QuestionOrderBy[];
@@ -218,7 +218,7 @@ const ArticleList: FC<Props> = ({
           currentPage={curPage}
           totalSize={count}
           pageSize={pageSize}
-          pathname={source === 'questions' ? '/questions' : ''}
+          pathname={source === 'articles' ? '/articles' : ''}
         />
       </div>
     </div>
