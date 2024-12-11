@@ -179,6 +179,7 @@ const ArticleList: FC<Props> = ({
                     <BaseUserCard
                       data={li.operator}
                       showAvatar={false}
+                      showReputation={false}
                       className="me-1"
                     />
                     •
