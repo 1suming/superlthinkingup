@@ -64,10 +64,17 @@ func (sr *siteInfoRepo) SaveByType(ctx context.Context, siteType string, data *e
 
 // GetByType get site info by type
 func (sr *siteInfoRepo) GetByType(ctx context.Context, siteType string) (siteInfo *entity.SiteInfo, exist bool, err error) {
-	siteInfo = sr.getCache(ctx, siteType)
-	if siteInfo != nil {
-		return siteInfo, true, nil
+	if siteType != constant.SiteType_about && siteType != constant.SiteType_contact && siteType != constant.SiteType_disclaim {
+		//@cws 这几个不要缓存
+		siteInfo = sr.getCache(ctx, siteType)
+		if siteInfo != nil {
+			return siteInfo, true, nil
+		}
 	}
+	//siteInfo = sr.getCache(ctx, siteType)
+	//if siteInfo != nil {
+	//	return siteInfo, true, nil
+	//}
 	siteInfo = &entity.SiteInfo{}
 	exist, err = sr.data.DB.Context(ctx).Where(builder.Eq{"type": siteType}).Get(siteInfo)
 	if err != nil {

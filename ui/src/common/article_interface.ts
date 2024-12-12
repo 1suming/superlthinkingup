@@ -57,3 +57,9 @@ import { UserInfoBase,ImgCodeReq,Tag } from './interface';
     operation: 'pin' | 'unpin' | 'hide' | 'show';
   }
   
+  export interface QuerySiteInfoKeyValReq  {
+    key: string; 
+}
+export interface QuerySiteInfoKeyValResp   {
+    content: string;
+}

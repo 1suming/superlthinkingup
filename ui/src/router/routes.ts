@@ -581,6 +581,19 @@ const routes: RouteNode[] = [
 
                 ],
             },
+            {
+                path: 'siteinfo/about',
+                page: 'pages/siteinfo/site_about',
+            },
+            {
+                path: 'siteinfo/contact',
+                page: 'pages/siteinfo/site_contact',
+            },
+            {
+                path: 'siteinfo/disclaim',
+                page: 'pages/siteinfo/site_disclaim',
+            },
+                
 
         ],
     },

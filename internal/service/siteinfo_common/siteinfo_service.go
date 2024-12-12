@@ -56,6 +56,8 @@ type SiteInfoCommonService interface {
 	GetSiteTheme(ctx context.Context) (resp *schema.SiteThemeResp, err error)
 	GetSiteSeo(ctx context.Context) (resp *schema.SiteSeoResp, err error)
 	GetSiteInfoByType(ctx context.Context, siteType string, resp interface{}) (err error)
+
+	GetSiteValByType(ctx context.Context, siteType string, val *string) (err error)
 }
 
 // NewSiteInfoCommonService new site info common service
@@ -231,5 +233,19 @@ func (s *siteInfoCommonService) GetSiteInfoByType(ctx context.Context, siteType 
 		return nil
 	}
 	_ = json.Unmarshal([]byte(siteInfo.Content), resp)
+	return nil
+}
+
+// @cws
+func (s *siteInfoCommonService) GetSiteValByType(ctx context.Context, siteType string, val *string) (err error) {
+	siteInfo, exist, err := s.siteInfoRepo.GetByType(ctx, siteType)
+	if err != nil {
+		return err
+	}
+	if !exist {
+		return nil
+	}
+	//_ = json.Unmarshal([]byte(siteInfo.Content), resp)
+	*val = siteInfo.Content
 	return nil
 }

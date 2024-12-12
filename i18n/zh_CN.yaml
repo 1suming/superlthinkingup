@@ -839,6 +839,8 @@ ui:
 
     articles: 文章
     article: 文章
+    site_about: 关于超维社
+    site_contact: 联系我们
 
   notifications:
     title: 通知

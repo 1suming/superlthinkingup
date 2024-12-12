@@ -394,3 +394,10 @@ func init() {
 		Privileges: DefaultPrivilegeOptions[0].Privileges,
 	}
 }
+
+type GetSiteValByKeyReq struct {
+	Key string `validate:"required" form:"key"`
+}
+type GetSiteValByKeyResp struct {
+	Content string `json:"content"`
+}

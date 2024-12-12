@@ -134,6 +134,9 @@ func (a *AnswerAPIRouter) RegisterMustUnAuthAnswerAPIRouter(authUserMiddleware *
 	r.GET("/siteinfo", a.siteInfoController.GetSiteInfo)
 	r.GET("/siteinfo/legal", a.siteInfoController.GetSiteLegalInfo)
 
+	//@cws
+	r.GET("/siteinfo/val", a.siteInfoController.GetSiteValByKey)
+
 	// user
 	r.GET("/user/info", a.userController.GetUserInfoByUserID)
 	r.GET("/user/action/record", authUserMiddleware.Auth(), a.userController.ActionRecord)

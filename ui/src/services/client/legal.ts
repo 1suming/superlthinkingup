@@ -49,3 +49,18 @@ export const useLegalPrivacy = () => {
     mutate,
   };
 };
+
+ 
+  
+export const useSiteInfoValByKey = (params: Type.QuerySiteInfoKeyValReq) => {
+    const apiUrl = `/answer/api/v1/siteinfo/val?key=${params.key}`;
+    const { data, error } = useSWR<Type.QuerySiteInfoKeyValResp, Error>(
+      [apiUrl],
+      request.instance.get,
+    );
+    return {
+      data,
+      isLoading: !data && !error,
+      error,
+    };
+  };

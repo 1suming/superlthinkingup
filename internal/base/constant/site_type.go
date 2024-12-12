@@ -31,4 +31,9 @@ const (
 	SiteTypeTheme         = "theme"
 	SiteTypePrivileges    = "privileges"
 	SiteTypeUsers         = "users"
+
+	//@关于我们
+	SiteType_about    = "site_about_info"
+	SiteType_contact  = "site_contact_info"
+	SiteType_disclaim = "site_disclaim_info"
 )

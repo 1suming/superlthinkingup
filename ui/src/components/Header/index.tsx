@@ -25,6 +25,8 @@ import {
   Form,
   FormControl,
   Col,
+  Dropdown,
+  NavDropdown,
 } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import {
@@ -248,6 +250,17 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
                     }>
                     <span>精彩问答</span>
                 </NavLink>
+
+             <NavDropdown title="更多" id="navbarScrollingDropdown">
+                
+                <NavDropdown.Item href="/siteinfo/about">超维社是什么?</NavDropdown.Item>
+                <NavDropdown.Divider />
+                <NavDropdown.Item href="/siteinfo/about"> 关于超维社 </NavDropdown.Item>
+                <NavDropdown.Item href="/siteinfo/contact"> 联系我们 </NavDropdown.Item>
+                <NavDropdown.Item href="/siteinfo/disclaim"> 免责声明 </NavDropdown.Item>
+            </NavDropdown>
+ 
+           
 
             </Nav>
           </Col>

@@ -218,3 +218,4 @@ INSERT INTO config (`key`, `value`) VALUES ('rank.article.undeleted', '-1');
 alter table tag add  column  tag_type tinyint NOT NULL DEFAULT '0' comment '0:默认,1:Article类型的';
 alter table tag add  column  tag_sort int NOT NULL DEFAULT '0' comment 'tag的顺序，越小越靠前';
 
+alter table site_info add  column remark varchar(255) NOT NULL default ''   comment '';

@@ -20,6 +20,7 @@
 package controller
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
@@ -161,4 +162,30 @@ func (sc *SiteInfoController) GetManifestJson(ctx *gin.Context) {
 		resp.ShortName = siteGeneral.Name
 	}
 	ctx.JSON(http.StatusOK, resp)
+}
+
+func (sc *SiteInfoController) GetSiteValByKey(ctx *gin.Context) {
+	//req := &schema.GetSiteValByKeyReq{}
+	//if handler.BindAndCheck(ctx, req) {
+	//	return
+	//}
+
+	key := ctx.Query("key")
+	if key == "" {
+		handler.HandleResponse(ctx, errors.New("empty key"), nil)
+		return
+	}
+
+	resp := &schema.GetSiteValByKeyResp{}
+	//var resp_content string
+	if err := sc.siteInfoService.GetSiteValByType(ctx, key, &(resp.Content)); err != nil {
+		log.Error(err)
+		handler.HandleResponse(ctx, err, nil)
+		return
+	}
+
+	//log.Infof("resp_content:%s", resp_content)
+	//resp.Content = resp_content
+
+	handler.HandleResponse(ctx, nil, resp)
 }
