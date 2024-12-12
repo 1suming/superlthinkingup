@@ -78,7 +78,7 @@ type ArticleAdd struct {
 	// question title
 	Title string `validate:"required,notblank,gte=6,lte=150" json:"title"`
 	// content
-	Content string `validate:"required,notblank,gte=6,lte=65535" json:"content"`
+	Content string `validate:"required,notblank,gte=6,lte=150000" json:"content"` //lte=65535，这里不要限制,或者限制放大点
 
 	ContentFormat int8 `validate:"" json:"content_format"` //类型如果，如果是markdown默认0，如果是rich格式，则是1  0不要用validator
 	// html
