@@ -63,4 +63,4 @@ export const useSiteInfoValByKey = (params: Type.QuerySiteInfoKeyValReq) => {
       isLoading: !data && !error,
       error,
     };
-  };
+};

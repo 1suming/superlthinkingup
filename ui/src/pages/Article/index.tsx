@@ -54,13 +54,17 @@ const Questions: FC = () => {
   const { t: t2 } = useTranslation('translation');
   const { user: loggedUser } = loggedUserInfoStore((_) => _);
   const [urlSearchParams] = useSearchParams();
+
+  const [urlSearchParamsDup,setUrlSearchParamsDup] = useSearchParams();
+
+
   const curPage = Number(urlSearchParams.get('page')) || 1;
   const curOrder = (urlSearchParams.get('order') ||
     QUESTION_ORDER_KEYS[0]) as Type.QuestionOrderBy;
 
 const querySelectedTagId=urlSearchParams.get('tag_id') || "";
 
-    const TAG_TYPE_ARTICLE=1;
+const TAG_TYPE_ARTICLE=1;
 
     //---tag
     const tag_page=0
@@ -80,15 +84,15 @@ const querySelectedTagId=urlSearchParams.get('tag_id') || "";
     console.log("my tags:",tags)
 
    
- const [selectedTagId,setselectedTagId] = useState(querySelectedTagId)
-
+//  const [selectedTagId,setselectedTagId] = useState(querySelectedTagId)
+console.log("querySelectedTagId:",querySelectedTagId)
   const reqParams: Type.QueryArticlesReq = {
     page_size: 20,
     page: curPage,
     order: curOrder as Type.ArticleOrderBy,
     
     
-    tag_id: selectedTagId,//@cws
+    tag_id: querySelectedTagId,//@cws
    // tag: routeParams.tagName,
   };
   const { data: listData, isLoading: listLoading } =
@@ -110,6 +114,9 @@ const querySelectedTagId=urlSearchParams.get('tag_id') || "";
 
   usePageTags({ title: pageTitle, subtitle: slogan });
 
+//参考其他的
+ 
+
 
 
   
@@ -126,11 +133,35 @@ const querySelectedTagId=urlSearchParams.get('tag_id') || "";
     } as React.CSSProperties ; // 'background':'#fff',
     const emptyStyle={} as React.CSSProperties;
 
-
+    const handleParams = (selectedTag): string => {
+        urlSearchParamsDup.delete('page'); //筛选tag时，删除url中的page，这个很合理
+        if(selectedTag===""){
+            urlSearchParamsDup.delete('tag_id');
+        }else{
+            urlSearchParamsDup.set("tag_id", selectedTag);
+        }
+        
+        const searchStr = urlSearchParamsDup.toString();
+        // console.log("handleParams:",searchStr)
+         
+        return `?${searchStr}`;
+      };
     const handleTagSelected= (e,tag_id)=>{
-        e.preventDefault();
-        setselectedTagId(tag_id)
-        console.log("click tag_id",tag_id)
+        // e.preventDefault();
+        // setselectedTagId(tag_id)
+        // console.log("click tag_id",tag_id)
+
+        const str = handleParams(tag_id);
+        console.log("handleTagSelected str",str);
+        // if (floppyNavigation.shouldProcessLinkClick(e)) {
+            e.preventDefault();
+        //   if (pathname) {
+        //     navigate(`${pathname}${str}`);
+        //   } else {
+            setUrlSearchParamsDup(str); //排查bug浪费了一个小时，不能用 urlSearchParams， 如果用urlSearchParams，,修改了那么urlSearchParams.get('tag_id')就会里面获取到值，就会请求
+            //urlSearchParams(str);是
+        // }
+
     }
 
 // <NavLink to="/questions" className="nav-link">全部 </NavLink>
@@ -142,11 +173,12 @@ const querySelectedTagId=urlSearchParams.get('tag_id') || "";
          <Col  >
             <nav id="second-article-sideNav" className="nav"   >
                 
-                <a className={  classNames("nav-link",{"active": selectedTagId==="" }) } href="#" onClick={ event=> handleTagSelected(event, "")}  >全部</a>
+                <a className={  classNames("nav-link",{"active": querySelectedTagId==="" }) } href="/" onClick={ event=> handleTagSelected(event, "")}  >全部</a>
                 { tags?.list?.map((tag) => (
 
-                    <a className={  classNames("nav-link",{"active": selectedTagId=== tag.tag_id }) } href="#" key={tag.tag_id} data-key={tag.tag_id} onClick={ event=> handleTagSelected(event,tag.tag_id)}>{tag.slug_name}</a>
+                    <a className={  classNames("nav-link",{"active": querySelectedTagId=== tag.tag_id }) } href={handleParams(tag.tag_id)} key={tag.tag_id} data-key={tag.tag_id} onClick={ event=> handleTagSelected(event,tag.tag_id)}>{tag.slug_name}</a>
                 ))}
+ 
 
             </nav>
         </Col>

@@ -219,3 +219,6 @@ alter table tag add  column  tag_type tinyint NOT NULL DEFAULT '0' comment '0:�
 alter table tag add  column  tag_sort int NOT NULL DEFAULT '0' comment 'tag的顺序，越小越靠前';
 
 alter table site_info add  column remark varchar(255) NOT NULL default ''   comment '';
+INSERT INTO `site_info` (  `created_at`, `updated_at`, `type`, `content`, `status`, `remark`) VALUES (  NULL, NULL, 'site_about_info', '<p>超维社，我们坚信：<strong>超级思维改变人生</strong>。在这里，你将遇到众多志同道合的人，一起交流。&nbsp;</p>', 1, '');
+INSERT INTO `site_info` (  `created_at`, `updated_at`, `type`, `content`, `status`, `remark`) VALUES (  NULL, NULL, 'site_disclaim_info', '部分文章取自网络，侵权请留言或发邮件到此邮箱：admin@superthinkingup.com。', 1, '');
+INSERT INTO `site_info` (  `created_at`, `updated_at`, `type`, `content`, `status`, `remark`) VALUES (  NULL, NULL, 'site_contact_info', '超维社', 1, '');
