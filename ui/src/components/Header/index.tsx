@@ -144,8 +144,13 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
 //   });
 
     const { pathname } = useLocation();
-    console.log("pathname:",pathname)
+    console.log("pathname:",pathname);
 
+  const handleSiteAboutClick = function(event,href){
+    event.preventDefault();
+   // console.log("event.target.href:",event.target.href)//,event.target.href会加上http域名，不符合要求
+    navigate(href);
+  };
   return (
     <Navbar ref={siteHeadNavRef}
       variant={navbarStyle === 'theme-colored' ? 'dark' : ''}
@@ -253,11 +258,11 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
 
              <NavDropdown title="更多" id="navbarScrollingDropdown">
                 
-                <NavDropdown.Item href="/siteinfo/about">超维社是什么?</NavDropdown.Item>
+                <NavDropdown.Item href="/siteinfo/about" onClick={(evt) => { handleSiteAboutClick(evt,"/siteinfo/about");}}>超维社是什么?</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="/siteinfo/about"> 关于超维社 </NavDropdown.Item>
-                <NavDropdown.Item href="/siteinfo/contact"> 联系我们 </NavDropdown.Item>
-                <NavDropdown.Item href="/siteinfo/disclaim"> 免责声明 </NavDropdown.Item>
+                <NavDropdown.Item href="/siteinfo/about" onClick={(evt) => { handleSiteAboutClick(evt,"/siteinfo/about");}}> 关于超维社 </NavDropdown.Item>
+                <NavDropdown.Item href="/siteinfo/contact" onClick={(evt) => { handleSiteAboutClick(evt,"/siteinfo/contact");}}> 联系我们 </NavDropdown.Item>
+                <NavDropdown.Item href="/siteinfo/disclaim" onClick={(evt) => { handleSiteAboutClick(evt,"/siteinfo/disclaim");}} > 免责声明 </NavDropdown.Item>
             </NavDropdown>
  
            
