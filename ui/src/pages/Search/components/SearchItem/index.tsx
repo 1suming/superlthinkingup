@@ -42,18 +42,26 @@ const Index: FC<Props> = ({ data }) => {
   if (!data?.object_type) {
     return null;
   }
-  let itemUrl = pathFactory.questionLanding(
-    data.object.id,
-    data.object.url_title,
-  );
-  if (data.object_type === 'answer' && data.object.question_id) {
-    itemUrl = pathFactory.answerLanding({
-      questionId: data.object.question_id,
-      slugTitle: data.object.url_title,
-      answerId: data.object.id,
-    });
+  let itemUrl=""
+  if (data.object_type === 'article' ){
+    itemUrl = pathFactory.articleLanding(
+        data.object.id,
+        data.object.url_title,
+      );
+  }else{
+     itemUrl = pathFactory.questionLanding(
+        data.object.id,
+        data.object.url_title,
+      );
+      if (data.object_type === 'answer' && data.object.question_id) {
+        itemUrl = pathFactory.answerLanding({
+          questionId: data.object.question_id,
+          slugTitle: data.object.url_title,
+          answerId: data.object.id,
+        });
+      }
   }
-
+ 
   const [searchParams] = useSearchParams();
   const q = searchParams.get('q');
   const keywords =
@@ -61,16 +69,46 @@ const Index: FC<Props> = ({ data }) => {
       ?.replace(Pattern.search, '')
       ?.split(' ')
       ?.filter((v) => v !== '') || [];
+  const getObjectTypeStrShort=(object_type: string)=>{
+    switch (object_type) {
+      case 'question':
+        return "问题";
+      case 'answer':
+        return "回答";
+      case 'article':
+            return "文章";
+        default:
+        return "";
+    }
+  };
 
+  const { t : t2   } = useTranslation('translation', {
+    // keyPrefix: 'question_detail',
+  //  keyPrefix: 'article_detail',
+  });
+
+  //  preFix={ data.object_type === 'question' ? 'asked' : 'answered'}
+  const getObjectTypeStrOperateShort=(object_type: string)=>{
+    switch (object_type) {
+       case 'article':
+        return  t2("article_detail.asked");
+        case 'question':
+        return t2("question.asked");
+        case 'answer':
+            return t2("answer.answered");
+      default:
+        return "";
+    }
+  };
   return (
     <ListGroupItem className="py-3 px-0 border-start-0 border-end-0 bg-transparent">
       <div className="mb-2 clearfix">
         <span
           className="float-start me-2 badge text-bg-dark"
           style={{ marginTop: '2px' }}>
-          {data.object_type === 'question' ? 'Q' : 'A'}
+          { getObjectTypeStrShort(data.object_type )}
         </span>
-        <Link className="h5 mb-0 link-dark text-break" to={itemUrl}>
+        <Link className="h5 mb-0 link-dark text-break" to={itemUrl} target="_blank" >
           <HighlightText text={data.object.title} keywords={keywords} />
           {data.object.status === 'closed'
             ? ` [${t('closed', { keyPrefix: 'question' })}]`
@@ -84,7 +122,7 @@ const Index: FC<Props> = ({ data }) => {
         <FormatTime
           time={data.object?.created_at}
           className="me-3"
-          preFix={data.object_type === 'question' ? 'asked' : 'answered'}
+          preFix={ getObjectTypeStrOperateShort( data.object_type )}
         />
 
         <Counts

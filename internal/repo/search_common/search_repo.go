@@ -22,6 +22,7 @@ package search_common
 import (
 	"context"
 	"fmt"
+	"github.com/segmentfault/pacman/log"
 	"strconv"
 	"strings"
 	"time"
@@ -60,6 +61,22 @@ var (
 		"`question`.`status` as `status`",
 		"`post_update_time`",
 	}
+	//@cws 必须要和afield字段数一样
+	articleFields = []string{
+
+		"`article`.`id`",
+		"`article`.`id` as `article_id`",
+		"`title`",
+		"`parsed_text`",
+		"`article`.`created_at` as `created_at`",
+		"`user_id`",
+		"`vote_count`",
+		"0 as `answer_count`",
+		" 0 as accepted",
+		"`article`.`status` as `status`",
+		"`post_update_time`",
+	}
+
 	aFields = []string{
 		"`answer`.`id` as `id`",
 		"`question_id`",
@@ -103,29 +120,42 @@ func (sr *searchRepo) SearchContents(ctx context.Context, words []string, tagIDs
 	words = filterWords(words)
 
 	var (
-		b     *builder.Builder
-		ub    *builder.Builder
-		qfs   = qFields
-		afs   = aFields
-		argsQ = []interface{}{}
-		argsA = []interface{}{}
+		b              *builder.Builder
+		ub             *builder.Builder
+		articleBuilder *builder.Builder
+		qfs            = qFields
+		afs            = aFields
+		articleFs      = articleFields
+		argsQ          = []interface{}{}
+		argsA          = []interface{}{}
+		argsArticle    = []interface{}{}
 	)
 
 	if order == "relevance" {
 		if len(words) > 0 {
 			qfs, argsQ = addRelevanceField([]string{"title", "original_text"}, words, qfs)
+			articleFs, argsArticle = addRelevanceField([]string{"title", "original_text"}, words, articleFs)
+
 			afs, argsA = addRelevanceField([]string{"`answer`.`original_text`"}, words, afs)
 		} else {
 			order = "newest"
 		}
 	}
+	log.Infof("articleFs: first", articleFs)
 
 	b = builder.MySQL().Select(qfs...).From("`question`")
+
+	articleBuilder = builder.MySQL().Select(articleFs...).From("`ta_article`", " article ")
+
 	ub = builder.MySQL().Select(afs...).From("`answer`").
 		LeftJoin("`question`", "`question`.id = `answer`.question_id")
 
 	b.Where(builder.Lt{"`question`.`status`": entity.QuestionStatusDeleted}).
 		And(builder.Eq{"`question`.`show`": entity.QuestionShow})
+
+	articleBuilder.Where(builder.Lt{"`article`.`status`": entity.ArticleStatusDeleted}).
+		And(builder.Eq{"`article`.`show`": entity.ArticleShow})
+
 	ub.Where(builder.Lt{"`question`.`status`": entity.QuestionStatusDeleted}).
 		And(builder.Lt{"`answer`.`status`": entity.AnswerStatusDeleted}).
 		And(builder.Eq{"`question`.`show`": entity.QuestionShow})
@@ -133,13 +163,22 @@ func (sr *searchRepo) SearchContents(ctx context.Context, words []string, tagIDs
 	argsQ = append(argsQ, entity.QuestionStatusDeleted, entity.QuestionShow)
 	argsA = append(argsA, entity.QuestionStatusDeleted, entity.AnswerStatusDeleted, entity.QuestionShow)
 
+	argsArticle = append(argsArticle, entity.ArticleStatusDeleted, entity.ArticleShow)
+
 	likeConQ := builder.NewCond()
 	likeConA := builder.NewCond()
+	likeConArticle := builder.NewCond()
+
 	for _, word := range words {
 		likeConQ = likeConQ.Or(builder.Like{"title", word}).
 			Or(builder.Like{"original_text", word})
 		argsQ = append(argsQ, "%"+word+"%")
 		argsQ = append(argsQ, "%"+word+"%")
+
+		likeConArticle = likeConArticle.Or(builder.Like{"title", word}).
+			Or(builder.Like{"original_text", word})
+		argsArticle = append(argsArticle, "%"+word+"%")
+		argsArticle = append(argsArticle, "%"+word+"%")
 
 		likeConA = likeConA.Or(builder.Like{"`answer`.original_text", word})
 		argsA = append(argsA, "%"+word+"%")
@@ -147,6 +186,8 @@ func (sr *searchRepo) SearchContents(ctx context.Context, words []string, tagIDs
 
 	b.Where(likeConQ)
 	ub.Where(likeConA)
+
+	articleBuilder.Where(likeConArticle)
 
 	// check tag
 	for ti, tagID := range tagIDs {
@@ -173,21 +214,27 @@ func (sr *searchRepo) SearchContents(ctx context.Context, words []string, tagIDs
 	if userID != "" {
 		b.Where(builder.Eq{"question.user_id": userID})
 		ub.Where(builder.Eq{"answer.user_id": userID})
+		articleBuilder.Where(builder.Eq{"article.user_id": userID})
 		argsQ = append(argsQ, userID)
 		argsA = append(argsA, userID)
+		argsArticle = append(argsArticle, userID)
 	}
 
 	// check vote
 	if votes == 0 {
 		b.Where(builder.Eq{"question.vote_count": votes})
+		articleBuilder.Where(builder.Eq{"article.vote_count": votes})
 		ub.Where(builder.Eq{"answer.vote_count": votes})
 		argsQ = append(argsQ, votes)
 		argsA = append(argsA, votes)
+		argsArticle = append(argsArticle, votes)
 	} else if votes > 0 {
 		b.Where(builder.Gte{"question.vote_count": votes})
+		articleBuilder.Where(builder.Gte{"article.vote_count": votes})
 		ub.Where(builder.Gte{"answer.vote_count": votes})
 		argsQ = append(argsQ, votes)
 		argsA = append(argsA, votes)
+		argsArticle = append(argsArticle, votes)
 	}
 
 	//b = b.Union("all", ub)
@@ -199,7 +246,13 @@ func (sr *searchRepo) SearchContents(ctx context.Context, words []string, tagIDs
 	if err != nil {
 		return
 	}
-	sql := fmt.Sprintf("(%s UNION ALL %s)", bSQL, ubSQL)
+
+	articleSQL, _, err := articleBuilder.ToSQL()
+	if err != nil {
+		return
+	}
+
+	sql := fmt.Sprintf("(%s UNION ALL %s UNION ALL %s)", bSQL, ubSQL, articleSQL)
 
 	countSQL, _, err := builder.MySQL().Select("count(*) total").From(sql, "c").ToSQL()
 	if err != nil {
@@ -217,10 +270,12 @@ func (sr *searchRepo) SearchContents(ctx context.Context, words []string, tagIDs
 	queryArgs = append(queryArgs, querySQL)
 	queryArgs = append(queryArgs, argsQ...)
 	queryArgs = append(queryArgs, argsA...)
+	queryArgs = append(queryArgs, argsArticle...)
 
 	countArgs = append(countArgs, countSQL)
 	countArgs = append(countArgs, argsQ...)
 	countArgs = append(countArgs, argsA...)
+	countArgs = append(countArgs, argsArticle...)
 
 	res, err := sr.data.DB.Context(ctx).Query(queryArgs...)
 	if err != nil {
@@ -533,6 +588,14 @@ func (sr *searchRepo) parseResult(ctx context.Context, res []map[string][]byte, 
 					break
 				}
 			}
+		case "article": //@cws
+			for k, v := range entity.AdminArticleSearchStatus {
+				if v == converter.StringToInt(string(r["status"])) {
+					object.StatusStr = k
+					break
+				}
+			}
+
 		case "answer":
 			for k, v := range entity.AdminAnswerSearchStatus {
 				if v == converter.StringToInt(string(r["status"])) {

@@ -71,6 +71,7 @@ const Index = () => {
 
     getSearchResult(params)
       .then(async (resp) => {
+        console.log("search result: ", resp)
         await searchCaptcha?.close();
         setData(resp);
       })
