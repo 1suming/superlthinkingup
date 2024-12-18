@@ -18,5 +18,12 @@
 ====
 
 # https://www.robotstxt.org/robotstxt.html
+#User-agent:AhrefsBot
+#Disallow:/
+
 User-agent: *
-Disallow:
+Disallow:/admin/
+Disallow:/images/
+Disallow:/css/
+Disallow:/uploads/
+
