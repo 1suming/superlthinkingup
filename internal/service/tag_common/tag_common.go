@@ -114,7 +114,14 @@ func NewTagCommonService(
 
 // SearchTagLike get tag list all
 func (ts *TagCommonService) SearchTagLike(ctx context.Context, req *schema.SearchTagLikeReq) (resp []schema.GetTagBasicResp, err error) {
-	tags, err := ts.tagCommonRepo.GetTagListByName(ctx, req.Tag, len(req.Tag) == 0, false)
+	var tags []*entity.Tag
+	if req.Tag == "all" { //@cws
+		//不限制recommend,不限制tag
+		tags, err = ts.tagCommonRepo.GetTagListByName(ctx, "", false, false)
+	} else {
+		tags, err = ts.tagCommonRepo.GetTagListByName(ctx, req.Tag, len(req.Tag) == 0, false)
+	}
+
 	if err != nil {
 		return
 	}

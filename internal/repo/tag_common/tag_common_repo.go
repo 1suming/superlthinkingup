@@ -103,7 +103,7 @@ func (tr *tagCommonRepo) GetTagListByName(ctx context.Context, name string, reco
 	session.Where(builder.Eq{"status": entity.TagStatusAvailable})
 
 	tagList = make([]*entity.Tag, 0)
-	err = session.OrderBy("recommend DESC,reserved DESC,slug_name ASC").Find(&tagList, cond)
+	err = session.OrderBy("recommend DESC,reserved DESC,tag_sort DESC, slug_name ASC").Find(&tagList, cond)
 	if err != nil {
 		err = errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
 	}

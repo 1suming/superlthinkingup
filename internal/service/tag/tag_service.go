@@ -207,6 +207,7 @@ func (ts *TagService) GetTagInfo(ctx context.Context, req *schema.GetTagInfoReq)
 func (ts *TagService) GetTagsBySlugName(ctx context.Context, req *schema.SearchTagsBySlugName) (
 	resp []*schema.GetTagBasicResp, err error) {
 	resp = make([]*schema.GetTagBasicResp, 0)
+
 	tagSlugNames := strings.Split(req.Tags, ",")
 	if len(tagSlugNames) == 0 {
 		return resp, nil

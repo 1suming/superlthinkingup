@@ -147,10 +147,15 @@ const TagSelector: FC<IProps> = ({
   };
 
   const fetchTags = (str) => {
+   
+    console.log("fetchTags:",str)
     if (!showRequiredTag && !str) {
+        console.log("direct return")
       setTags([]);
       return;
     }
+    console.log("queryTags:",str);
+   
     queryTags(str).then((res) => {
       const tagArray: Type.Tag[] = filterTags(res || []);
       if (str === '') {
@@ -207,12 +212,47 @@ const TagSelector: FC<IProps> = ({
     }
   };
 
-  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+//   const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+const handleSearch = async (e:any) => {
     const searchStr = e.currentTarget.value.replace(';', '');
+    console.log("handleSearch:",searchStr);
+
     onChange?.([...value]);
     setSearchValue(searchStr);
     fetchTags(searchStr);
   };
+
+  //@cws增加  handleSearchFocus handleSearchBlur ,就是为了focus时，直接显示所有的tag
+  let is_search_empty_str=false;
+  const handleSearchFocus = async (e:any) => {
+    const searchStr = e.currentTarget.value.replace(';', '');
+   
+    // const searchStr="-1";//默认-1取所有的tag
+    console.log("handleSearchFocus:",searchStr);
+    console.log("value:",value)
+
+    // onChange?.([...value]);
+    // setSearchValue(searchStr);
+    // setSearchValue("");
+    if(searchStr=="" && value.length==0){
+        is_search_empty_str=true;
+        const want_search_all_tag="-1"
+        console.log("want_search_all_tag:",want_search_all_tag)
+        fetchTags(want_search_all_tag);
+    }
+
+   
+  };
+const handleSearchBlur= async (e) => {
+    const searchStr = e.currentTarget.value.replace(';', '');
+    console.log("handleSearchBlur:",searchStr);
+    if(searchStr==="" && value.length==0){
+        is_search_empty_str=false;
+        setTags([]);
+    }
+    console.log("value:",value)
+};
+
 
   const scrollIntoView = (targetId) => {
     const container = document.getElementById('a-dropdown-menu') as HTMLElement;
@@ -226,6 +266,7 @@ const TagSelector: FC<IProps> = ({
   };
 
   const handleKeyDown = (e) => {
+    console.log("handleKeyDown:",e.keyCode)
     e.stopPropagation();
     const { keyCode } = e;
     if (keyCode === 9) {
@@ -410,6 +451,8 @@ const TagSelector: FC<IProps> = ({
                 placeholder={t('add_btn')}
                 value={searchValue}
                 onChange={handleSearch}
+                // onFocus={handleSearchFocus}
+                // onBlur={handleSearchBlur}
               />
             ) : (
               <Form.Control
