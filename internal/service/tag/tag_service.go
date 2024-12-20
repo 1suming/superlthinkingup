@@ -92,6 +92,15 @@ func (ts *TagService) RemoveTag(ctx context.Context, req *schema.RemoveTagReq) (
 		return errors.BadRequest(reason.TagIsUsedCannotDelete)
 	}
 
+	//@cws，检查有没有 子标签，如果有不允许删除
+	childTagCount, err := ts.tagRepo.GetTagCountByParentId(ctx, req.TagID)
+	if err != nil {
+		return err
+	}
+	if childTagCount > 0 {
+		return errors.BadRequest(reason.TagHasChildTagCannotDelete)
+	}
+
 	// tagRelRepo
 	err = ts.tagRepo.RemoveTag(ctx, req.TagID)
 	if err != nil {
@@ -188,6 +197,9 @@ func (ts *TagService) GetTagInfo(ctx context.Context, req *schema.GetTagInfoReq)
 	resp.Status = entity.TagStatusDisplayMapping[tagInfo.Status]
 	resp.MemberActions = permission.GetTagPermission(ctx, tagInfo.Status, req.CanEdit, req.CanDelete, req.CanRecover)
 	resp.GetExcerpt()
+	//@cws
+	resp.ParentTagId = converter.IntToString(tagInfo.ParentTagId)
+	resp.ParentTagSlugName = tagInfo.ParentTagSlugName
 	return resp, nil
 }
 
@@ -408,7 +420,13 @@ func (ts *TagService) GetTagWithPage(ctx context.Context, req *schema.GetTagWith
 	page := req.Page
 	pageSize := req.PageSize
 
-	tags, total, err := ts.tagCommonService.GetTagPage(ctx, page, pageSize, tag, req.QueryCond, 0)
+	//@cws
+	tagSearchCond := &schema.TagSearchCond{
+		TagType:             req.TagType,
+		ParentTagId:         req.ParentTagId,
+		IsArticleModuleMenu: req.IsArticleModuleMenu,
+	}
+	tags, total, err := ts.tagCommonService.GetTagPage(ctx, page, pageSize, tag, req.QueryCond, tagSearchCond)
 	if err != nil {
 		return
 	}

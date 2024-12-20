@@ -51,6 +51,7 @@ const initUser: UserInfoRes = {
 const loggedUserInfo = create<UserInfoStore>((set) => ({
   user: initUser,
   update: (params) => {
+    console.log("update params:",params)
     if (typeof params !== 'object' || !params) {
       return;
     }

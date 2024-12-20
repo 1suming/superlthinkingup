@@ -118,6 +118,13 @@ func (tr *tagRepo) GetTagSynonymCount(ctx context.Context, tagID string) (count 
 	}
 	return
 }
+func (tr *tagRepo) GetTagCountByParentId(ctx context.Context, parentTagId string) (count int64, err error) {
+	count, err = tr.data.DB.Context(ctx).Count(&entity.Tag{ParentTagId: converter.StringToInt64(parentTagId), Status: entity.TagStatusAvailable})
+	if err != nil {
+		err = errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	return
+}
 
 func (tr *tagRepo) GetIDsByMainTagId(ctx context.Context, mainTagID string) (tagIDs []string, err error) {
 	session := tr.data.DB.Context(ctx).Table(entity.Tag{}.TableName()).Where(builder.Eq{"status": entity.TagStatusAvailable, "main_tag_id": converter.StringToInt64(mainTagID)}).Cols("id")

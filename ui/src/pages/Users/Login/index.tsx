@@ -131,6 +131,7 @@ const Index: React.FC = () => {
     login(params)
       .then(async (res) => {
         await passwordCaptcha?.close?.();
+        console.log("login:res",res)
         updateUser(res);
         setupAppTheme();
         const userStat = guard.deriveLoginState();

@@ -9,8 +9,8 @@ create table ta_article (
                             post_date datetime NOT NULL  comment '发布时间',
                             post_update_time datetime  comment '文章修改时间',
 
-                             `original_text` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
-                          `parsed_text` mediumtext COLLATE utf8mb4_unicode_ci NOT NULL,
+                             `original_text` mediumtext  NOT NULL,
+                          `parsed_text` mediumtext NOT NULL,
 
 
                             title text NOT NULL,
@@ -222,3 +222,8 @@ alter table site_info add  column remark varchar(255) NOT NULL default ''   comm
 INSERT INTO `site_info` (  `created_at`, `updated_at`, `type`, `content`, `status`, `remark`) VALUES (  NULL, NULL, 'site_about_info', '<p>超维社，我们坚信：<strong>超级思维改变人生</strong>。在这里，你将遇到众多志同道合的人，一起交流。&nbsp;</p>', 1, '');
 INSERT INTO `site_info` (  `created_at`, `updated_at`, `type`, `content`, `status`, `remark`) VALUES (  NULL, NULL, 'site_disclaim_info', '部分文章取自网络，侵权请留言或发邮件到此邮箱：admin@superthinkingup.com。', 1, '');
 INSERT INTO `site_info` (  `created_at`, `updated_at`, `type`, `content`, `status`, `remark`) VALUES (  NULL, NULL, 'site_contact_info', '超维社', 1, '');
+
+
+alter table tag add  column  parent_tag_id int NOT NULL DEFAULT '0' comment '父标签';
+alter table tag add  column  `parent_tag_slug_name` varchar(35)  NOT NULL DEFAULT '';
+alter table tag add  column  is_article_module_menu tinyint(2) NOT NULL DEFAULT '0' comment '是否是文章模块的菜单栏标签';

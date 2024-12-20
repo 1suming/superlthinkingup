@@ -117,6 +117,8 @@ const (
 	ArticleCannotUpdate   = "error.Article.cannot_update"
 	ArticleAlreadyDeleted = "error.Article.already_deleted"
 	ArticleUnderReview    = "error.Article.under_review"
+
+	TagHasChildTagCannotDelete = "该标签还有子标签，不能删除"
 )
 
 // user external login reasons

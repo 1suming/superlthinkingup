@@ -130,7 +130,7 @@ func Test_tagRepo_GetTagPage(t *testing.T) {
 	tagOnce.Do(addTagList)
 	tagCommonRepo := tag_common.NewTagCommonRepo(testDataSource, unique.NewUniqueIDRepo(testDataSource))
 
-	gotTags, _, err := tagCommonRepo.GetTagPage(context.TODO(), 1, 1, &entity.Tag{SlugName: testTagList[0].SlugName}, "", 0)
+	gotTags, _, err := tagCommonRepo.GetTagPage(context.TODO(), 1, 1, &entity.Tag{SlugName: testTagList[0].SlugName}, "", nil)
 	assert.NoError(t, err)
 	assert.Equal(t, testTagList[0].SlugName, gotTags[0].SlugName)
 }

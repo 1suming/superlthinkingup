@@ -265,7 +265,8 @@ func (tc *TagController) GetTagWithPage(ctx *gin.Context) {
 	if handler.BindAndCheck(ctx, req) {
 		return
 	}
-
+	//log.Info("GetTagWithPage req:%+v", req)
+	//log.Info("GetTagWithPage reqTagSearchCond :%+v", *(req.TagSearchCond))
 	req.UserID = middleware.GetLoginUserIDFromContext(ctx)
 
 	resp, err := tc.tagService.GetTagWithPage(ctx, req)

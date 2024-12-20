@@ -24,19 +24,22 @@ import { useTranslation } from 'react-i18next';
 
 import dayjs from 'dayjs';
 import classNames from 'classnames';
+import { Select } from "antd";
 
 import { usePageTags, usePromptWithUnload } from '@/hooks';
 import { Editor, EditorRef } from '@/components';
 import { loggedUserInfoStore } from '@/stores';
 import type * as Type from '@/common/interface';
-import { TAG_SLUG_NAME_MAX_LENGTH } from '@/common/constants';
-import { useTagInfo, modifyTag, useQueryRevisions } from '@/services';
+import { TAG_SLUG_NAME_MAX_LENGTH,TAG_PARENT_TAG_ID_IS_ZERO } from '@/common/constants';
+import { useTagInfo, modifyTag, useQueryRevisions,useQueryTags } from '@/services';
 
 interface FormDataItem {
   displayName: Type.FormValue<string>;
   slugName: Type.FormValue<string>;
   description: Type.FormValue<string>;
   editSummary: Type.FormValue<string>;
+  parentTagId: Type.FormValue<string>;
+
 }
 const initFormData = {
   displayName: {
@@ -59,6 +62,11 @@ const initFormData = {
     isInvalid: false,
     errorMsg: '',
   },
+  parentTagId: {
+    value: '0',
+    isInvalid: false,
+    errorMsg: '',
+  },
 };
 
 const Index = () => {
@@ -74,7 +82,7 @@ const Index = () => {
   const [formData, setFormData] = useState<FormDataItem>(initFormData);
   const [immData, setImmData] = useState(initFormData);
   const [contentChanged, setContentChanged] = useState(false);
-
+console.log("tagINfo:",data)
   const editorRef = useRef<EditorRef>({
     getHtml: () => '',
   });
@@ -87,22 +95,26 @@ const Index = () => {
     initFormData.displayName.value = data?.display_name || '';
     initFormData.slugName.value = data?.slug_name || '';
     initFormData.description.value = data?.original_text || '';
+    initFormData.parentTagId.value = data?.parent_tag_id || '0';
     setFormData(initFormData);
     setImmData(initFormData);
+    console.log("formData.parentTagId.value:",formData.parentTagId.value)
   }, [data]);
 
   useEffect(() => {
-    const { displayName, slugName, description, editSummary } = formData;
+    const { displayName, slugName, description, editSummary,parentTagId } = formData;
     const {
       displayName: display_name,
       slugName: slug_name,
       description: original_text,
+      parentTagId: parent_tag_id,//@cws
     } = immData;
 
     if (
       display_name.value !== displayName.value ||
       slug_name.value !== slugName.value ||
       original_text.value !== description.value ||
+      parent_tag_id.value !== parentTagId.value ||
       editSummary.value
     ) {
       setContentChanged(true);
@@ -114,6 +126,7 @@ const Index = () => {
     formData.slugName.value,
     formData.description.value,
     formData.editSummary.value,
+    formData.parentTagId.value,
   ]);
 
   const handleDescriptionChange = (value: string) =>
@@ -184,6 +197,8 @@ const Index = () => {
     return bol;
   };
 
+  const [selectParentTagId, setSelectParentTagId] = useState("0");
+  
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     setContentChanged(false);
 
@@ -200,6 +215,7 @@ const Index = () => {
       parsed_text: editorRef.current.getHtml(),
       tag_id: data?.tag_id,
       edit_summary: formData.editSummary.value,
+      parent_tag_id: formData.parentTagId.value,//@  selectParentTagId,
     };
     modifyTag(params).then((res) => {
       navigate(`/tags/${encodeURIComponent(formData.slugName.value)}/info`, {
@@ -246,6 +262,50 @@ const Index = () => {
   usePageTags({
     title: t('edit_tag', { keyPrefix: 'page_title' }),
   });
+
+
+ 
+   //--@cws 
+ const tag_pageSize =50;
+ const sortBtns = ['popular', 'name', 'newest'];
+ const page =  1;
+ const sort = sortBtns[0];
+ 
+  const {
+     data: tags,
+     mutate,
+     isLoading,
+   } = useQueryTags({
+     page,
+     page_size: tag_pageSize,
+     // ...(searchTag ? { slug_name: searchTag } : {}),
+      ...(sort ? { query_cond: sort } : {}),
+      parent_tag_id: TAG_PARENT_TAG_ID_IS_ZERO,//父级id为0的。//为-2表示 选择 parent_tag_id为0的
+   }); 
+ console.log("parent tags:",tags)
+ let tagOptions:Array<any>  =[  ]
+ tagOptions.push({value:"0",label:"无父标签"})
+ if(tags){
+     for(let i=0;i<tags.list.length;i+=1){
+         let currTag=tags.list[i];
+         tagOptions.push({value:currTag.tag_id,label:currTag.slug_name})
+     }
+ }
+ 
+ const onParentTagSearch=(value)=>{
+ }
+ 
+ const onParentTagChange=(value)=>{
+ console.log("onParentTagChange",value);
+//  setSelectParentTagId(value);
+ setFormData({
+    ...formData,
+    parentTagId: { ...formData.parentTagId, value: value },
+  });
+ }
+ // Antd中Select组件中的defaultValue问题 https://blog.csdn.net/u010856177/article/details/104242498 增加一个key
+ 
+
   return (
     <div className="pt-4 mb-5">
       <h3 className="mb-4">{t('title')}</h3>
@@ -274,6 +334,10 @@ const Index = () => {
                 })}
               </Form.Select>
             </Form.Group>
+
+
+
+
             <Form.Group controlId="display_name" className="mb-3">
               <Form.Label>
                 {t('form.fields.display_name.label', {
@@ -291,6 +355,25 @@ const Index = () => {
                 {formData.displayName.errorMsg}
               </Form.Control.Feedback>
             </Form.Group>
+
+
+            <Form.Group controlId="parent_tag_id" className="mb-3">
+                  <Form.Label>父标签</Form.Label>
+                   <div className="select-wrapper">
+                  
+                    <Select
+                            showSearch
+                            placeholder="选择父标签"
+                            key={formData.parentTagId.value}
+                            defaultValue={formData.parentTagId.value}
+                            optionFilterProp="label"
+                            onChange={onParentTagChange}
+                            onSearch={onParentTagSearch}
+                            options={ tagOptions}
+                        />
+                 </div>
+            </Form.Group>
+
             <Form.Group controlId="slug_name" className="mb-3">
               <Form.Label>
                 {t('form.fields.slug_name.label', { keyPrefix: 'tag_modal' })}
@@ -301,6 +384,8 @@ const Index = () => {
                 disabled={role_id !== 2 && role_id !== 3}
                 onChange={handleSlugNameChange}
               />
+
+
               <Form.Text as="div">
                 {t('form.fields.slug_name.desc', { keyPrefix: 'tag_modal' })}
               </Form.Text>

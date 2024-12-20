@@ -37,18 +37,7 @@ export const useQuestionList = (params: Type.QueryQuestionsReq) => {
 };
 
 
-export const useArticleList = (params: Type.QueryArticlesReq) => {
-    const apiUrl = `/answer/api/v1/article/page?${qs.stringify(params)}`;
-    const { data, error } = useSWR<Type.ListResult, Error>(
-      [apiUrl],
-      request.instance.get,
-    );
-    return {
-      data,
-      isLoading: !data && !error,
-      error,
-    };
-  };
+
 
 export const useQuestionRecommendList = (params: Type.QueryQuestionsReq) => {
   const apiUrl = `/answer/api/v1/question/recommend/page?${qs.stringify(

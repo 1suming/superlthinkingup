@@ -87,6 +87,9 @@ type GetTagResp struct {
 	MainTagSlugName string `json:"main_tag_slug_name"`
 	Recommend       bool   `json:"recommend"`
 	Reserved        bool   `json:"reserved"`
+
+	ParentTagId       string `json:"parent_tag_id"`
+	ParentTagSlugName string `json:"parent_tag_slug_name"`
 }
 
 func (tr *GetTagResp) GetExcerpt() {
@@ -174,7 +177,9 @@ type AddTagReq struct {
 	// parsed text
 	ParsedText string `json:"-"`
 	// user id
-	UserID string `json:"-"`
+	UserID      string `json:"-"`
+	ParentTagId string `validate:"omitempty" json:"parent_tag_id"` //@cws omitempty
+
 }
 
 func (req *AddTagReq) Check() (errFields []*validator.FormErrorField, err error) {
@@ -205,6 +210,8 @@ type UpdateTagReq struct {
 	// user id
 	UserID       string `json:"-"`
 	NoNeedReview bool   `json:"-"`
+	ParentTagId  string `validate:"omitempty" json:"parent_tag_id"` //@cws omitempty
+
 }
 
 func (r *UpdateTagReq) Check() (errFields []*validator.FormErrorField, err error) {
@@ -238,7 +245,14 @@ type GetTagWithPageReq struct {
 	// user id
 	UserID string `json:"-"`
 
-	TagType int `validate:"omitempty" form:"tag_type"`
+	TagType             int   `validate:"omitempty" form:"tag_type"`
+	ParentTagId         int64 `validate:"omitempty" form:"parent_tag_id"` //@cws
+	IsArticleModuleMenu int8  `validate:"omitempty" form:"is_article_module_menu"`
+}
+type TagSearchCond struct {
+	TagType             int   `validate:"omitempty" form:"tag_type"`
+	ParentTagId         int64 `validate:"" form:"parent_tag_id"` //@cws omitempty
+	IsArticleModuleMenu int8  `validate:"omitempty" form:"is_article_module_menu"`
 }
 
 // GetTagSynonymsReq get tag synonyms request

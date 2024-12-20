@@ -23,8 +23,11 @@ import (
 	"context"
 	"fmt"
 	"github.com/apache/incubator-answer/internal/base/constant"
+	"github.com/segmentfault/pacman/log"
 	"strconv"
 	"strings"
+
+	"github.com/apache/incubator-answer/internal/schema"
 
 	"github.com/apache/incubator-answer/internal/base/data"
 	"github.com/apache/incubator-answer/internal/base/pager"
@@ -166,7 +169,7 @@ func (tr *tagCommonRepo) GetTagByID(ctx context.Context, tagID string, includeDe
 }
 
 // GetTagPage get tag page
-func (tr *tagCommonRepo) GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tag_type int8) (
+func (tr *tagCommonRepo) GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tagSearchCond *schema.TagSearchCond) (
 	tagList []*entity.Tag, total int64, err error,
 ) {
 	//var tag_type int8
@@ -204,10 +207,24 @@ func (tr *tagCommonRepo) GetTagPage(ctx context.Context, page, pageSize int, tag
 	case "newest":
 		session.Desc("created_at")
 	}
-	if tag_type == constant.TAG_TYPE_ARTICLE {
-		session.Where("tag_type", tag_type) //@csw
-		session.Desc("tag_sort")
+
+	if tagSearchCond != nil {
+		if tagSearchCond.IsArticleModuleMenu == 1 {
+			session.Where(builder.Eq{"is_article_module_menu": 1}) //@csw
+			session.Desc("tag_sort")
+		}
+		if tagSearchCond.ParentTagId == constant.TAG_PARENT_TAG_ID_IS_ZERO { //为-2表示 选择 parent_tag_id为0的
+			//session.Where(builder.Eq{"parent_tag_id": 0})
+			log.Info("@enter1")
+			session.Where("parent_tag_id = ?", 0) //为什么字段会重复，因为是根据tag查询的。
+			tag.ParentTagId = 0                   //这里要把ParentTagId置为0，因为 pager.Help(page, pageSize, &tagList, tag, session)会根据tag里面的属性设置查询条件，赋值为0会忽略这个
+		}
+		//session.Where(builder.Eq{"tag_type": tagSearchCond.TagType})
+
 	}
+	//if tag_type == constant.TAG_TYPE_ARTICLE {
+	//
+	//}
 
 	total, err = pager.Help(page, pageSize, &tagList, tag, session)
 	if err != nil {

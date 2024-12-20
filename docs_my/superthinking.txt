@@ -50,3 +50,6 @@ npm build会在build文件夹生成一堆文件
 pnpm 使用硬链接来链接依赖项，而 npm 将依赖项复制到项目目录中。
 
 pnpm run start
+ --where="id=36 and post_date_*>='2013-10-25'"
+mysqldump -uroot -p --default-character-set=utf8  superthinking ta_article > ta_article_backup.sql
+

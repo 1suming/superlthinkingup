@@ -50,8 +50,12 @@ type Tag struct {
 	RevisionID      string    `xorm:"not null default 0 BIGINT(20) revision_id"`
 	UserID          string    `xorm:"not null default 0 BIGINT(20) user_id"`
 
-	TagType int8  `json:"tag_type" gorm:"tag_type"` // 0:默认,1:Article类型的
-	TagSort int64 `json:"tag_sort" gorm:"tag_sort"` // tag的顺序，越小越靠前
+	TagType int8  `json:"tag_type" xorm:"tag_type"` // 0:默认,1:Article类型的
+	TagSort int64 `json:"tag_sort" xorm:"tag_sort"` // tag的顺序，越小越靠前
+
+	ParentTagId         int64  `xorm:"parent_tag_id"` // 父标签 //AND (parent_tag_id = ?) AND `parent_tag_id`=?
+	ParentTagSlugName   string `xorm:"parent_tag_slug_name"`
+	IsArticleModuleMenu int8   ` xorm:"is_article_module_menu"` // 是否是文章模块的菜单栏标签
 
 }
 

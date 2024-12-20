@@ -24,6 +24,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/apache/incubator-answer/internal/base/constant"
@@ -46,7 +47,7 @@ type TagCommonRepo interface {
 	GetTagListByName(ctx context.Context, name string, recommend, reserved bool) (tagList []*entity.Tag, err error)
 	GetTagListByNames(ctx context.Context, names []string) (tagList []*entity.Tag, err error)
 	GetTagByID(ctx context.Context, tagID string, includeDeleted bool) (tag *entity.Tag, exist bool, err error)
-	GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tag_type int8) (tagList []*entity.Tag, total int64, err error)
+	GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tagSearchCond *schema.TagSearchCond) (tagList []*entity.Tag, total int64, err error)
 	GetRecommendTagList(ctx context.Context) (tagList []*entity.Tag, err error)
 	GetReservedTagList(ctx context.Context) (tagList []*entity.Tag, err error)
 	UpdateTagsAttribute(ctx context.Context, tags []string, attribute string, value bool) (err error)
@@ -64,6 +65,8 @@ type TagRepo interface {
 	GetTagSynonymCount(ctx context.Context, tagID string) (count int64, err error)
 	GetIDsByMainTagId(ctx context.Context, mainTagID string) (tagIDs []string, err error)
 	GetTagList(ctx context.Context, tag *entity.Tag) (tagList []*entity.Tag, err error)
+
+	GetTagCountByParentId(ctx context.Context, parentTagId string) (count int64, err error)
 }
 
 type TagRelRepo interface {
@@ -335,6 +338,29 @@ func (ts *TagCommonService) AddTag(ctx context.Context, req *schema.AddTagReq) (
 		return nil, errors.BadRequest(reason.TagAlreadyExist)
 	}
 	slugName := strings.ReplaceAll(req.SlugName, " ", "-")
+
+	log.Infof("@req.ParentTagId:%+v", req.ParentTagId)
+
+	parentTagIDInt := int64(0)
+	parentTagInfo_slugname := ""
+	if req.ParentTagId != "0" {
+		parentTagInfo, exist, err := ts.GetTagByID(ctx, req.ParentTagId)
+		if err != nil {
+			log.Error("GetTagByID:", err)
+			return resp, err
+		}
+		if !exist {
+			err = errors.BadRequest(reason.TagNotFound)
+			return resp, err
+		}
+		parentTagIDInt, err = strconv.ParseInt(parentTagInfo.ID, 10, 64)
+		if err != nil {
+			log.Error("parentTagIDInt error", err)
+			return resp, err
+		}
+		parentTagInfo_slugname = parentTagInfo.SlugName
+	}
+
 	slugName = strings.ToLower(slugName)
 	tagInfo := &entity.Tag{
 		SlugName:     slugName,
@@ -343,6 +369,9 @@ func (ts *TagCommonService) AddTag(ctx context.Context, req *schema.AddTagReq) (
 		ParsedText:   req.ParsedText,
 		Status:       entity.TagStatusAvailable,
 		UserID:       req.UserID,
+
+		ParentTagId:       parentTagIDInt,
+		ParentTagSlugName: parentTagInfo_slugname,
 	}
 	tagList := []*entity.Tag{tagInfo}
 	err = ts.tagCommonRepo.AddTagList(ctx, tagList)
@@ -405,9 +434,9 @@ func (ts *TagCommonService) GetTagListByIDs(ctx context.Context, ids []string) (
 }
 
 // GetTagPage get object tag
-func (ts *TagCommonService) GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tag_type int8) (
+func (ts *TagCommonService) GetTagPage(ctx context.Context, page, pageSize int, tag *entity.Tag, queryCond string, tagSearchCond *schema.TagSearchCond) (
 	tagList []*entity.Tag, total int64, err error) {
-	tagList, total, err = ts.tagCommonRepo.GetTagPage(ctx, page, pageSize, tag, queryCond, tag_type)
+	tagList, total, err = ts.tagCommonRepo.GetTagPage(ctx, page, pageSize, tag, queryCond, tagSearchCond)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -881,6 +910,31 @@ func (ts *TagCommonService) UpdateTag(ctx context.Context, req *schema.UpdateTag
 		return errors.BadRequest(reason.TagNotFound)
 	}
 
+	//parentTagIDInt := int64(0)
+	parentTagInfo_slugname := ""
+	parentTagIDInt, err := strconv.ParseInt(req.ParentTagId, 10, 64)
+	if err != nil {
+		log.Error("parentTagIDInt error", err)
+		return
+	}
+	if req.ParentTagId != "0" {
+		parentTagInfo, exist, err := ts.GetTagByID(ctx, req.ParentTagId)
+		if err != nil {
+			log.Error("GetTagByID:", err)
+			return err
+		}
+		if !exist {
+			err = errors.BadRequest(reason.TagNotFound)
+			return err
+		}
+		parentTagInfo_slugname = parentTagInfo.SlugName
+		//parentTagIDInt, err := strconv.ParseInt(parentTagInfo.ID, 10, 64)
+		//if err != nil {
+		//	log.Error("parentTagIDInt error", err)
+		//	return
+		//}
+	}
+
 	//Adding equivalent slug formatting for tag update
 	slugName := strings.ReplaceAll(req.SlugName, " ", "-")
 	slugName = strings.ToLower(slugName)
@@ -888,7 +942,7 @@ func (ts *TagCommonService) UpdateTag(ctx context.Context, req *schema.UpdateTag
 	//If the content is the same, ignore it
 	if tagInfo.OriginalText == req.OriginalText &&
 		tagInfo.DisplayName == req.DisplayName &&
-		tagInfo.SlugName == slugName {
+		tagInfo.SlugName == slugName && tagInfo.ParentTagId == parentTagIDInt {
 		return nil
 	}
 
@@ -896,6 +950,8 @@ func (ts *TagCommonService) UpdateTag(ctx context.Context, req *schema.UpdateTag
 	tagInfo.DisplayName = req.DisplayName
 	tagInfo.OriginalText = req.OriginalText
 	tagInfo.ParsedText = req.ParsedText
+	tagInfo.ParentTagId = parentTagIDInt
+	tagInfo.ParentTagSlugName = parentTagInfo_slugname
 
 	revisionDTO := &schema.AddRevisionDTO{
 		UserID:   req.UserID,

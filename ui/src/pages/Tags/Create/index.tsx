@@ -23,14 +23,17 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import classNames from 'classnames';
+import { Select } from "antd";
+
+
 
 import { usePageTags, usePromptWithUnload } from '@/hooks';
 import { Editor, EditorRef } from '@/components';
 import { loggedUserInfoStore } from '@/stores';
 import type * as Type from '@/common/interface';
-import { createTag } from '@/services';
+import { createTag,useQueryTags } from '@/services';
 import { handleFormError, scrollToElementTop } from '@/utils';
-import { TAG_SLUG_NAME_MAX_LENGTH } from '@/common/constants';
+import { TAG_SLUG_NAME_MAX_LENGTH,TAG_PARENT_TAG_ID_IS_ZERO } from '@/common/constants';
 
 interface FormDataItem {
   displayName: Type.FormValue<string>;
@@ -170,6 +173,7 @@ const Index = () => {
     return bol;
   };
 
+const [selectParentTagId, setSelectParentTagId] = useState("0");
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     event.stopPropagation();
@@ -183,7 +187,9 @@ const Index = () => {
       display_name: formData.displayName.value,
       slug_name: formData.slugName.value,
       original_text: formData.description.value,
+      parent_tag_id: selectParentTagId,
     };
+    console.log("create tag params:",params)
     createTag(params)
       .then((res) => {
         navigate(`/tags/${encodeURIComponent(res.slug_name)}/info`, {
@@ -230,13 +236,55 @@ const Index = () => {
     title: t('create_tag', { keyPrefix: 'page_title' }),
   });
 
+  //--@cws 
+const tag_pageSize =50;
+const sortBtns = ['popular', 'name', 'newest'];
+const page =  1;
+const sort = sortBtns[0];
+
+ const {
+    data: tags,
+    mutate,
+    isLoading,
+  } = useQueryTags({
+    page,
+    page_size: tag_pageSize,
+    // ...(searchTag ? { slug_name: searchTag } : {}),
+     ...(sort ? { query_cond: sort } : {}),
+     parent_tag_id: TAG_PARENT_TAG_ID_IS_ZERO,//父级id为0的。//为-2表示 选择 parent_tag_id为0的
+  }); 
+console.log("parent tags:",tags)
+let tagOptions:Array<any>  =[  ]
+tagOptions.push({value:"0",label:"无父标签"})
+if(tags){
+    for(let i=0;i<tags.list.length;i+=1){
+        let currTag=tags.list[i];
+        tagOptions.push({value:currTag.tag_id,label:currTag.slug_name})
+    }
+}
+
+const onParentTagSearch=(value)=>{
+}
+
+const onParentTagChange=(value)=>{
+console.log("onParentTagChange",value);
+setSelectParentTagId(value);
+}
+
+
+
+
+
   return (
     <div className="pt-4 mb-5">
       <h3 className="mb-4">{t('title')}</h3>
       <Row>
         <Col className="page-main flex-auto">
           <Form noValidate onSubmit={handleSubmit}>
+             
+
             <Form.Group controlId="display_name" className="mb-3">
+    
               <Form.Label>{t('form.fields.display_name.label')}</Form.Label>
               <Form.Control
                 type="text"
@@ -250,6 +298,24 @@ const Index = () => {
                 {formData.displayName.errorMsg}
               </Form.Control.Feedback>
             </Form.Group>
+
+            <Form.Group controlId="parent_tag_id" className="mb-3">
+                  <Form.Label>父标签</Form.Label>
+                   <div className="select-wrapper">
+                  
+                    <Select
+                            showSearch
+                            placeholder="选择父标签"
+                            defaultValue="0"
+                            optionFilterProp="label"
+                            onChange={onParentTagChange}
+                            onSearch={onParentTagSearch}
+                            options={ tagOptions}
+                        />
+                 </div>
+            </Form.Group>
+
+            
             <Form.Group controlId="slug_name" className="mb-3">
               <Form.Label>{t('form.fields.slug_name.label')}</Form.Label>
               <Form.Control

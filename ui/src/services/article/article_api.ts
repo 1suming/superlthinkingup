@@ -46,3 +46,16 @@ export const articleDetail = (id: string) => {
   export const articleOperation = (params: Type.ArticleOperationReq) => {
     return request.put('/answer/api/v1/article/operation', params);
   };
+
+  export const useArticleList = (params: Type.QueryArticlesReq) => {
+    const apiUrl = `/answer/api/v1/article/page?${qs.stringify(params)}`;
+    const { data, error } = useSWR<Type.ListResult, Error>(
+      [apiUrl],
+      request.instance.get,
+    );
+    return {
+      data,
+      isLoading: !data && !error,
+      error,
+    };
+  };

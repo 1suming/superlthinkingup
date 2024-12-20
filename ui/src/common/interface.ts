@@ -51,6 +51,8 @@ export interface TagBase {
   original_text?: string;
   recommend?: boolean;
   reserved?: boolean;
+  parent_tag_id?: string;//@cws parent_tag_id
+  parent_tag_slug_name?: string;
 }
 
 export interface Tag extends TagBase {

@@ -77,8 +77,8 @@ const TAG_TYPE_ARTICLE=1;
     } = useQueryTags({
         tag_page,
       page_size: tag_pageSize,
-      tag_type: TAG_TYPE_ARTICLE,
-     
+    //   tag_type: TAG_TYPE_ARTICLE,
+      is_article_module_menu:1,
     });
 
     console.log("my tags:",tags)
