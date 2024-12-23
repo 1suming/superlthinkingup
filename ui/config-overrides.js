@@ -26,6 +26,9 @@ const {
 const path = require("path");
 const i18nPath = path.resolve(__dirname, "../i18n");
 
+// const UnoCSS = require('@unocss/webpack').default
+
+
 module.exports = {
   webpack: function(config, env) {
     console.log("process.env.NODE_ENV:",process.env.NODE_ENV)
@@ -149,6 +152,7 @@ module.exports = {
             }
             
         ));
+  
    } //else {
 //     //     config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== 'BundleAnalyzerPlugin');
 //     // }
@@ -158,7 +162,15 @@ module.exports = {
 或者在项目更目录下创建文件 .env, 写入: GENERATE_SOURCEMAP=false 即可.
 */
 
-
+    // this.addWebpackPlugin("UnoCSS", new UnoCSS({ configFile: './unocss.config.js' }))
+    // config.optimization.realContentHash = true;
+    import('@unocss/webpack').then(({ default: UnoCSS }) => ({
+        plugins: [UnoCSS()],
+        optimization: {
+          realContentHash: true
+        }
+      }));
+ 
     return config;
   },
   devServer: function(configFunction) {

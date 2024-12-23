@@ -581,6 +581,7 @@ const routes: RouteNode[] = [
 
                 ],
             },
+
             {
                 path: 'siteinfo/about',
                 page: 'pages/siteinfo/site_about',
@@ -592,6 +593,10 @@ const routes: RouteNode[] = [
             {
                 path: 'siteinfo/disclaim',
                 page: 'pages/siteinfo/site_disclaim',
+            },
+            {
+                path: 'ai',
+                page: 'pages/Ais/AIIndex',
             },
                 
 

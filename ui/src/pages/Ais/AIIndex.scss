@@ -1,0 +1,18 @@
+.text-4xl {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+  }
+.ai-list-item{
+//    background : linear-gradient(var(--quick-links-hover-bg,#f0f9ff),var(--quick-links-hover-bg,#f0f9ff)) padding-box,linear-gradient(to top,#818cf8,#22d3ee,#0ea5e9) border-box;
+
+   background: rgb(248 ,250, 252);
+   border-radius: 1.5rem;
+   max-width:361px;
+   max-height: 204px;
+   .title{ 
+      color: rgb(5, 5, 6);
+      font-weight: 600;
+      font-size:large;
+   }
+   padding: 1.5rem;
+}

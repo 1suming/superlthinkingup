@@ -24,6 +24,8 @@ import './i18n/init';
 import '@/utils/pluginKit';
 import routes from '@/router';
 
+// import 'uno.css'
+
 function App() {
   const router = createBrowserRouter(routes, {
     basename: process.env.REACT_APP_BASE_URL,
