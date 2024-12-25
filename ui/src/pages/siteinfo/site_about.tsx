@@ -66,9 +66,18 @@ const Index: React.FC = () => {
         
       
         <Col className="mx-auto text-center" md={12} lg={12} xl={12}>
-          <h3>关于超维社</h3>
-          <article  className="fmt text-break text-wrap mt-4 " dangerouslySetInnerHTML={{ __html: (data?.content)?(data?.content):"" }}   />
- 
+          <h3 className="mb-4" style={{
+            fontSize: '2.5rem',
+            fontWeight: 'bold',
+            color: '#2c3e50',
+          }}>
+            关于超维社
+          
+          </h3>
+          <article className="fmt text-break text-wrap mt-2 px-4" 
+          
+            dangerouslySetInnerHTML={{ __html: data?.content || "" }} 
+          />
         </Col>
         <div className="row mt-5">
           <div className="col-md-4 mb-4">
