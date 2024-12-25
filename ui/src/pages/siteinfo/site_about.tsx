@@ -65,7 +65,7 @@ const Index: React.FC = () => {
     <Container style={{ paddingTop: '4rem', paddingBottom: '5rem' }}>
         
       
-        <Col className="mx-auto" md={12} lg={12} xl={12}>
+        <Col className="mx-auto text-center" md={12} lg={12} xl={12}>
           <h3>关于超维社</h3>
           <article  className="fmt text-break text-wrap mt-4 " dangerouslySetInnerHTML={{ __html: (data?.content)?(data?.content):"" }}   />
  
