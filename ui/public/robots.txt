@@ -21,9 +21,27 @@
 #User-agent:AhrefsBot
 #Disallow:/
 
+#User-agent: *
+#Disallow:/admin/
+#Disallow:/images/
+#Disallow:/css/
+#Disallow:/uploads/
+
+
 User-agent: *
-Disallow:/admin/
+Disallow: /admin
+Disallow: /search
+Disallow: /install
+Disallow: /review
+Disallow: /users/login
+Disallow: /users/register
+Disallow: /users/account-recovery
+Disallow: /users/oauth/*
+Disallow: /users/*/*
+Disallow: /answer/api
+Disallow: /*?code*
+
 Disallow:/images/
 Disallow:/css/
 Disallow:/uploads/
-
+Sitemap: https://superthinkingup.com/sitemap.xml
