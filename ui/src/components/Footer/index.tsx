@@ -25,6 +25,8 @@ import dayjs from 'dayjs';
 
 import { siteInfoStore } from '@/stores';
 
+import  ScrollToTopBtn from "@/components/ScrollToTopBtn/ScrollToTopBtn"
+
 const Index = () => {
   const fullYear = dayjs().format('YYYY');
   const siteName = siteInfoStore((state) => state.siteInfo.name);
@@ -36,15 +38,16 @@ const Index = () => {
           <Trans i18nKey="footer.build_on" values={{ cc }}>
             Powered by
             {/* eslint-disable-next-line react/jsx-no-target-blank */}
-            <a href="https://answer.apache.org" target="_blank">
-              Apache Answer
+            <a href="" target="_blank">
+              
             </a>
-            - the open-source software that powers Q&A communities.
+            - 
             <br />
             Made with love. © 2022 Answer.
           </Trans>
         </p>
       </Container>
+      <ScrollToTopBtn/>
     </footer>
   );
 };

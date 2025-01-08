@@ -17,6 +17,11 @@
 
 # The following fields are used for back-end
 backend:
+  quote: #cws
+    deleted_title:
+      other: 删除的金句
+    quotes_title:
+      other: 金句
   base:
     success:
       other: 成功。
@@ -216,6 +221,47 @@ backend:
         other: 该帖子已被删除。
       under_review:
         other: 您的帖子正在等待审核。它将在它获得批准后可见。
+      not_found:
+        other: 问题未找到。
+      cannot_deleted:
+        other: 没有删除权限。
+      cannot_close:
+        other: 没有关闭权限。
+      cannot_update:
+        other: 没有更新权限。
+    article:
+      already_deleted:
+        other: 该帖子已被删除。
+      under_review:
+        other: 您的帖子正在等待审核。它将在它获得批准后可见。
+      not_found:
+        other: 问题未找到。
+      cannot_deleted:
+        other: 没有删除权限。
+      cannot_close:
+        other: 没有关闭权限。
+      cannot_update:
+        other: 没有更新权限。
+
+    quote:
+      already_deleted:
+        other: 该文章已被删除。
+      under_review:
+        other: 您的文章正在等待审核。它将在它获得批准后可见。
+      not_found:
+        other: 问题未找到。
+      cannot_deleted:
+        other: 没有删除权限。
+      cannot_close:
+        other: 没有关闭权限。
+      cannot_update:
+        other: 没有更新权限。
+
+    quote_author:
+      already_deleted:
+        other: 该作者已被删除。
+      under_review:
+        other: 您的作者正在等待审核。它将在它获得批准后可见。
       not_found:
         other: 问题未找到。
       cannot_deleted:
@@ -1929,6 +1975,10 @@ ui:
         label: 站点描述
         msg: 网站描述不能为空。
         text: "使用一句话描述本站，作为网站的描述（Html 的 meta 标签）。"
+      keywords:
+        label: 站点keywords
+        msg: 网站keywords不能为空。
+        text: "meta的 keywords"
       contact_email:
         label: 联系邮箱
         msg: 联系人邮箱不能为空。
@@ -2379,3 +2429,70 @@ ui:
     btn_save_edits: 保存更改
     answer_question: 回答自己的问题
     post_question&answer: 提交问题和回答
+
+
+
+  quote:
+    following_tags: 已关注的标签
+    edit: 编辑
+    save: 保存
+    follow_tag_tip: 关注标签来筛选你的问题列表。
+    hot_quotes: 热门金句
+    all_quotes: 全部金句
+    x_questions: "{{ count }} 个问题"
+    x_answers: "{{ count }} 个"
+    questions: 问题
+    answers: 回答
+    newest: 最新
+    active: 活跃
+    hot: 热门
+    recommend: 推荐
+    score: 评分
+    unanswered: 未回答
+    modified: 更新于
+    answered: 回答于
+    # asked: 提问于
+    asked: 发表于
+    closed: 已关闭
+    follow_a_tag: 关注一个标签
+    more: 更多
+  related_quote:
+    title: 相关金句
+  write_quote: #ask:
+    title: 新增金句
+    edit_title: 编辑金句
+    default_reason: 编辑金句
+    default_first_reason: 新增金句
+    similar_questions: 相似问题
+    form:
+      fields:
+        revision:
+          label: 修订版本
+        title:
+          label: 标题
+          placeholder: 请详细描述你的问题，想象你在问一个人
+          msg:
+            empty: 标题不能为空。
+            range: 标题最多 150 个字符
+        body:
+          label: 内容
+          msg:
+            empty: 内容不能为空。
+        tags:
+          label: 标签
+          msg:
+            empty: 必须选择一个标签
+        answer:
+          label: 回答内容
+          msg:
+            empty: 回答内容不能为空
+        edit_summary:
+          label: 编辑备注
+          placeholder: >-
+            简单描述更改原因（更正拼写、修复语法、改进格式）
+    btn_post_question: 提交问题
+    btn_save_edits: 保存更改
+    answer_question: 回答自己的问题
+    post_question&answer: 提交问题和回答
+  
+  

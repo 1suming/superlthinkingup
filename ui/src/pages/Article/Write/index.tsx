@@ -38,7 +38,7 @@ import {
   articleDetail,
   modifyArticle,
   useQueryRevisions,
-  queryQuestionByTitle,
+  queryArticleByTitle,
   getTagsBySlugName,
   saveQuestionWithAnswer,
 } from '@/services';
@@ -280,9 +280,9 @@ const [editorType,setEditorType] = useState(EnumEditorType.TinyMCE);//@cws编辑
     });
   }, [qid]);
 
-  const querySimilarQuestions = useCallback(
+  const querySimilarArticles = useCallback(
     debounce((title) => {
-      queryQuestionByTitle(title).then((res) => {
+      queryArticleByTitle(title).then((res) => {
         setSimilarQuestions(res);
       });
     }, 400),
@@ -294,8 +294,8 @@ const [editorType,setEditorType] = useState(EnumEditorType.TinyMCE);//@cws编辑
       ...formData,
       title: { value: e.currentTarget.value, errorMsg: '', isInvalid: false },
     });
-    if (e.currentTarget.value.length >= 10) {
-      querySimilarQuestions(e.currentTarget.value);
+    if (e.currentTarget.value.length >= 4) {
+      querySimilarArticles(e.currentTarget.value);
     }
     if (e.currentTarget.value.length === 0) {
       setSimilarQuestions([]);

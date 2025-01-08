@@ -452,6 +452,12 @@ type QuotePageResp struct {
 	OperationType string                 `json:"operation_type"`
 
 	Thumbnails []QuoteThumbnail `json:"thumbnails"`
+
+	QuoteAuthorId string `json:"quote_author_id"`
+	QuotePieceId  string `json:"quote_piece_id"`
+
+	QuoteAuthorBasicInfo *QuoteAuthorBasicInfo `json:"quote_author_basic_info"`
+	QuotePieceBasicInfo  *QuotePieceBasicInfo  `json:"quote_piece_basic_info"`
 }
 
 type QuotePageRespOperator struct {

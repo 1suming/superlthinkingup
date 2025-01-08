@@ -56,4 +56,13 @@ const (
 	//@ms:
 	SiteMapArticleCacheKeyPrefix = "answer:sitemap:article:%d" //@cws，要改成aritcle "answer:sitemap:question:%d"
 	SiteMapArticleCacheTime      = time.Hour
+
+	SiteMapQuoteCacheKeyPrefix = "answer:sitemap:quote:%d" //@cws，要改成aritcle "answer:sitemap:question:%d"
+	SiteMapQuoteCacheTime      = time.Hour
+
+	SiteMapQuoteAuthorCacheKeyPrefix = "answer:sitemap:quote_author:%d" //@cws，要改成aritcle "answer:sitemap:question:%d"
+	SiteMapQuoteAuthorCacheTime      = time.Hour
+
+	SiteMapQuotePieceCacheKeyPrefix = "answer:sitemap:quote_piece:%d" //@cws，要改成aritcle "answer:sitemap:question:%d"
+	SiteMapQuotePieceCacheTime      = time.Hour
 )

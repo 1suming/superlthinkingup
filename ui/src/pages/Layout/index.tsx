@@ -144,7 +144,7 @@ const Layout: FC = () => {
         }}>
         <Header siteHeadNavRef={siteHeadNavRef}/>
         {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events */}
-        <div className="position-relative page-wrap d-flex flex-column flex-fill">
+        <div className="position-relative page-wrap d-flex flex-column flex-fill"  id="body-main-content" >
           {httpStatusCode ? (
             <HttpErrorContent httpCode={httpStatusCode} />
           ) : (

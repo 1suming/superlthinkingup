@@ -222,6 +222,23 @@ func (qr *quoteAuthorRepo) GetQuoteAuthor(ctx context.Context, id string) (
 	}
 	return
 }
+func (qr *quoteAuthorRepo) GetQuoteAuthorSimple(ctx context.Context, id string) (
+	quoteAuthorBasicInfo *schema.QuoteAuthorBasicInfo, exist bool, err error,
+) {
+	id = uid.DeShortID(id)
+	quoteAuthor := &entity.QuoteAuthor{}
+	//quoteAuthor.ID = id
+
+	quoteAuthorBasicInfo = &schema.QuoteAuthorBasicInfo{}
+	exist, err = qr.data.DB.Context(ctx).Table(quoteAuthor.TableName()).Select("id,author_name,avatar").Where("id = ?", id).Get(quoteAuthorBasicInfo)
+	if err != nil {
+		return nil, false, errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	if handler.GetEnableShortID(ctx) {
+		quoteAuthorBasicInfo.ID = uid.EnShortID(quoteAuthorBasicInfo.ID)
+	}
+	return
+}
 
 // GetQuoteAuthorsByTitle get quoteAuthor list by title
 func (qr *quoteAuthorRepo) GetQuoteAuthorsByAuthorName(ctx context.Context, title string, pageSize int) (

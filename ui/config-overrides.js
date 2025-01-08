@@ -27,10 +27,26 @@ const path = require("path");
 const i18nPath = path.resolve(__dirname, "../i18n");
 
 // const UnoCSS = require('@unocss/webpack').default
+// 添加 UnoCSS webpack 插件
+// const UnoCSS = require('@unocss/webpack').default;
+
+// const UnoCSS = require('@unocss/webpack/webpack').default;
+// const UnoCSS = require('@unocss/webpack').default
+// const UnoCSS = require('@unocss/webpack').default;
+// const UnoCSS = require('unocss/webpack'); // 引入 UnoCSS Webpack 插件
+
+
+// const UnoCSS = require('@unocss/webpack').default;
+
+// const presetUno = require('@unocss/preset-uno').default;
+// const presetAttributify = require('@unocss/preset-attributify').default;
+// const presetIcons = require('@unocss/preset-icons').default;
 
 
 module.exports = {
-  webpack: function(config, env) {
+  webpack:  function(config, env) {
+    // config.devtool = 'source-map';
+
     console.log("process.env.NODE_ENV:",process.env.NODE_ENV)
     console.log("@process.env.REACT_APP_API_URL:", process.env.REACT_APP_API_URL)
     addWebpackAlias({
@@ -164,13 +180,70 @@ module.exports = {
 
     // this.addWebpackPlugin("UnoCSS", new UnoCSS({ configFile: './unocss.config.js' }))
     // config.optimization.realContentHash = true;
-    import('@unocss/webpack').then(({ default: UnoCSS }) => ({
-        plugins: [UnoCSS()],
-        optimization: {
-          realContentHash: true
-        }
-      }));
- 
+    // import('@unocss/webpack').then(({ default: UnoCSS }) => ({
+    //     plugins: [UnoCSS()],
+    //     optimization: {
+    //       realContentHash: true
+    //     }
+    //   }));
+
+      
+    // 添加 UnoCSS 插件到 webpack 配置
+    // config.plugins.push(new UnoCSS(
+    //   //{ configFile: './unocss.config.js' }
+    // ));
+
+    // import('@unocss/webpack').then(({ default: UnoCSS }) => ({
+    //   plugins: [
+    //     UnoCSS()
+    //   ],
+    //   optimization: {
+    //     realContentHash: true
+    //   }
+    // }))
+    // import('@unocss/webpack').then(({ default: UnoCSS }) => {
+    //   config.plugins.push(new UnoCSS({ configFile: './unocss.config.js' }));
+    //   config.optimization.realContentHash = true;
+    // });
+
+    // config.plugins.push(new UnoCSS({
+    //   configFile: path.resolve(__dirname, './unocss.config.js')
+    // }));
+    // const { default: UnoCSS } = await import('@unocss/webpack');
+    // config.plugins.push(new UnoCSS({
+    //   configFile: path.resolve(__dirname, './unocss.config.js')
+    // }));
+
+    // config.plugins.push(new UnoCSS({
+    //   configFile: path.resolve(__dirname, './unocss.config.js')
+    // }));
+     // 添加 UnoCSS 插件
+       // 移除 ModuleScopePlugin 限制
+    config.resolve.plugins = config.resolve.plugins.filter(
+      (plugin) => plugin.constructor.name !== 'ModuleScopePlugin'
+    );
+
+    // config.plugins.push(
+    //   UnoCSS({
+    //     // outFile: path.resolve(__dirname, 'src/common/uno.css'), // 输出 CSS 文件
+    //     // outFile: 'src/common/uno.css' ,//
+    //     presets: [
+    //       // require('@unocss/preset-uno')(),
+    //       // require('@unocss/preset-attributify')(),
+    //       // require('@unocss/preset-icons')(),
+    //       presetUno(),
+    //       presetAttributify(),
+    //       presetIcons(),
+    //     ],
+    //     shortcuts: {
+    //       'btn': 'px-4 py-2 rounded bg-blue-500 text-white',
+    //     },
+    //     rules: [
+    //       ['text-primary', { color: '#1e90ff' }],
+    //     ],
+    //   })
+    // );
+
     return config;
   },
   devServer: function(configFunction) {

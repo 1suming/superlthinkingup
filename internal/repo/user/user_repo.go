@@ -98,10 +98,21 @@ func (ur *userRepo) UpdateQuestionCount(ctx context.Context, userID string, coun
 	}
 	return nil
 }
+
+// @cws
 func (ur *userRepo) UpdateArticleCount(ctx context.Context, userID string, count int64) (err error) {
 	user := &entity.User{}
-	user.QuestionCount = int(count)
-	_, err = ur.data.DB.Context(ctx).Where("id = ?", userID).Cols("question_count").Update(user)
+	user.ArticleCount = int(count)
+	_, err = ur.data.DB.Context(ctx).Where("id = ?", userID).Cols("article_count").Update(user)
+	if err != nil {
+		return errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	return nil
+}
+func (ur *userRepo) UpdateQuoteCount(ctx context.Context, userID string, count int64) (err error) {
+	user := &entity.User{}
+	user.QuoteCount = int(count)
+	_, err = ur.data.DB.Context(ctx).Where("id = ?", userID).Cols("quote_count").Update(user)
 	if err != nil {
 		return errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
 	}

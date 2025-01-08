@@ -1,0 +1,96 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+// #second-article-sideNav {
+//   .nav-wrap {
+//     position: sticky;
+//     width: auto;
+//     top: 62px;
+//     box-sizing: border-box;
+//     max-height: calc(100vh - 62px);
+//     overflow-y: auto;
+//     margin-bottom: 8px;
+//   }
+//   .nav {
+//     max-width: calc(100% - 24px);
+//   }
+//   .nav-link {
+//     color: var(--an-side-nav-link);
+//   }
+//   .nav-link:focus-visible {
+//     box-shadow: none;
+//   }
+//   .nav-link:hover {
+//     color: var(--an-side-nav-link-hover-color);
+//     background-color: var(--bs-gray-100);
+//   }
+//   .nav-link.active {
+//     color: var(--an-side-nav-link-hover-color);
+//     background-color: var(--bs-gray-200);
+//   }
+//   .side-nav-right-line {
+//     position: absolute;
+//     top: 0;
+//     right: 12px;
+//     width: 1px;
+//     height: 100%;
+//     background-color: var(--bs-border-color);
+//   }
+// }
+#second-article-sideNav {
+   .nav-link {
+    color: #222;
+    font-weight: 500;
+  }
+  .nav-link.active {
+    color: #f04142;
+  }
+   .nav-link:hover {
+    color:  #f04142; 
+   
+  }
+  /*在电脑设备上，当鼠标悬停在按钮上时，你会看到按钮变成黄色。
+
+当在移动设备上时，只有一种与元素的交互方式，即点击（轻触）。你会发现，当你点击按钮时，它也会变成黄色，即使当前操作方式不是“指针悬停”。因此，在移动设备上，:hover 会在元素被点击时触发，同样的情况会出现在 :focus 和 :active 上。
+
+对于键盘设备用户来说， :hover 永远不会被触发，因为键盘不是一种“指针”设备，因此不适用于 “指针悬停” 伪类。
+*/
+  
+}
+@media screen and (max-width: 991.9px) {
+  #sideNav {
+    .nav-wrap {
+      max-height: fit-content;
+    }
+    .nav {
+      max-width: 100%;
+    }
+    .side-nav-right-line {
+      display: none;
+    }
+  }
+}
+
+///@my-----------
+//bootstrap中本来就有的
+    .stick-top{
+        position: sticky;
+        top: 50px;
+        z-index: 1020;
+    }

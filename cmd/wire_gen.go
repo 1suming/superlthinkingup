@@ -17,6 +17,7 @@ import (
 	"github.com/apache/incubator-answer/internal/controller/template_render"
 	"github.com/apache/incubator-answer/internal/controller_admin"
 	"github.com/apache/incubator-answer/internal/controller_article"
+	"github.com/apache/incubator-answer/internal/controller_quote"
 	"github.com/apache/incubator-answer/internal/repo/activity"
 	"github.com/apache/incubator-answer/internal/repo/activity_common"
 	"github.com/apache/incubator-answer/internal/repo/answer"
@@ -35,6 +36,9 @@ import (
 	notification2 "github.com/apache/incubator-answer/internal/repo/notification"
 	"github.com/apache/incubator-answer/internal/repo/plugin_config"
 	"github.com/apache/incubator-answer/internal/repo/question"
+	"github.com/apache/incubator-answer/internal/repo/quote"
+	"github.com/apache/incubator-answer/internal/repo/quote_author"
+	"github.com/apache/incubator-answer/internal/repo/quote_piece"
 	"github.com/apache/incubator-answer/internal/repo/rank"
 	"github.com/apache/incubator-answer/internal/repo/reason"
 	"github.com/apache/incubator-answer/internal/repo/report"
@@ -95,6 +99,8 @@ import (
 	user_external_login2 "github.com/apache/incubator-answer/internal/service/user_external_login"
 	user_notification_config2 "github.com/apache/incubator-answer/internal/service/user_notification_config"
 	"github.com/apache/incubator-answer/internal/service_article"
+	"github.com/apache/incubator-answer/internal/service_quote"
+	"github.com/apache/incubator-answer/internal/service_quote/quote_common"
 	"github.com/segmentfault/pacman"
 	"github.com/segmentfault/pacman/log"
 )
@@ -261,7 +267,16 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	avatarMiddleware := middleware.NewAvatarMiddleware(serviceConf, uploaderService)
 	shortIDMiddleware := middleware.NewShortIDMiddleware(siteInfoCommonService)
 	articleService := service_article.NewArticleService(activityRepo, articleRepo, answerRepo, tagCommonService, tagService, articleCommon, userCommon, userRepo, userRoleRelService, revisionService, metaCommonService, collectionCommon, answerActivityService, emailService, notificationQueueService, externalNotificationQueueService, activityQueueService, siteInfoCommonService, externalNotificationService, reviewService, configService, eventQueueService)
-	templateRenderController := templaterender.NewTemplateRenderController(questionService, userService, tagService, answerService, commentService, siteInfoCommonService, questionRepo, articleRepo, articleService)
+	quoteRepo := quote.NewQuoteRepo(dataData, uniqueIDRepo)
+	quoteAuthorRepo := quote_author.NewQuoteAuthorRepo(dataData, uniqueIDRepo)
+	quotePieceRepo := quote_piece.NewQuotePieceRepo(dataData, uniqueIDRepo)
+	quoteCommon := quote_common.NewQuoteCommon(quoteRepo, answerRepo, voteRepo, followRepo, tagCommonService, userCommon, collectionCommon, answerCommon, metaCommonService, configService, activityQueueService, revisionRepo, dataData, quoteAuthorRepo, quotePieceRepo)
+	quoteAuthorCommon := quote_common.NewQuoteAuthorCommon(quoteAuthorRepo, answerRepo, voteRepo, followRepo, tagCommonService, userCommon, collectionCommon, answerCommon, metaCommonService, configService, activityQueueService, revisionRepo, dataData)
+	quoteAuthorService := service_quote.NewQuoteAuthorService(activityRepo, quoteAuthorRepo, answerRepo, tagCommonService, tagService, quoteAuthorCommon, userCommon, userRepo, userRoleRelService, revisionService, metaCommonService, collectionCommon, answerActivityService, emailService, notificationQueueService, externalNotificationQueueService, activityQueueService, siteInfoCommonService, externalNotificationService, reviewService, configService, eventQueueService)
+	quotePieceCommon := quote_common.NewQuotePieceCommon(quotePieceRepo, answerRepo, voteRepo, followRepo, tagCommonService, userCommon, collectionCommon, answerCommon, metaCommonService, configService, activityQueueService, revisionRepo, dataData)
+	quotePieceService := service_quote.NewQuotePieceService(activityRepo, quotePieceRepo, answerRepo, tagCommonService, tagService, quotePieceCommon, userCommon, userRepo, userRoleRelService, revisionService, metaCommonService, collectionCommon, answerActivityService, emailService, notificationQueueService, externalNotificationQueueService, activityQueueService, siteInfoCommonService, externalNotificationService, reviewService, configService, eventQueueService)
+	quoteService := service_quote.NewQuoteService(activityRepo, quoteRepo, answerRepo, tagCommonService, tagService, quoteCommon, userCommon, userRepo, userRoleRelService, revisionService, metaCommonService, collectionCommon, answerActivityService, emailService, notificationQueueService, externalNotificationQueueService, activityQueueService, siteInfoCommonService, externalNotificationService, reviewService, configService, eventQueueService, quoteAuthorService, quotePieceService, quoteAuthorRepo, quotePieceRepo, quoteAuthorCommon, quotePieceCommon)
+	templateRenderController := templaterender.NewTemplateRenderController(questionService, userService, tagService, answerService, commentService, siteInfoCommonService, questionRepo, articleRepo, articleService, quoteRepo, quoteService)
 	templateController := controller.NewTemplateController(templateRenderController, siteInfoCommonService, eventQueueService, userService)
 	templateRouter := router.NewTemplateRouter(templateController, templateRenderController, siteInfoController, authUserMiddleware)
 	connectorController := controller.NewConnectorController(siteInfoCommonService, emailService, userExternalLoginService)
@@ -273,7 +288,11 @@ func initApplication(debug bool, serverConf *conf.Server, dbConf *data.Database,
 	pluginAPIRouter := router.NewPluginAPIRouter(connectorController, userCenterController, captchaController, embedController, renderController)
 	articleController := controller_article.NewArticleController(articleService, answerService, rankService, siteInfoCommonService, captchaService, rateLimitMiddleware)
 	articleAPIRouter := router.NewArticleAPIRouter(articleController)
-	ginEngine := server.NewHTTPServer(debug, staticRouter, answerAPIRouter, swaggerRouter, uiRouter, authUserMiddleware, avatarMiddleware, shortIDMiddleware, templateRouter, pluginAPIRouter, uiConf, articleAPIRouter)
+	quoteController := controller_quote.NewQuoteController(quoteService, answerService, rankService, siteInfoCommonService, captchaService, rateLimitMiddleware)
+	quoteAuthorController := controller_quote.NewQuoteAuthorController(quoteAuthorService, answerService, rankService, siteInfoCommonService, captchaService, rateLimitMiddleware)
+	quotePieceController := controller_quote.NewQuotePieceController(quotePieceService, answerService, rankService, siteInfoCommonService, captchaService, rateLimitMiddleware)
+	quoteAPIRouter := router.NewQuoteAPIRouter(quoteController, quoteAuthorController, quotePieceController)
+	ginEngine := server.NewHTTPServer(debug, staticRouter, answerAPIRouter, swaggerRouter, uiRouter, authUserMiddleware, avatarMiddleware, shortIDMiddleware, templateRouter, pluginAPIRouter, uiConf, articleAPIRouter, quoteAPIRouter)
 	scheduledTaskManager := cron.NewScheduledTaskManager(siteInfoCommonService, questionService, articleService)
 	application := newApplication(serverConf, ginEngine, scheduledTaskManager)
 	return application, func() {

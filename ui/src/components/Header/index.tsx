@@ -128,6 +128,7 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
     if (location.pathname !== '/search' && searchStr) {
       setSearch('');
     }
+    
   }, [location.pathname]);
 
   let navbarStyle = 'theme-colored';
@@ -229,7 +230,7 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
 
         <Navbar.Collapse id="navBarContent" className="me-auto">
           <hr className="hr lg-none mb-3" style={{ marginTop: '12px' }} />
-          <Col lg={4} className="ps-0 nav-left-top-bar">
+          <Col lg={5} className="ps-0 nav-left-top-bar">
            <Nav className="nav-top">
                  
  
@@ -253,7 +254,14 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
                     className={() =>
                     pathname === '/questions' ? 'nav-link active' : 'nav-link'
                     }>
-                    <span>精彩问答</span>
+                    <span>问答</span>
+                </NavLink>
+                <NavLink
+                    to="/quotes"
+                    className={() =>
+                    pathname === '/quotes' ? 'nav-link active' : 'nav-link'
+                    }>
+                    <span>金句控</span>
                 </NavLink>
                <NavDropdown title="人工智能AI" id="navbarScrollingDropdown1">
                 
@@ -278,7 +286,7 @@ const Header: FC<HeaderProps> = ( {siteHeadNavRef}) => {
 
 
 
-          <Col lg={4} className="ps-0">
+          <Col lg={3} className="ps-0">
             <Form
               action="/search"
               className="w-100 maxw-400 position-relative"

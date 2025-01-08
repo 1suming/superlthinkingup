@@ -1352,7 +1352,11 @@ func (qs *QuoteService) GetQuote(ctx context.Context, quoteID, userID string,
 		quote.Operation = operation
 	}
 
-	quote.Description = htmltext.FetchExcerpt(quote.HTML, "...", 240)
+	quote.Description = htmltext.FetchExcerpt(quote.HTML, "...", 120)
+	//@cws
+	if quote.Title == "" {
+		quote.Title = quote.Description //如果title为空
+	}
 	quote.MemberActions = permission.GetQuotePermission(ctx, userID, quote.UserID, quote.Status,
 		per.CanEdit, per.CanDelete,
 		per.CanClose, per.CanReopen, per.CanPin, per.CanHide, per.CanUnPin, per.CanShow,

@@ -97,6 +97,9 @@ type QuoteCommon struct {
 	activityQueueService activity_queue.ActivityQueueService
 	revisionRepo         revision.RevisionRepo
 	data                 *data.Data
+
+	quoteAuthorRepo QuoteAuthorRepo
+	quotePieceRepo  QuotePieceRepo
 }
 
 func NewQuoteCommon(quoteRepo QuoteRepo,
@@ -112,6 +115,9 @@ func NewQuoteCommon(quoteRepo QuoteRepo,
 	activityQueueService activity_queue.ActivityQueueService,
 	revisionRepo revision.RevisionRepo,
 	data *data.Data,
+
+	quoteAuthorRepo QuoteAuthorRepo,
+	quotePieceRepo QuotePieceRepo,
 ) *QuoteCommon {
 	return &QuoteCommon{
 		quoteRepo:            quoteRepo,
@@ -127,6 +133,9 @@ func NewQuoteCommon(quoteRepo QuoteRepo,
 		activityQueueService: activityQueueService,
 		revisionRepo:         revisionRepo,
 		data:                 data,
+
+		quoteAuthorRepo: quoteAuthorRepo,
+		quotePieceRepo:  quotePieceRepo,
 	}
 }
 
@@ -453,6 +462,11 @@ func (qs *QuoteCommon) FormatQuotesPage(
 			Show: quoteInfo.Show,
 
 			//Thumbnails: thumbnails,
+			QuoteAuthorId: quoteInfo.QuoteAuthorId,
+			QuotePieceId:  quoteInfo.QuotePieceId,
+		}
+		if t.Title == "" {
+			t.Title = t.Description //@cws 如果title为空，则使用描述代替
 		}
 
 		quoteIDs = append(quoteIDs, quoteInfo.ID)
@@ -476,6 +490,21 @@ func (qs *QuoteCommon) FormatQuotesPage(
 		//		userIDs = append(userIDs, t.LastAnsweredUserID)
 		//	}
 		//}
+		log.Info("@quoteInfo.QuoteAuthorId:", quoteInfo.QuoteAuthorId)
+		if checker.IsNotZeroString(quoteInfo.QuoteAuthorId) {
+			quoteAuthorBaseInfoInfo, exist, err := qs.quoteAuthorRepo.GetQuoteAuthorSimple(ctx, quoteInfo.QuoteAuthorId)
+			log.Infof("quoteAuthorBaseInfoInfo :%+v ,%+v", err, exist)
+			if err == nil && exist {
+				log.Info("has val autho basic info")
+				t.QuoteAuthorBasicInfo = quoteAuthorBaseInfoInfo
+			}
+		}
+		if checker.IsNotZeroString(quoteInfo.QuotePieceId) {
+			quotePieceBaseInfo, exist, err := qs.quotePieceRepo.GetQuotePieceSimple(ctx, quoteInfo.QuotePieceId)
+			if err == nil && exist {
+				t.QuotePieceBasicInfo = quotePieceBaseInfo
+			}
+		}
 
 		// if order condition is newest or nobody edited or nobody answered, only show quote author
 		if orderCond == schema.QuoteOrderCondNewest || (!haveEdited && !haveAnswered) {

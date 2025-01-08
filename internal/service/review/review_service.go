@@ -155,6 +155,84 @@ func (cs *ReviewService) AddArticleReview(ctx context.Context,
 	//}
 	return entity.ArticleStatusAvailable
 }
+func (cs *ReviewService) AddQuoteReview(ctx context.Context,
+	question *entity.Quote, tags []*schema.TagItem, ip, ua string) (questionStatus int) {
+	//reviewContent := &plugin.ReviewContent{
+	//	ObjectType: constant.QuestionObjectType,
+	//	Title:      question.Title,
+	//	Content:    question.ParsedText,
+	//	IP:         ip,
+	//	UserAgent:  ua,
+	//}
+	//for _, tag := range tags {
+	//	reviewContent.Tags = append(reviewContent.Tags, tag.SlugName)
+	//}
+	//reviewContent.Author = cs.getReviewContentAuthorInfo(ctx, question.UserID)
+	//reviewStatus := cs.callPluginToReview(ctx, question.UserID, question.ID, reviewContent)
+	//switch reviewStatus {
+	//case plugin.ReviewStatusApproved:
+	//	questionStatus = entity.QuestionStatusAvailable
+	//case plugin.ReviewStatusNeedReview:
+	//	questionStatus = entity.QuestionStatusPending
+	//case plugin.ReviewStatusDeleteDirectly:
+	//	questionStatus = entity.QuestionStatusDeleted
+	//default:
+	//	questionStatus = entity.QuestionStatusAvailable
+	//}
+	return entity.QuoteStatusAvailable
+}
+func (cs *ReviewService) AddQuoteAuthorReview(ctx context.Context,
+	question *entity.QuoteAuthor, tags []*schema.TagItem, ip, ua string) (questionStatus int) {
+	//reviewContent := &plugin.ReviewContent{
+	//	ObjectType: constant.QuestionObjectType,
+	//	Title:      question.Title,
+	//	Content:    question.ParsedText,
+	//	IP:         ip,
+	//	UserAgent:  ua,
+	//}
+	//for _, tag := range tags {
+	//	reviewContent.Tags = append(reviewContent.Tags, tag.SlugName)
+	//}
+	//reviewContent.Author = cs.getReviewContentAuthorInfo(ctx, question.UserID)
+	//reviewStatus := cs.callPluginToReview(ctx, question.UserID, question.ID, reviewContent)
+	//switch reviewStatus {
+	//case plugin.ReviewStatusApproved:
+	//	questionStatus = entity.QuestionStatusAvailable
+	//case plugin.ReviewStatusNeedReview:
+	//	questionStatus = entity.QuestionStatusPending
+	//case plugin.ReviewStatusDeleteDirectly:
+	//	questionStatus = entity.QuestionStatusDeleted
+	//default:
+	//	questionStatus = entity.QuestionStatusAvailable
+	//}
+	return entity.QuoteAuthorStatusAvailable
+}
+func (cs *ReviewService) AddQuotePieceReview(ctx context.Context,
+	question *entity.QuotePiece, tags []*schema.TagItem, ip, ua string) (questionStatus int) {
+	//reviewContent := &plugin.ReviewContent{
+	//	ObjectType: constant.QuestionObjectType,
+	//	Title:      question.Title,
+	//	Content:    question.ParsedText,
+	//	IP:         ip,
+	//	UserAgent:  ua,
+	//}
+	//for _, tag := range tags {
+	//	reviewContent.Tags = append(reviewContent.Tags, tag.SlugName)
+	//}
+	//reviewContent.Author = cs.getReviewContentAuthorInfo(ctx, question.UserID)
+	//reviewStatus := cs.callPluginToReview(ctx, question.UserID, question.ID, reviewContent)
+	//switch reviewStatus {
+	//case plugin.ReviewStatusApproved:
+	//	questionStatus = entity.QuestionStatusAvailable
+	//case plugin.ReviewStatusNeedReview:
+	//	questionStatus = entity.QuestionStatusPending
+	//case plugin.ReviewStatusDeleteDirectly:
+	//	questionStatus = entity.QuestionStatusDeleted
+	//default:
+	//	questionStatus = entity.QuestionStatusAvailable
+	//}
+	return entity.QuoteAuthorStatusAvailable
+}
 
 // AddAnswerReview add review for answer if needed
 func (cs *ReviewService) AddAnswerReview(ctx context.Context,

@@ -77,6 +77,19 @@ const articleLanding = (questionId: string = '', slugTitle: string = '') => {
     return `/articles/${questionId}`;
   };
 
+const quoteLanding = (quoteId: string = '', slugTitle: string = '') => {
+  const { seo } = seoSettingStore.getState();
+  if (!quoteId) {
+    return slugTitle ? `/quotes/null/${slugTitle}` : '/quotes/null';
+  }
+  // @ts-ignore
+  if (/[13]/.test(seo.permalink) && slugTitle) {
+    return `/quotes/${quoteId}/${encodeURIComponent(slugTitle)}`;
+  }
+
+  return `/quotes/${quoteId}`;
+};
+
 
 export const pathFactory = {
   tagLanding,
@@ -87,4 +100,6 @@ export const pathFactory = {
 
   articleLanding,//@ms:
   articleTagLanding,
+
+  quoteLanding,
 };

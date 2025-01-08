@@ -25,3 +25,6 @@ export * from './user-center';
 
 //@ms:
 export * from './article';
+export * from './quote';
+export * from './quote_author';
+export * from './quote_piece';

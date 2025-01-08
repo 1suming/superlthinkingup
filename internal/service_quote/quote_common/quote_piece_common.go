@@ -53,6 +53,8 @@ type QuotePieceRepo interface {
 	RemoveQuotePiece(ctx context.Context, id string) (err error)
 	UpdateQuotePiece(ctx context.Context, QuotePiece *entity.QuotePiece, Cols []string) (err error)
 	GetQuotePiece(ctx context.Context, id string) (QuotePiece *entity.QuotePiece, exist bool, err error)
+	GetQuotePieceSimple(ctx context.Context, id string) (quotePieceBasicInfo *schema.QuotePieceBasicInfo, exist bool, err error)
+
 	GetQuotePieceList(ctx context.Context, QuotePiece *entity.QuotePiece) (QuotePieces []*entity.QuotePiece, err error)
 	GetQuotePiecePage(ctx context.Context, page, pageSize int, tagIDs []string, userID, orderCond string, inDays int, showHidden, showPending bool) (
 		QuotePieceList []*entity.QuotePiece, total int64, err error)
@@ -80,7 +82,7 @@ type QuotePieceRepo interface {
 
 // QuotePieceCommon user service
 type QuotePieceCommon struct {
-	QuotePieceRepo       QuotePieceRepo
+	quotePieceRepo       QuotePieceRepo
 	answerRepo           answercommon.AnswerRepo
 	voteRepo             activity_common.VoteRepo
 	followCommon         activity_common.FollowRepo
@@ -95,7 +97,7 @@ type QuotePieceCommon struct {
 	data                 *data.Data
 }
 
-func NewQuotePieceCommon(QuotePieceRepo QuotePieceRepo,
+func NewQuotePieceCommon(quotePieceRepo QuotePieceRepo,
 	answerRepo answercommon.AnswerRepo,
 	voteRepo activity_common.VoteRepo,
 	followCommon activity_common.FollowRepo,
@@ -110,7 +112,7 @@ func NewQuotePieceCommon(QuotePieceRepo QuotePieceRepo,
 	data *data.Data,
 ) *QuotePieceCommon {
 	return &QuotePieceCommon{
-		QuotePieceRepo:       QuotePieceRepo,
+		quotePieceRepo:       quotePieceRepo,
 		answerRepo:           answerRepo,
 		voteRepo:             voteRepo,
 		followCommon:         followCommon,
@@ -127,7 +129,7 @@ func NewQuotePieceCommon(QuotePieceRepo QuotePieceRepo,
 }
 
 func (qs *QuotePieceCommon) GetUserQuotePieceCount(ctx context.Context, userID string) (count int64, err error) {
-	return qs.QuotePieceRepo.GetUserQuotePieceCount(ctx, userID, 0)
+	return qs.quotePieceRepo.GetUserQuotePieceCount(ctx, userID, 0)
 }
 
 func (qs *QuotePieceCommon) GetPersonalUserQuotePieceCount(ctx context.Context, loginUserID, userID string, isAdmin bool) (count int64, err error) {
@@ -135,11 +137,11 @@ func (qs *QuotePieceCommon) GetPersonalUserQuotePieceCount(ctx context.Context, 
 	if loginUserID == userID || isAdmin {
 		show = 0
 	}
-	return qs.QuotePieceRepo.GetUserQuotePieceCount(ctx, userID, show)
+	return qs.quotePieceRepo.GetUserQuotePieceCount(ctx, userID, show)
 }
 
 func (qs *QuotePieceCommon) UpdatePv(ctx context.Context, QuotePieceID string) error {
-	return qs.QuotePieceRepo.UpdatePvCount(ctx, QuotePieceID)
+	return qs.quotePieceRepo.UpdatePvCount(ctx, QuotePieceID)
 }
 
 //func (qs *QuotePieceCommon) UpdateAnswerCount(ctx context.Context, QuotePieceID string) error {
@@ -148,7 +150,7 @@ func (qs *QuotePieceCommon) UpdatePv(ctx context.Context, QuotePieceID string) e
 //		return err
 //	}
 //	if count == 0 {
-//		err = qs.QuotePieceRepo.UpdateLastAnswer(ctx, &entity.QuotePiece{
+//		err = qs.quotePieceRepo.UpdateLastAnswer(ctx, &entity.QuotePiece{
 //			ID:           QuotePieceID,
 //			LastAnswerID: "0",
 //		})
@@ -156,25 +158,25 @@ func (qs *QuotePieceCommon) UpdatePv(ctx context.Context, QuotePieceID string) e
 //			return err
 //		}
 //	}
-//	return qs.QuotePieceRepo.UpdateAnswerCount(ctx, QuotePieceID, int(count))
+//	return qs.quotePieceRepo.UpdateAnswerCount(ctx, QuotePieceID, int(count))
 //}
 
 func (qs *QuotePieceCommon) UpdateCollectionCount(ctx context.Context, QuotePieceID string) (count int64, err error) {
-	return qs.QuotePieceRepo.UpdateCollectionCount(ctx, QuotePieceID)
+	return qs.quotePieceRepo.UpdateCollectionCount(ctx, QuotePieceID)
 }
 
 func (qs *QuotePieceCommon) UpdateAccepted(ctx context.Context, QuotePieceID, AnswerID string) error {
 	QuotePiece := &entity.QuotePiece{}
 	QuotePiece.ID = QuotePieceID
 	//QuotePiece.AcceptedAnswerID = AnswerID
-	return qs.QuotePieceRepo.UpdateAccepted(ctx, QuotePiece)
+	return qs.quotePieceRepo.UpdateAccepted(ctx, QuotePiece)
 }
 
 func (qs *QuotePieceCommon) UpdateLastAnswer(ctx context.Context, QuotePieceID, AnswerID string) error {
 	QuotePiece := &entity.QuotePiece{}
 	QuotePiece.ID = QuotePieceID
 	//QuotePiece.LastAnswerID = AnswerID
-	return qs.QuotePieceRepo.UpdateLastAnswer(ctx, QuotePiece)
+	return qs.quotePieceRepo.UpdateLastAnswer(ctx, QuotePiece)
 }
 
 //func (qs *QuotePieceCommon) UpdatePostTime(ctx context.Context, QuotePieceID string) error {
@@ -183,18 +185,18 @@ func (qs *QuotePieceCommon) UpdateLastAnswer(ctx context.Context, QuotePieceID, 
 //	_ = now
 //	QuotePieceinfo.ID = QuotePieceID
 //	QuotePieceinfo.PostUpdateTime = now
-//	return qs.QuotePieceRepo.UpdateQuotePiece(ctx, QuotePieceinfo, []string{"post_update_time"})
+//	return qs.quotePieceRepo.UpdateQuotePiece(ctx, QuotePieceinfo, []string{"post_update_time"})
 //}
 //func (qs *QuotePieceCommon) UpdatePostSetTime(ctx context.Context, QuotePieceID string, setTime time.Time) error {
 //	QuotePieceinfo := &entity.QuotePiece{}
 //	QuotePieceinfo.ID = QuotePieceID
 //	QuotePieceinfo.PostUpdateTime = setTime
-//	return qs.QuotePieceRepo.UpdateQuotePiece(ctx, QuotePieceinfo, []string{"post_update_time"})
+//	return qs.quotePieceRepo.UpdateQuotePiece(ctx, QuotePieceinfo, []string{"post_update_time"})
 //}
 
 func (qs *QuotePieceCommon) FindInfoByID(ctx context.Context, QuotePieceIDs []string, loginUserID string) (map[string]*schema.QuotePieceInfoResp, error) {
 	list := make(map[string]*schema.QuotePieceInfoResp)
-	QuotePieceList, err := qs.QuotePieceRepo.FindByID(ctx, QuotePieceIDs)
+	QuotePieceList, err := qs.quotePieceRepo.FindByID(ctx, QuotePieceIDs)
 	if err != nil {
 		return list, err
 	}
@@ -211,7 +213,7 @@ func (qs *QuotePieceCommon) FindInfoByID(ctx context.Context, QuotePieceIDs []st
 func (qs *QuotePieceCommon) InviteUserInfo(ctx context.Context, QuotePieceID string) (inviteList []*schema.UserBasicInfo, err error) {
 	return
 	//InviteUserInfo := make([]*schema.UserBasicInfo, 0)
-	//dbinfo, has, err := qs.QuotePieceRepo.GetQuotePiece(ctx, QuotePieceID)
+	//dbinfo, has, err := qs.quotePieceRepo.GetQuotePiece(ctx, QuotePieceID)
 	//if err != nil {
 	//	return InviteUserInfo, err
 	//}
@@ -238,7 +240,7 @@ func (qs *QuotePieceCommon) InviteUserInfo(ctx context.Context, QuotePieceID str
 }
 
 func (qs *QuotePieceCommon) Info(ctx context.Context, QuotePieceID string, loginUserID string) (resp *schema.QuotePieceInfoResp, err error) {
-	QuotePieceInfo, has, err := qs.QuotePieceRepo.GetQuotePiece(ctx, QuotePieceID)
+	QuotePieceInfo, has, err := qs.quotePieceRepo.GetQuotePiece(ctx, QuotePieceID)
 	if err != nil {
 		return resp, err
 	}
@@ -502,7 +504,7 @@ func (qs *QuotePieceCommon) FormatQuotePieces(ctx context.Context, QuotePieceLis
 
 // RemoveQuotePiece delete QuotePiece
 func (qs *QuotePieceCommon) RemoveQuotePiece(ctx context.Context, req *schema.RemoveQuotePieceReq) (err error) {
-	QuotePieceInfo, has, err := qs.QuotePieceRepo.GetQuotePiece(ctx, req.ID)
+	QuotePieceInfo, has, err := qs.quotePieceRepo.GetQuotePiece(ctx, req.ID)
 	if err != nil {
 		return err
 	}
@@ -515,7 +517,7 @@ func (qs *QuotePieceCommon) RemoveQuotePiece(ctx context.Context, req *schema.Re
 	}
 
 	QuotePieceInfo.Status = entity.QuotePieceStatusDeleted
-	err = qs.QuotePieceRepo.UpdateQuotePieceStatus(ctx, QuotePieceInfo.ID, QuotePieceInfo.Status)
+	err = qs.quotePieceRepo.UpdateQuotePieceStatus(ctx, QuotePieceInfo.ID, QuotePieceInfo.Status)
 	if err != nil {
 		return err
 	}
@@ -535,7 +537,7 @@ func (qs *QuotePieceCommon) RemoveQuotePiece(ctx context.Context, req *schema.Re
 }
 
 func (qs *QuotePieceCommon) CloseQuotePiece(ctx context.Context, req *schema.CloseQuotePieceReq) error {
-	QuotePieceInfo, has, err := qs.QuotePieceRepo.GetQuotePiece(ctx, req.ID)
+	QuotePieceInfo, has, err := qs.quotePieceRepo.GetQuotePiece(ctx, req.ID)
 	if err != nil {
 		return err
 	}
@@ -543,7 +545,7 @@ func (qs *QuotePieceCommon) CloseQuotePiece(ctx context.Context, req *schema.Clo
 		return nil
 	}
 	QuotePieceInfo.Status = entity.QuotePieceStatusClosed
-	err = qs.QuotePieceRepo.UpdateQuotePieceStatus(ctx, QuotePieceInfo.ID, QuotePieceInfo.Status)
+	err = qs.quotePieceRepo.UpdateQuotePieceStatus(ctx, QuotePieceInfo.ID, QuotePieceInfo.Status)
 	if err != nil {
 		return err
 	}
@@ -595,13 +597,13 @@ func (qs *QuotePieceCommon) CloseQuotePiece(ctx context.Context, req *schema.Clo
 //}
 
 func (qs *QuotePieceCommon) SitemapCron(ctx context.Context) {
-	QuotePieceNum, err := qs.QuotePieceRepo.GetQuotePieceCount(ctx)
+	QuotePieceNum, err := qs.quotePieceRepo.GetQuotePieceCount(ctx)
 	if err != nil {
 		log.Error(err)
 		return
 	}
 	if QuotePieceNum <= constant.SitemapMaxSize {
-		_, err = qs.QuotePieceRepo.SitemapQuotePieces(ctx, 1, int(QuotePieceNum))
+		_, err = qs.quotePieceRepo.SitemapQuotePieces(ctx, 1, int(QuotePieceNum))
 		if err != nil {
 			log.Errorf("get site map QuotePiece error: %v", err)
 		}
@@ -610,7 +612,7 @@ func (qs *QuotePieceCommon) SitemapCron(ctx context.Context) {
 
 	totalPages := int(math.Ceil(float64(QuotePieceNum) / float64(constant.SitemapMaxSize)))
 	for i := 1; i <= totalPages; i++ {
-		_, err = qs.QuotePieceRepo.SitemapQuotePieces(ctx, i, constant.SitemapMaxSize)
+		_, err = qs.quotePieceRepo.SitemapQuotePieces(ctx, i, constant.SitemapMaxSize)
 		if err != nil {
 			log.Errorf("get site map QuotePiece error: %v", err)
 			return

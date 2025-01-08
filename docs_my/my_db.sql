@@ -227,3 +227,181 @@ INSERT INTO `site_info` (  `created_at`, `updated_at`, `type`, `content`, `statu
 alter table tag add  column  parent_tag_id int NOT NULL DEFAULT '0' comment '父标签';
 alter table tag add  column  `parent_tag_slug_name` varchar(35)  NOT NULL DEFAULT '';
 alter table tag add  column  is_article_module_menu tinyint(2) NOT NULL DEFAULT '0' comment '是否是文章模块的菜单栏标签';
+
+
+
+CREATE TABLE `tv_vlog` (
+                           `id` bigint unsigned NOT NULL,
+                           `user_id` bigint unsigned NOT NULL COMMENT '对应用户表id，vlog视频发布者',
+                           `url` varchar(1024)  NOT NULL COMMENT '视频播放地址',
+                           `cover` varchar(255) NOT NULL COMMENT '视频封面',
+                           `title` varchar(128) DEFAULT NULL COMMENT '视频标题，可以为空',
+                           `width` int NOT NULL COMMENT '视频width',
+                           `height` int NOT NULL COMMENT '视频height',
+                           `like_counts` int NOT NULL COMMENT '点赞总数',
+                           `comments_counts` int NOT NULL COMMENT '评论总数',
+                           `is_private` int NOT NULL COMMENT '是否私密，用户可以设置私密，如此可以不公开给比人看',
+                           `created_at`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                           `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+                           PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB   COMMENT='短视频表';
+
+
+CREATE TABLE `tv_comment` (
+                              `id` bigint unsigned NOT NULL,
+                              `video_id` bigint unsigned NOT NULL   COMMENT '回复的那个视频id',
+                              `video_user_id` bigint unsigned NOT NULL  COMMENT '评论的视频是哪个作者（vloger）的关联id',
+                              `parent_comment_id` bigint unsigned NOT NULL COMMENT '如果是回复留言，则本条为子留言，需要关联查询',
+
+                              `comment_user_id`  bigint unsigned NOT NULL COMMENT '发布留言的用户id',
+                              `content` varchar(128) NOT NULL COMMENT '留言内容',
+                              `like_counts` int NOT NULL COMMENT '留言的点赞总数',
+                              `create_time` datetime NOT NULL COMMENT '留言时间',
+                              PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB  COMMENT='评论表';
+
+
+CREATE TABLE `tv_user_follow` (
+                        `id` varchar(24) NOT NULL,
+                        `user_id` bigint unsigned  NOT NULL COMMENT '作家用户id',
+                        `follow_user_id` bigint unsigned NOT NULL COMMENT '粉丝用户id',
+                        `is_friend` int NOT NULL COMMENT '粉丝是否是vloger的朋友，如果成为朋友，则本表的双方此字段都需要设置为1，如果有一人取关，则两边都需要设置为0',
+                        `remark` varchar(50) NOT NULL COMMENT '备注',
+
+
+                        `status` tinyint(1) DEFAULT '0' COMMENT '关注状态(0关注 1取消)' ,
+  `created_at`  timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+  PRIMARY KEY (`id`) USING BTREE,
+  UNIQUE KEY `writer_id` (`vloger_id`,`fan_id`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='粉丝表';
+
+
+
+
+create table tq_quote (
+                          ID bigint unsigned NOT NULL ,
+                          user_id bigint(20) unsigned NOT NULL default '0' comment '发布者ID',
+                          quote_author_id bigint(20) unsigned NOT NULL default '0' comment '发布者ID',
+                          quote_piece_id bigint(20) unsigned NOT NULL default '0' comment '作品ID（来源出处)',
+                          `title` varchar(256)  NOT NULL default '',
+                          `original_text` varchar(2048)  NOT NULL,
+                          `parsed_text` varchar(2048)  NOT NULL,
+
+                          status tinyint(2) NOT NULL default '0',
+
+                          comment_count bigint(20) NOT NULL default '0' comment '评论总数',
+
+                          `revision_id` bigint NOT NULL DEFAULT '0' comment '修订号',
+
+
+                          `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                          `updated_at` timestamp not null  DEFAULT   CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                          `post_update_time` timestamp NULL DEFAULT NULL,
+
+
+                          `pin` int NOT NULL DEFAULT '1',
+                          `show` int NOT NULL DEFAULT '1',
+                          `collection_count` int NOT NULL DEFAULT '0',
+                          `follow_count` int NOT NULL DEFAULT '0',
+                          `view_count` int NOT NULL DEFAULT '0',
+                          `hot_score` int NOT NULL DEFAULT '0',
+                          `unique_view_count` int NOT NULL DEFAULT '0',
+                          `vote_count` int NOT NULL DEFAULT '0',
+
+
+                          PRIMARY KEY  (ID),
+                          KEY     idx_user_id (    user_id),
+                          KEY     idx_quote_author_id (    quote_author_id),
+                          FULLTEXT KEY idx_content (`parsed_text`)
+)ENGINE=InnoDB comment  "金句";
+
+//  `bio_html` text   NOT NULL,
+CREATE TABLE `tq_quote_author` (
+                                   `id` bigint unsigned NOT NULL ,
+                                   user_id bigint(20) unsigned NOT NULL default '0' comment '发布者ID',
+                                   `author_name` varchar(256)  NOT NULL DEFAULT '' comment '作者ID',
+                                   `status` int NOT NULL DEFAULT '1',
+                                   `avatar` varchar(256)   NOT NULL DEFAULT '',
+                                   `bio` mediumtext  NOT NULL,
+
+
+                                   `pin` int NOT NULL DEFAULT '1',
+                                   `show` int NOT NULL DEFAULT '1',
+
+                                   `collection_count` int NOT NULL DEFAULT '0',
+                                   `follow_count` int NOT NULL DEFAULT '0',
+                                   `view_count` int NOT NULL DEFAULT '0',
+                                   `hot_score` int NOT NULL DEFAULT '0',
+                                   `unique_view_count` int NOT NULL DEFAULT '0',
+                                   `vote_count` int NOT NULL DEFAULT '0',
+
+
+                                   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                   `updated_at` timestamp not null  DEFAULT   CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+                                   PRIMARY KEY (`id`),
+                                   unique key uni_author_name (author_name)
+) ENGINE=InnoDB  COMMENT='金句作者表';
+
+
+create table tq_quote_piece (
+                                ID bigint unsigned NOT NULL ,
+                                user_id bigint(20) unsigned NOT NULL default '0' comment '发布者ID',
+                                author_id bigint(20) unsigned NOT NULL default '0' comment 'ID',
+
+                                `title` varchar(256)  NOT NULL default '',
+                                `avatar` varchar(256)   NOT NULL DEFAULT '',
+                                publish_date DATE DEFAULT NULL comment '出版日期',
+
+                                `original_text` varchar(2048)  NOT NULL,
+                                `parsed_text` varchar(2048)  NOT NULL,
+                                piece_type  tinyint not null default 0  comment "book', 'article', 'speech', 'website', 'other' 来源类型，使用枚举约束来源类别 ",
+
+                                status tinyint(2) NOT NULL default '0',
+
+                                comment_count bigint(20) NOT NULL default '0' comment '评论总数',
+
+                                `revision_id` bigint NOT NULL DEFAULT '0' comment '修订号',
+
+
+                                `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                `updated_at` timestamp not null  DEFAULT   CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                                `post_update_time` timestamp NULL DEFAULT NULL,
+
+                                `pin` int NOT NULL DEFAULT '1',
+                                `show` int NOT NULL DEFAULT '1',
+                                `collection_count` int NOT NULL DEFAULT '0',
+                                `follow_count` int NOT NULL DEFAULT '0',
+                                `view_count` int NOT NULL DEFAULT '0',
+                                `hot_score` int NOT NULL DEFAULT '0',
+                                `unique_view_count` int NOT NULL DEFAULT '0',
+                                `vote_count` int NOT NULL DEFAULT '0',
+
+                                PRIMARY KEY  (ID),
+                                KEY     idx_user_id (    user_id),
+                                KEY     idx_author_id (    author_id),
+                                unique key uni_title (title),
+                                FULLTEXT KEY idx_content (`parsed_text`)
+)ENGINE=InnoDB comment  "金句所属出处-作品名等";
+
+CREATE TABLE t_upvote (
+                          `id` bigint NOT NULL DEFAULT '0',
+
+                          `user_id` bigint NOT NULL DEFAULT '0',
+                          `object_id` bigint NOT NULL DEFAULT '0',
+
+                          is_liked tinyint(2) DEFAULT 1 comment '是否点赞（支持取消点赞功能）',
+                          `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                          `updated_at` timestamp not null  DEFAULT   CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                          PRIMARY KEY (`id`),
+
+                          unique KEY idx_uni(user_id, object_id)
+
+
+)ENGINE=InnoDB   COMMENT='点赞表';
+alter table user add  column `quote_count` int NOT NULL DEFAULT '0' comment '名言数';
+
+

@@ -35,11 +35,13 @@ import (
 	templaterender "github.com/apache/incubator-answer/internal/controller/template_render"
 	"github.com/apache/incubator-answer/internal/controller_admin"
 	"github.com/apache/incubator-answer/internal/controller_article" //@cws
+	"github.com/apache/incubator-answer/internal/controller_quote"
 	"github.com/apache/incubator-answer/internal/repo"
 	"github.com/apache/incubator-answer/internal/router"
 	"github.com/apache/incubator-answer/internal/service"
 	"github.com/apache/incubator-answer/internal/service/service_config"
 	"github.com/apache/incubator-answer/internal/service_article" //@cws
+	"github.com/apache/incubator-answer/internal/service_quote"
 	"github.com/google/wire"
 	"github.com/segmentfault/pacman"
 	"github.com/segmentfault/pacman/log"
@@ -62,9 +64,11 @@ func initApplication(
 		controller.ProviderSetController,
 		controller_admin.ProviderSetController,
 		controller_article.ProviderSetController, //@cws
+		controller_quote.ProviderSetController,
 		templaterender.ProviderSetTemplateRenderController,
 		service.ProviderSetService,
 		service_article.ProviderSetService, //@cws
+		service_quote.ProviderSetService,
 
 		cron.ProviderSetService,
 		repo.ProviderSetRepo,

@@ -54,6 +54,9 @@ type TagCommonRepo interface {
 	UpdateTagQuestionCount(ctx context.Context, tagID string, questionCount int) (err error)
 
 	GetTagListByType(ctx context.Context, tag_type int8) (tagList []*entity.Tag, err error)
+	UpdateTagArticleCount(ctx context.Context, tagID string, articleCount int) (err error)
+	UpdateTagQuoteCount(ctx context.Context, tagID string, quoteCount int) (err error)
+	UpdateTagQuoteAuthorCount(ctx context.Context, tagID string, quoteCount int) (err error)
 }
 
 type TagRepo interface {
@@ -350,7 +353,7 @@ func (ts *TagCommonService) AddTag(ctx context.Context, req *schema.AddTagReq) (
 
 	parentTagIDInt := int64(0)
 	parentTagInfo_slugname := ""
-	if req.ParentTagId != "0" {
+	if req.ParentTagId != "0" { //@cws
 		parentTagInfo, exist, err := ts.GetTagByID(ctx, req.ParentTagId)
 		if err != nil {
 			log.Error("GetTagByID:", err)
@@ -776,7 +779,35 @@ func (ts *TagCommonService) RefreshTagArticleCount(ctx context.Context, tagIDs [
 		if err != nil {
 			return err
 		}
-		err = ts.tagCommonRepo.UpdateTagQuestionCount(ctx, tagID, int(count))
+		err = ts.tagCommonRepo.UpdateTagArticleCount(ctx, tagID, int(count))
+		if err != nil {
+			return err
+		}
+		log.Debugf("tag count updated %s %d", tagID, count)
+	}
+	return nil
+}
+func (ts *TagCommonService) RefreshTagQuoteCount(ctx context.Context, tagIDs []string) (err error) {
+	for _, tagID := range tagIDs {
+		count, err := ts.tagRelRepo.CountTagRelByTagID(ctx, tagID)
+		if err != nil {
+			return err
+		}
+		err = ts.tagCommonRepo.UpdateTagQuoteAuthorCount(ctx, tagID, int(count))
+		if err != nil {
+			return err
+		}
+		log.Debugf("tag count updated %s %d", tagID, count)
+	}
+	return nil
+}
+func (ts *TagCommonService) RefreshTagQuoteAuthorCount(ctx context.Context, tagIDs []string) (err error) {
+	for _, tagID := range tagIDs {
+		count, err := ts.tagRelRepo.CountTagRelByTagID(ctx, tagID)
+		if err != nil {
+			return err
+		}
+		err = ts.tagCommonRepo.UpdateTagQuoteAuthorCount(ctx, tagID, int(count))
 		if err != nil {
 			return err
 		}
@@ -810,6 +841,21 @@ func (ts *TagCommonService) RefreshTagCountByArticleID(ctx context.Context, ques
 		tagIDs = append(tagIDs, item.TagID)
 	}
 	err = ts.RefreshTagQuestionCount(ctx, tagIDs) //用这个也没关系
+	if err != nil {
+		return err
+	}
+	return nil
+}
+func (ts *TagCommonService) RefreshTagCountByQuoteID(ctx context.Context, questionID string) (err error) {
+	tagListList, err := ts.tagRelRepo.GetObjectTagRelList(ctx, questionID)
+	if err != nil {
+		return err
+	}
+	tagIDs := make([]string, 0)
+	for _, item := range tagListList {
+		tagIDs = append(tagIDs, item.TagID)
+	}
+	err = ts.RefreshTagQuoteCount(ctx, tagIDs) //用这个也没关系
 	if err != nil {
 		return err
 	}

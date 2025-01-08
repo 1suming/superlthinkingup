@@ -67,6 +67,9 @@ type User struct {
 	IsAdmin        bool      `xorm:"not null default false BOOL is_admin"`
 	Language       string    `xorm:"not null default '' VARCHAR(100) language"`
 	ColorScheme    string    `xorm:"not null default '' VARCHAR(100) color_scheme"`
+
+	QuoteCount int `xorm:"not null default 0 INT(11) quote_count"` //@CWS
+
 }
 
 // TableName user table name

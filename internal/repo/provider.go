@@ -39,6 +39,9 @@ import (
 	"github.com/apache/incubator-answer/internal/repo/notification"
 	"github.com/apache/incubator-answer/internal/repo/plugin_config"
 	"github.com/apache/incubator-answer/internal/repo/question"
+	"github.com/apache/incubator-answer/internal/repo/quote"
+	"github.com/apache/incubator-answer/internal/repo/quote_author"
+	"github.com/apache/incubator-answer/internal/repo/quote_piece"
 	"github.com/apache/incubator-answer/internal/repo/rank"
 	"github.com/apache/incubator-answer/internal/repo/reason"
 	"github.com/apache/incubator-answer/internal/repo/report"
@@ -110,4 +113,7 @@ var ProviderSetRepo = wire.NewSet(
 	badge_award.NewBadgeAwardRepo,
 
 	article.NewArticleRepo,
+	quote.NewQuoteRepo,
+	quote_author.NewQuoteAuthorRepo,
+	quote_piece.NewQuotePieceRepo,
 )

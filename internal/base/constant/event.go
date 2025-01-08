@@ -29,7 +29,10 @@ const (
 	eventComment  = "comment"
 	eventUser     = "user"
 
-	eventArticle = "article"
+	eventArticle     = "article"
+	eventQuote       = "quote"
+	eventQuoteAuthor = "quote_author"
+	eventQuotePiece  = "quote_piece"
 )
 
 // event action
@@ -82,4 +85,33 @@ const (
 	EventCommentDelete EventType = eventComment + "." + eventDelete
 	EventCommentVote   EventType = eventComment + "." + eventVote
 	EventCommentFlag   EventType = eventComment + "." + eventFlag
+)
+
+const (
+	EventQuoteCreate EventType = eventQuote + "." + eventCreate
+	EventQuoteUpdate EventType = eventQuote + "." + eventUpdate
+	EventQuoteDelete EventType = eventQuote + "." + eventDelete
+	EventQuoteVote   EventType = eventQuote + "." + eventVote
+	EventQuoteAccept EventType = eventQuote + "." + eventAccept
+	EventQuoteFlag   EventType = eventQuote + "." + eventFlag
+	EventQuoteReact  EventType = eventQuote + "." + eventReact
+)
+
+const (
+	EventQuoteAuthorCreate EventType = eventQuoteAuthor + "." + eventCreate
+	EventQuoteAuthorUpdate EventType = eventQuoteAuthor + "." + eventUpdate
+	EventQuoteAuthorDelete EventType = eventQuoteAuthor + "." + eventDelete
+	EventQuoteAuthorVote   EventType = eventQuoteAuthor + "." + eventVote
+	EventQuoteAuthorAccept EventType = eventQuoteAuthor + "." + eventAccept
+	EventQuoteAuthorFlag   EventType = eventQuoteAuthor + "." + eventFlag
+	EventQuoteAuthorReact  EventType = eventQuoteAuthor + "." + eventReact
+)
+const (
+	EventQuotePieceCreate EventType = eventQuotePiece + "." + eventCreate
+	EventQuotePieceUpdate EventType = eventQuotePiece + "." + eventUpdate
+	EventQuotePieceDelete EventType = eventQuotePiece + "." + eventDelete
+	EventQuotePieceVote   EventType = eventQuotePiece + "." + eventVote
+	EventQuotePieceAccept EventType = eventQuotePiece + "." + eventAccept
+	EventQuotePieceFlag   EventType = eventQuotePiece + "." + eventFlag
+	EventQuotePieceReact  EventType = eventQuotePiece + "." + eventReact
 )

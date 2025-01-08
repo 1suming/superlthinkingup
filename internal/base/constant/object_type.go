@@ -31,7 +31,10 @@ const (
 	BadgeAwardObjectType = "badge_award"
 
 	//@ms:
-	ArticleObjectType = "article"
+	ArticleObjectType     = "article"
+	QuoteObjectType       = "tq_quote"
+	QuoteAuthorObjectType = "tq_quote_author"
+	QuotePieceObjectType  = "tq_quote_piece"
 )
 
 var (
@@ -46,7 +49,10 @@ var (
 		BadgeObjectType:      9,
 		BadgeAwardObjectType: 10,
 
-		ArticleObjectType: 11, //
+		ArticleObjectType:     11, //
+		QuoteObjectType:       12, //
+		QuoteAuthorObjectType: 13,
+		QuotePieceObjectType:  14,
 	}
 
 	ObjectTypeNumberMapping = map[int]string{
@@ -61,5 +67,8 @@ var (
 		10: BadgeAwardObjectType,
 
 		11: ArticleObjectType,
+		12: QuoteObjectType,
+		13: QuoteAuthorObjectType,
+		14: QuotePieceObjectType,
 	}
 )

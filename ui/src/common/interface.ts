@@ -307,13 +307,7 @@ export type QuestionOrderBy =
   | 'score'
   | 'unanswered';
 
-export type ArticleOrderBy =
-  | 'recommend'
-  | 'newest'
-  | 'active'
-  | 'hot'
-  | 'score'
-  | 'unanswered';
+
 
 export interface QueryQuestionsReq extends Paging {
   order: QuestionOrderBy;
@@ -321,13 +315,7 @@ export interface QueryQuestionsReq extends Paging {
   in_days?: number;
 }
 
-export interface QueryArticlesReq extends Paging {
-    order: ArticleOrderBy;
-    tag?: string;
-    in_days?: number;
 
-    tag_id?:string;
-}
 
 export type AdminQuestionStatus =
   | 'available'
@@ -385,6 +373,7 @@ export interface AdminSettingsGeneral {
   contact_email: string;
   check_update: boolean;
   permalink?: number;
+  keywords: string;
 }
 
 export interface HelmetBase {
@@ -816,3 +805,6 @@ export interface BadgeDetailListRes {
 }
 
 export * from "./article_interface";//@ms:
+export * from "./quote_interface";//@ms:
+export * from "./quote_author_interface";//@ms:
+export * from "./quote_piece_interface";//@ms:

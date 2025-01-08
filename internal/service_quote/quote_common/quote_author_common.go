@@ -53,6 +53,8 @@ type QuoteAuthorRepo interface {
 	RemoveQuoteAuthor(ctx context.Context, id string) (err error)
 	UpdateQuoteAuthor(ctx context.Context, quoteAuthor *entity.QuoteAuthor, Cols []string) (err error)
 	GetQuoteAuthor(ctx context.Context, id string) (quoteAuthor *entity.QuoteAuthor, exist bool, err error)
+	GetQuoteAuthorSimple(ctx context.Context, id string) (quoteAuthorBasicInfo *schema.QuoteAuthorBasicInfo, exist bool, err error)
+
 	GetQuoteAuthorList(ctx context.Context, quoteAuthor *entity.QuoteAuthor) (quoteAuthors []*entity.QuoteAuthor, err error)
 	GetQuoteAuthorPage(ctx context.Context, page, pageSize int, tagIDs []string, userID, orderCond string, inDays int, showHidden, showPending bool) (
 		quoteAuthorList []*entity.QuoteAuthor, total int64, err error)

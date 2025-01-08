@@ -62,6 +62,7 @@ type UserRepo interface {
 	SearchUserListByName(ctx context.Context, name string, limit int, onlyStaff bool) (userList []*entity.User, err error)
 
 	UpdateArticleCount(ctx context.Context, userID string, count int64) (err error)
+	UpdateQuoteCount(ctx context.Context, userID string, count int64) (err error)
 }
 
 // UserCommon user service
@@ -141,6 +142,9 @@ func (us *UserCommon) UpdateAnswerCount(ctx context.Context, userID string, num 
 // @ms:
 func (us *UserCommon) UpdateArticleCount(ctx context.Context, userID string, num int64) error {
 	return us.userRepo.UpdateArticleCount(ctx, userID, num)
+}
+func (us *UserCommon) UpdateQuoteCount(ctx context.Context, userID string, num int64) error {
+	return us.userRepo.UpdateQuoteCount(ctx, userID, num)
 }
 
 func (us *UserCommon) UpdateQuestionCount(ctx context.Context, userID string, num int64) error {

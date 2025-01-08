@@ -351,7 +351,9 @@ func (qr *quoteRepo) GetQuotePage(ctx context.Context, page, pageSize int,
 	tagIDs []string, userID, orderCond string, inDays int, showHidden, showPending bool) (
 	quoteList []*entity.Quote, total int64, err error) {
 	quoteList = make([]*entity.Quote, 0)
+
 	session := qr.data.DB.Context(ctx)
+	session.Alias(entity.QuoteGetAlias()) //@ms:alias
 	status := []int{entity.QuoteStatusAvailable, entity.QuoteStatusClosed}
 	if showPending {
 		status = append(status, entity.QuoteStatusPending)
@@ -362,6 +364,9 @@ func (qr *quoteRepo) GetQuotePage(ctx context.Context, page, pageSize int,
 		session.In("tag_rel.tag_id", tagIDs)
 		session.And("tag_rel.status = ?", entity.TagRelStatusAvailable)
 	}
+	session.Join("LEFT", "tq_quote_author", "quote.quote_author_id = tq_quote_author.id")
+	session.Join("LEFT", "tq_quote_piece", "quote.quote_piece_id = tq_quote_piece.id")
+
 	if len(userID) > 0 {
 		session.And("quote.user_id = ?", userID)
 		if !showHidden {

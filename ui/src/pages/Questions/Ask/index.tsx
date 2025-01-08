@@ -257,7 +257,7 @@ const Ask = () => {
       ...formData,
       title: { value: e.currentTarget.value, errorMsg: '', isInvalid: false },
     });
-    if (e.currentTarget.value.length >= 10) {
+    if (e.currentTarget.value.length >= 6) {
       querySimilarQuestions(e.currentTarget.value);
     }
     if (e.currentTarget.value.length === 0) {

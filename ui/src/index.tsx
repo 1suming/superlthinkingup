@@ -24,6 +24,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 
 import './index.scss';
+// import 'uno.css'; // 引入 UnoCSS 的样式
+// import './src/common/uno.css'; 
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,

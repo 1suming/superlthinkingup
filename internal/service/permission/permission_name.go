@@ -93,3 +93,53 @@ const (
 	showActionName                  = "action.show"
 	inviteSomeoneToAnswerActionName = "action.invite_someone_to_answer"
 )
+
+// @quote
+const (
+	QuoteAdd               = "quote.add"
+	QuoteEdit              = "quote.edit"
+	QuoteEditWithoutReview = "quote.edit_without_review"
+	QuoteDelete            = "quote.delete"
+	QuoteClose             = "quote.close"
+	QuoteReopen            = "quote.reopen"
+	QuoteVoteUp            = "quote.vote_up"
+	QuoteVoteDown          = "quote.vote_down"
+	QuotePin               = "quote.pin"
+	QuoteUnPin             = "quote.unpin"
+	QuoteHide              = "quote.hide"
+	QuoteShow              = "quote.show"
+
+	QuoteUnDelete = "quote.undeleted"
+)
+const (
+	QuoteAuthorAdd               = "quote_author.add"
+	QuoteAuthorEdit              = "quote_author.edit"
+	QuoteAuthorEditWithoutReview = "quote_author.edit_without_review"
+	QuoteAuthorDelete            = "quote_author.delete"
+	QuoteAuthorClose             = "quote_author.close"
+	QuoteAuthorReopen            = "quote_author.reopen"
+	QuoteAuthorVoteUp            = "quote_author.vote_up"
+	QuoteAuthorVoteDown          = "quote_author.vote_down"
+	QuoteAuthorPin               = "quote_author.pin"
+	QuoteAuthorUnPin             = "quote_author.unpin"
+	QuoteAuthorHide              = "quote_author.hide"
+	QuoteAuthorShow              = "quote_author.show"
+
+	QuoteAuthorUnDelete = "quote_author.undeleted"
+)
+const (
+	QuotePieceAdd               = "quote_piece.add"
+	QuotePieceEdit              = "quote_piece.edit"
+	QuotePieceEditWithoutReview = "quote_piece.edit_without_review"
+	QuotePieceDelete            = "quote_piece.delete"
+	QuotePieceClose             = "quote_piece.close"
+	QuotePieceReopen            = "quote_piece.reopen"
+	QuotePieceVoteUp            = "quote_piece.vote_up"
+	QuotePieceVoteDown          = "quote_piece.vote_down"
+	QuotePiecePin               = "quote_piece.pin"
+	QuotePieceUnPin             = "quote_piece.unpin"
+	QuotePieceHide              = "quote_piece.hide"
+	QuotePieceShow              = "quote_piece.show"
+
+	QuotePieceUnDelete = "quote_piece.undeleted"
+)

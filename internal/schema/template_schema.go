@@ -67,6 +67,25 @@ type ArticlePageJsonLD struct {
 		SuggestedAnswer []*SuggestedAnswerItem `json:"suggestedAnswer"`
 	} `json:"mainEntity"`
 }
+type QuotePageJsonLD struct {
+	Context    string `json:"@context"`
+	Type       string `json:"@type"`
+	MainEntity struct {
+		Type        string    `json:"@type"`
+		Name        string    `json:"name"`
+		Text        string    `json:"text"`
+		AnswerCount int       `json:"answerCount"`
+		UpvoteCount int       `json:"upvoteCount"`
+		DateCreated time.Time `json:"dateCreated"`
+		Author      struct {
+			URL  string `json:"url"`
+			Type string `json:"@type"`
+			Name string `json:"name"`
+		} `json:"author"`
+		AcceptedAnswer  *AcceptedAnswerItem    `json:"acceptedAnswer,omitempty"`
+		SuggestedAnswer []*SuggestedAnswerItem `json:"suggestedAnswer"`
+	} `json:"mainEntity"`
+}
 type AcceptedAnswerItem struct {
 	Type        string    `json:"@type"`
 	Text        string    `json:"text"`

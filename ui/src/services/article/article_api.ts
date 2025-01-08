@@ -59,3 +59,9 @@ export const articleDetail = (id: string) => {
       error,
     };
   };
+
+
+  export const queryArticleByTitle = (title: string) => {
+    return request.get(`/answer/api/v1/article/similar?title=${title}`);
+  };
+  

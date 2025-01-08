@@ -59,9 +59,21 @@ const (
 	// NotificationEarnedBadge earned badge
 	NotificationEarnedBadge = "notification.action.earned_badge"
 
-	NotificationYourArticleIsClosed = "notification.action.your_Article_is_closed"
+	NotificationYourArticleIsClosed = "notification.action.your_article_is_closed"
 	// NotificationYourArticleWasDeleted your Article was deleted
-	NotificationYourArticleWasDeleted = "notification.action.your_Article_was_deleted"
+	NotificationYourArticleWasDeleted = "notification.action.your_article_was_deleted"
+
+	NotificationYourQuoteIsClosed = "notification.action.your_quote_is_closed"
+	// NotificationYourQuoteWasDeleted your Quote was deleted
+	NotificationYourQuoteWasDeleted = "notification.action.your_quote_was_deleted"
+
+	NotificationYourQuoteAuthorIsClosed = "notification.action.your_quote_author_is_closed"
+	// NotificationYourQuoteWasDeleted your Quote was deleted
+	NotificationYourQuoteAuthorWasDeleted = "notification.action.your_quote_author_was_deleted"
+
+	NotificationYourQuotePieceIsClosed = "notification.action.your_quote_piece_is_closed"
+	// NotificationYourQuoteWasDeleted your Quote was deleted
+	NotificationYourQuotePieceWasDeleted = "notification.action.your_quote_piece_was_deleted"
 )
 
 type NotificationChannelKey string

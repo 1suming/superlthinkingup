@@ -304,6 +304,30 @@ func (tr *tagCommonRepo) UpdateTagQuestionCount(ctx context.Context, tagID strin
 	return
 }
 
+func (tr *tagCommonRepo) UpdateTagArticleCount(ctx context.Context, tagID string, articleCount int) (err error) {
+	cond := &entity.Tag{QuestionCount: articleCount}
+	_, err = tr.data.DB.Context(ctx).Where(builder.Eq{"id": tagID}).MustCols("question_count").Update(cond)
+	if err != nil {
+		err = errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	return
+}
+func (tr *tagCommonRepo) UpdateTagQuoteCount(ctx context.Context, tagID string, articleCount int) (err error) {
+	cond := &entity.Tag{QuestionCount: articleCount}
+	_, err = tr.data.DB.Context(ctx).Where(builder.Eq{"id": tagID}).MustCols("question_count").Update(cond)
+	if err != nil {
+		err = errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	return
+}
+func (tr *tagCommonRepo) UpdateTagQuoteAuthorCount(ctx context.Context, tagID string, articleCount int) (err error) {
+	cond := &entity.Tag{QuestionCount: articleCount}
+	_, err = tr.data.DB.Context(ctx).Where(builder.Eq{"id": tagID}).MustCols("question_count").Update(cond)
+	if err != nil {
+		err = errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	return
+}
 func (tr *tagCommonRepo) UpdateTagsAttribute(ctx context.Context, tags []string, attribute string, value bool) (err error) {
 	bean := &entity.Tag{}
 	switch attribute {

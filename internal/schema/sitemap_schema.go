@@ -40,3 +40,19 @@ type SiteMapArticleInfo struct {
 	Title      string `json:"title"`
 	UpdateTime string `json:"time"`
 }
+
+type SiteMapQuoteInfo struct {
+	ID         string `json:"id"`
+	Title      string `json:"title"`
+	UpdateTime string `json:"time"`
+}
+type SiteMapQuoteAuthorInfo struct {
+	ID         string `json:"id"`
+	AuthorName string `json:"author_name"`
+	UpdateTime string `json:"time"`
+}
+type SiteMapQuotePieceInfo struct {
+	ID         string `json:"id"`
+	Title      string `json:"title"`
+	UpdateTime string `json:"time"`
+}

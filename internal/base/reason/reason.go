@@ -111,14 +111,39 @@ const (
 
 	//@ms:
 
-	ArticleNotFound       = "error.Article.not_found"
-	ArticleCannotDeleted  = "error.Article.cannot_deleted"
-	ArticleCannotClose    = "error.Article.cannot_close"
-	ArticleCannotUpdate   = "error.Article.cannot_update"
-	ArticleAlreadyDeleted = "error.Article.already_deleted"
-	ArticleUnderReview    = "error.Article.under_review"
+	ArticleNotFound       = "error.article.not_found"
+	ArticleCannotDeleted  = "error.article.cannot_deleted"
+	ArticleCannotClose    = "error.article.cannot_close"
+	ArticleCannotUpdate   = "error.article.cannot_update"
+	ArticleAlreadyDeleted = "error.article.already_deleted"
+	ArticleUnderReview    = "error.article.under_review"
 
 	TagHasChildTagCannotDelete = "该标签还有子标签，不能删除"
+
+	QuoteNotFound       = "error.quote.not_found"
+	QuoteCannotDeleted  = "error.quote.cannot_deleted"
+	QuoteCannotClose    = "error.quote.cannot_close"
+	QuoteCannotUpdate   = "error.quote.cannot_update"
+	QuoteAlreadyDeleted = "error.quote.already_deleted"
+	QuoteUnderReview    = "error.quote.under_review"
+
+	QuoteAuthorNotFound       = "error.quote_author.not_found"
+	QuoteAuthorCannotDeleted  = "error.quote_author.cannot_deleted"
+	QuoteAuthorCannotClose    = "error.quote_author.cannot_close"
+	QuoteAuthorCannotUpdate   = "error.quote_author.cannot_update"
+	QuoteAuthorAlreadyDeleted = "error.quote_author.already_deleted"
+	QuoteAuthorUnderReview    = "error.quote_author.under_review"
+
+	QuoteAuthorAlreadyExist = "error.quote_author.already_exist"
+
+	QuotePieceNotFound       = "error.quote_piece.not_found"
+	QuotePieceCannotDeleted  = "error.quote_piece.cannot_deleted"
+	QuotePieceCannotClose    = "error.quote_piece.cannot_close"
+	QuotePieceCannotUpdate   = "error.quote_piece.cannot_update"
+	QuotePieceAlreadyDeleted = "error.quote_piece.already_deleted"
+	QuotePieceUnderReview    = "error.quote_piece.under_review"
+
+	QuotePieceAlreadyExist = "error.quote_piece.already_exist"
 )
 
 // user external login reasons

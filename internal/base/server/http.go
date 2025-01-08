@@ -43,6 +43,7 @@ func NewHTTPServer(debug bool,
 	pluginAPIRouter *router.PluginAPIRouter,
 	uiConf *UI,
 	articleRouter *router.ArticleAPIRouter, //@csw
+	quoteRouter *router.QuoteAPIRouter,
 ) *gin.Engine {
 
 	if debug {
@@ -132,6 +133,16 @@ func NewHTTPServer(debug bool,
 	article_authV1 := r.Group("/answer/api/v1")
 	article_authV1.Use(authUserMiddleware.MustAuthAndAccountAvailable())
 	articleRouter.RegisterArticleAPIRouter(article_authV1)
+
+	// register api that no need to login
+	quote_unAuthV1 := r.Group("/answer/api/v1")
+	quote_unAuthV1.Use(authUserMiddleware.Auth(), authUserMiddleware.EjectUserBySiteInfo())
+	quoteRouter.RegisterUnAuthQuoteAPIRouter(quote_unAuthV1)
+
+	// register api that must be authenticated
+	quote_authV1 := r.Group("/answer/api/v1")
+	quote_authV1.Use(authUserMiddleware.MustAuthAndAccountAvailable())
+	quoteRouter.RegisterQuoteAPIRouter(quote_authV1)
 
 	return r
 }

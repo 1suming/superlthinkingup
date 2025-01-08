@@ -30,4 +30,5 @@ var ProviderSetRouter = wire.NewSet(
 	NewTemplateRouter,
 	NewPluginAPIRouter,
 	NewArticleAPIRouter, //@cws
+	NewQuoteAPIRouter,
 )

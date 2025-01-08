@@ -31,6 +31,15 @@ const (
 	//@ms:
 	ArticleEditSummaryKey = "question.edit.summary"
 	ArticleCloseReasonKey = "question.close.reason"
+
+	QuoteEditSummaryKey = "quote.edit.summary"
+	QuoteCloseReasonKey = "quote.close.reason"
+
+	QuoteAuthorEditSummaryKey = "quote_author.edit.summary"
+	QuoteAuthorCloseReasonKey = "quote_author.close.reason"
+
+	QuotePieceEditSummaryKey = "quote_piece.edit.summary"
+	QuotePieceCloseReasonKey = "quote_piece.close.reason"
 )
 
 // Meta meta

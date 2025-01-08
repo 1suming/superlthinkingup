@@ -27,6 +27,8 @@ interface IType {
   theme_options: AdminSettingsTheme['theme_options'];
   color_scheme: AdminSettingsTheme['color_scheme'];
   update: (params: AdminSettingsTheme) => void;
+  body_background  : string ;//@cws
+  setBackground:  (color: string) => void;
 }
 
 const store = create<IType>((set) => ({
@@ -46,6 +48,10 @@ const store = create<IType>((set) => ({
         ...params,
       };
     }),
+    //@cws 
+    body_background :"white",
+    setBackground: (color) => set({ body_background: color }), // 更新背景色
+
 }));
 
 export default store;

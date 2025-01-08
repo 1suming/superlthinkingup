@@ -81,6 +81,9 @@ type Quote struct {
 func (Quote) TableName() string {
 	return "tq_quote"
 }
+func QuoteGetAlias() string {
+	return "quote"
+}
 
 // // QuoteWithTagsRevision Quote
 type QuoteWithTagsRevision struct {

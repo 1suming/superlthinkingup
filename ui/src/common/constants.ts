@@ -653,3 +653,9 @@ export const TAG_SLUG_NAME_MAX_LENGTH = 35;
 
 ////父级id为0的。//为-2表示 选择 parent_tag_id为0的
 export const TAG_PARENT_TAG_ID_IS_ZERO= -2;
+
+export enum EnumTinyMceToolbarType{
+  Default=1,
+  Simple=2,
+  
+};

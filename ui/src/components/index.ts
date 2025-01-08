@@ -73,12 +73,24 @@ import ArticleUserCard from './Article/UserCard';
 
 import ArticleList from './Article/ArticleList';
 import ArticleCounts from './Article/Counts';
-
 import HotArticles from './Article/HotArticles';
 
 
 import EditorTinyMCE from './EditorTinyMCE';
 
+//--quote moudle
+import QuoteActions from './Quote/Actions';
+import QuoteComment from './Quote/Comment';
+
+import QuoteOperate from './Quote/Operate';
+import QuoteUserCard from './Quote/UserCard';
+
+import QuoteList from './Quote/QuoteList';
+import QuoteCounts from './Quote/Counts';
+import HotQuotes from './Quote/HotQuotes';
+
+import BaseUserCardMy from './BaseUserCardMy';
+import CommonRelatedObjects from './CommonRelatedObjects';
 
 export {
   Avatar,
@@ -138,6 +150,20 @@ export {
   HotArticles,
   
   EditorTinyMCE,
+
+  //quote
+  QuoteActions ,
+  QuoteComment ,
+
+  QuoteOperate  ,
+  QuoteUserCard ,
+
+  QuoteList ,
+  QuoteCounts ,
+  HotQuotes,
+
+  BaseUserCardMy,
+  CommonRelatedObjects,
   
 };
 export type { EditorRef, JSONSchema, UISchema };

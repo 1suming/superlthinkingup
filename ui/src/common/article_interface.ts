@@ -1,4 +1,4 @@
-import { UserInfoBase,ImgCodeReq,Tag } from './interface';
+import { UserInfoBase,ImgCodeReq,Tag ,Paging} from './interface';
 
 
 // export interface ArticleDetailRes {
@@ -62,4 +62,19 @@ import { UserInfoBase,ImgCodeReq,Tag } from './interface';
 }
 export interface QuerySiteInfoKeyValResp   {
     content: string;
+}
+export type ArticleOrderBy =
+  | 'recommend'
+  | 'newest'
+  | 'active'
+  | 'hot'
+  | 'score'
+  | 'unanswered';
+
+export interface QueryArticlesReq extends Paging {
+    order: ArticleOrderBy;
+    tag?: string;
+    in_days?: number;
+
+    tag_id?:string;
 }

@@ -74,17 +74,22 @@ const Index: FC = () => {
             <span>{t('header.nav.badges')}</span>
           </NavLink>
 
+         {userInfo?.username ? (
           <>
               <div className="py-2 px-3 mt-3 small fw-bold">
                 {t('创作者中心')}
               </div>
 
               <NavLink to="/articles/write" className="nav-link">
-                  <span>{t('header.nav.create_center')}</span>
-                  
+                  <span>文章创作</span>
+              </NavLink>
+              <NavLink to="/quotes/write" className="nav-link">
+                  <span>金句创作</span>
               </NavLink>
               
           </>
+         ):null}
+
 
           {can_revision || userInfo?.role_id === 2 ? (
             <>

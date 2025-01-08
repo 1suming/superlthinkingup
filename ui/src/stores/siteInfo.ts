@@ -52,6 +52,7 @@ const siteInfo = create<SiteInfoType>((set) => ({
     contact_email: '',
     check_update: true,
     permalink: 1,
+    keywords:'',
   },
   users: defaultUsersConf,
   version: '',

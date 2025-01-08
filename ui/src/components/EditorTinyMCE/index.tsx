@@ -1,6 +1,8 @@
 import React, { memo ,useRef,useEffect,useState} from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import { myGlobalInfoStore } from '@/stores';
+import { EnumTinyMceToolbarType } from '@/common/constants';
+
 
 function EditorTinyMCE ({
         editorPlaceholder = '',
@@ -8,9 +10,13 @@ function EditorTinyMCE ({
         // initialValue='',
        value='',
         onChange,
-        // onFocus,
-        // onBlur,
+        onFocus=()=>{},
+        onBlur=()=>{},
         // autoFocus = false,
+        menubar=true,
+        toolbarType= EnumTinyMceToolbarType.Default,
+        min_height=540,
+        id="editorTinyMCE",
     })
 {
     const [contentValue, setContentValue] = useState(value ?? '');
@@ -22,20 +28,32 @@ function EditorTinyMCE ({
     const tinyMceKey = 'pm4bf4u8cw7y3w24vo5vrwmh09tgj9qcgns63w0293niwzpk'
     const templateStr="写点什么吧";
 
-    const toolbar=[
-        // ' blocks styles fontfamily  fontsize   | pastetext ',
-        ' blocks  fontfamily  fontsize   | code removeformat pastetext  ', //removeformat 清除格式
-       
-        'formatpainter forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent |  bullist numlist |  removeformat | table image media  emoticons hr    preview | fullscreen | bdmap indent2em lineheight  axupimgs',
-        ' undo redo restoredraft ',
-        ' blockquote subscript superscript ',
-        //不要的 charmap 特殊字符
-        //分页符 pagebreak
-        //insertdatetime 时间日期
-        //print 打印
+    let toolbar:string[]=[];
+    if(toolbarType==EnumTinyMceToolbarType.Default){
+        toolbar=[
+            //formatpainter 这个插件要付费，取消掉
+            // ' blocks styles fontfamily  fontsize   | pastetext ',
+            ' blocks  fontfamily  fontsize   | code removeformat pastetext  ', //removeformat 清除格式
+           
+            ' forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent |  bullist numlist |  removeformat | table image media  emoticons hr    preview | fullscreen | bdmap indent2em lineheight  axupimgs',
+            ' undo redo restoredraft ',
+            ' blockquote subscript superscript ',
+            //不要的 charmap 特殊字符
+            //分页符 pagebreak
+            //insertdatetime 时间日期
+            //print 打印
+    
+    
+        ];
+    }else if(toolbarType==EnumTinyMceToolbarType.Simple){
+        toolbar=[
+            'fontsize | pastetext',
+            'undo redo | removeformat',
+            ' forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent |  bullist numlist |  removeformat | table image media  emoticons hr    preview | fullscreen | bdmap indent2em lineheight  axupimgs',
+            'blockquote subscript superscript ',
+        ];
+    }
 
-
-    ];
     const toolBarStr=toolbar.join(" | ");
 
     const   handleEditorChange = (content, editor) => {
@@ -65,19 +83,22 @@ function EditorTinyMCE ({
    
  
     return (
-
+<div className={className}>
         <Editor apiKey={tinyMceKey}
 
         onInit= {handleEditorInit}
         value={contentValue}
+        id={id}
 
           init={{
             branding: false, // 去掉POWERED BY TINY
             language: 'zh_CN',
             // width: 1046,
-            min_height: 540,
+            min_height: min_height,
             // initialValue: editorPlaceholder,
+            menubar:menubar,
 
+            //不要help插件，help插件会在状态栏提示 alt+0 打开帮助
         //     plugins: 'preview searchreplace autolink directionality visualblocks visualchars fullscreen image link template code codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists wordcount imagetools textpattern help emoticons autosave autoresize formatpainter',
         //    toolbar: 'code undo redo restoredraft | cut copy paste pastetext | forecolor backcolor bold italic underline strikethrough link anchor | alignleft aligncenter alignright alignjustify outdent indent | styleselect formatselect fontselect fontsizeselect | bullist numlist | blockquote subscript superscript removeformat | table image media charmap emoticons hr pagebreak insertdatetime print preview | fullscreen | bdmap indent2em lineheight formatpainter axupimgs',
         //    fontsize_formats: '12px 14px 16px 18px 24px 36px 48px 56px 72px',
@@ -86,7 +107,7 @@ function EditorTinyMCE ({
              font_family_formats: "微软雅黑='微软雅黑';宋体='宋体';黑体='黑体';仿宋='仿宋';楷体='楷体';隶书='隶书';幼圆='幼圆';Andale Mono=andale mono,times;Arial=arial,helvetica,sans-serif;Arial Black=arial black,avant garde;Book Antiqua=book antiqua,palatino;Comic Sans MS=comic sans ms,sans-serif;Courier New=courier new,courier;Georgia=georgia,palatino;Helvetica=helvetica;Impact=impact,chicago;Symbol=symbol;Tahoma=tahoma,arial,helvetica,sans-serif;Terminal=terminal,monaco;Times New Roman=times new roman,times;Trebuchet MS=trebuchet ms,geneva;Verdana=verdana,geneva;Webdings=webdings;Wingdings=wingdings",
            // font_family_formats: 'Arial=arial,helvetica,sans-serif; Courier New=courier new,courier,monospace; AkrutiKndPadmini=Akpdmi-n' ,
 
-            plugins: 'preview searchreplace autolink directionality visualblocks visualchars fullscreen image link   code codesample table charmap   pagebreak nonbreaking anchor insertdatetime advlist lists wordcount   help emoticons autosave autoresize formatpainter ',//paste
+            plugins: 'preview searchreplace autolink directionality visualblocks visualchars fullscreen image link   code codesample table charmap   pagebreak nonbreaking anchor insertdatetime advlist lists wordcount    emoticons autosave autoresize  ',//paste formatpainter这个插件要付费
             //  toolbar: {toolBarStr},
             toolbar:  toolBarStr ,
             // images_upload_handler: (blobInfo, success, failure)=>{} ,
@@ -340,9 +361,11 @@ paste_strip_class_attributes:'all',// 粘贴时，去掉class属性
 
 
           onEditorChange={handleEditorChange}
+          onFocus={onFocus}
+          onBlur={onBlur}
         
         />
-      
+      </div>
     )
 
 }

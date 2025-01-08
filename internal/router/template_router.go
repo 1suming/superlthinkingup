@@ -77,4 +77,9 @@ func (a *TemplateRouter) RegisterTemplateRouter(r *gin.RouterGroup, baseURLPath 
 	seo.GET("/articles/:id", a.templateController.ArticleInfo)
 	seo.GET("/articles/:id/:title", a.templateController.ArticleInfo)
 	seo.GET("/articles/:id/:title/:answerid", a.templateController.ArticleInfo)
+
+	seo.GET("/quotes", a.templateController.QuoteList)
+	seo.GET("/quotes/:id", a.templateController.QuoteInfo)
+	seo.GET("/quotes/:id/:title", a.templateController.QuoteInfo)
+	seo.GET("/quotes/:id/:title/:answerid", a.templateController.QuoteInfo)
 }

@@ -126,6 +126,7 @@ func (tc *TemplateController) SiteInfo(ctx *gin.Context) *schema.TemplateSiteInf
 		log.Error(err)
 	}
 	resp.Year = fmt.Sprintf("%d", time.Now().Year())
+
 	return resp
 }
 
@@ -235,7 +236,37 @@ func (tc *TemplateController) ArticleList(ctx *gin.Context) {
 		"page":     templaterender.Paginator(page, req.PageSize, count),
 	})
 }
+func (tc *TemplateController) QuoteList(ctx *gin.Context) {
+	req := &schema.QuotePageReq{
+		OrderCond: "newest",
+	}
+	if handler.BindAndCheck(ctx, req) {
+		tc.Page404(ctx)
+		return
+	}
+	var page = req.Page
+	data, count, err := tc.templateRenderController.QuoteIndex(ctx, req)
+	if err != nil {
+		tc.Page404(ctx)
+		return
+	}
+	siteInfo := tc.SiteInfo(ctx)
+	siteInfo.Canonical = fmt.Sprintf("%s/quotes", siteInfo.General.SiteUrl)
+	if page > 1 {
+		siteInfo.Canonical = fmt.Sprintf("%s/quotes?page=%d", siteInfo.General.SiteUrl, page)
+	}
 
+	UrlUseTitle := false
+	if siteInfo.SiteSeo.Permalink == constant.PermalinkQuestionIDAndTitle {
+		UrlUseTitle = true
+	}
+	siteInfo.Title = fmt.Sprintf("%s - %s", translator.Tr(handler.GetLang(ctx), constant.QuotesTitleTrKey), siteInfo.General.Name)
+	tc.html(ctx, http.StatusOK, "quote.html", siteInfo, gin.H{
+		"data":     data,
+		"useTitle": UrlUseTitle,
+		"page":     templaterender.Paginator(page, req.PageSize, count),
+	})
+}
 func (tc *TemplateController) QuestionInfoeRdirect(ctx *gin.Context, siteInfo *schema.TemplateSiteInfoResp, correctTitle bool) (jump bool, url string) {
 	questionID := ctx.Param("id")
 	title := ctx.Param("title")
@@ -595,6 +626,147 @@ func (tc *TemplateController) ArticleInfo(ctx *gin.Context) {
 		"noindex":  detail.Show == entity.ArticleHide,
 	})
 }
+func (tc *TemplateController) QuoteInfo(ctx *gin.Context) {
+	log.Infof("templateController_QuoteInfo")
+	id := ctx.Param("id")
+	title := ctx.Param("title")
+	answerid := ctx.Param("answerid")
+	shareUsername := ctx.Query("share")
+	if checker.IsQuestionsIgnorePath(id) {
+		// if id == "ask" {
+		file, err := ui.Build.ReadFile("build/index.html")
+		if err != nil {
+			log.Error(err)
+			tc.Page404(ctx)
+			return
+		}
+		ctx.Header("content-type", "text/html;charset=utf-8")
+		ctx.String(http.StatusOK, string(file))
+		return
+	}
+
+	correctTitle := false
+
+	detail, err := tc.templateRenderController.QuoteDetail(ctx, id)
+	if err != nil {
+		tc.Page404(ctx)
+		return
+	}
+	if len(shareUsername) > 0 {
+		userInfo, err := tc.userService.GetOtherUserInfoByUsername(
+			ctx, &schema.GetOtherUserInfoByUsernameReq{Username: shareUsername})
+		if err == nil {
+			tc.eventQueueService.Send(ctx, schema.NewEvent(constant.EventUserShare, userInfo.ID).
+				QID(id, detail.UserID).AID(answerid, ""))
+		}
+	}
+	_ = correctTitle
+	encodeTitle := htmltext.UrlTitle(detail.Title)
+	if encodeTitle == title {
+		correctTitle = true
+	}
+
+	siteInfo := tc.SiteInfo(ctx)
+	//quote不要这个。不然
+	//jump, jumpurl := tc.QuestionInfoeRdirect(ctx, siteInfo, correctTitle)
+	//if jump {
+	//	ctx.Redirect(http.StatusFound, jumpurl)
+	//	return
+	//}
+
+	// answers
+	//answerReq := &schema.AnswerListReq{
+	//	QuestionID: id,
+	//	Order:      "",
+	//	Page:       1,
+	//	PageSize:   999,
+	//	UserID:     "",
+	//}
+	//answers, answerCount, err := tc.templateRenderController.AnswerList(ctx, answerReq)
+	//if err != nil {
+	//	tc.Page404(ctx)
+	//	return
+	//}
+
+	// comments
+
+	objectIDs := []string{uid.DeShortID(id)}
+	//for _, answer := range answers { //文章没有回答，如果不需要把回答的comment包含进去
+	//	answerID := uid.DeShortID(answer.ID)
+	//	objectIDs = append(objectIDs, answerID)
+	//}
+	comments, err := tc.templateRenderController.CommentList(ctx, objectIDs)
+	if err != nil {
+		tc.Page404(ctx)
+		return
+	}
+	siteInfo.Canonical = fmt.Sprintf("%s/quotes/%s/%s", siteInfo.General.SiteUrl, id, encodeTitle)
+	if siteInfo.SiteSeo.Permalink == constant.PermalinkQuestionID || siteInfo.SiteSeo.Permalink == constant.PermalinkQuestionIDByShortID {
+		siteInfo.Canonical = fmt.Sprintf("%s/quotes/%s", siteInfo.General.SiteUrl, id)
+	}
+	jsonLD := &schema.QuotePageJsonLD{}
+	jsonLD.Context = "https://schema.org"
+	jsonLD.Type = "QuotePage" //"QAPage"
+	jsonLD.MainEntity.Type = "Quote"
+	jsonLD.MainEntity.Name = detail.Title
+	jsonLD.MainEntity.Text = detail.HTML
+	//jsonLD.MainEntity.AnswerCount = int(answerCount)
+	jsonLD.MainEntity.UpvoteCount = detail.VoteCount
+	jsonLD.MainEntity.DateCreated = time.Unix(detail.CreateTime, 0)
+	jsonLD.MainEntity.Author.Type = "Person"
+	jsonLD.MainEntity.Author.Name = detail.UserInfo.DisplayName
+	jsonLD.MainEntity.Author.URL = fmt.Sprintf("%s/users/%s", siteInfo.General.SiteUrl, detail.UserInfo.Username)
+	//answerList := make([]*schema.SuggestedAnswerItem, 0)
+	//for _, answer := range answers {
+	//	if answer.Accepted == schema.AnswerAcceptedEnable {
+	//		acceptedAnswerItem := &schema.AcceptedAnswerItem{}
+	//		acceptedAnswerItem.Type = "Answer"
+	//		acceptedAnswerItem.Text = answer.HTML
+	//		acceptedAnswerItem.DateCreated = time.Unix(answer.CreateTime, 0)
+	//		acceptedAnswerItem.UpvoteCount = answer.VoteCount
+	//		acceptedAnswerItem.URL = fmt.Sprintf("%s/%s", siteInfo.Canonical, answer.ID)
+	//		acceptedAnswerItem.Author.Type = "Person"
+	//		acceptedAnswerItem.Author.Name = answer.UserInfo.DisplayName
+	//		acceptedAnswerItem.Author.URL = fmt.Sprintf("%s/users/%s", siteInfo.General.SiteUrl, answer.UserInfo.Username)
+	//		jsonLD.MainEntity.AcceptedAnswer = acceptedAnswerItem
+	//	} else {
+	//		item := &schema.SuggestedAnswerItem{}
+	//		item.Type = "Answer"
+	//		item.Text = answer.HTML
+	//		item.DateCreated = time.Unix(answer.CreateTime, 0)
+	//		item.UpvoteCount = answer.VoteCount
+	//		item.URL = fmt.Sprintf("%s/%s", siteInfo.Canonical, answer.ID)
+	//		item.Author.Type = "Person"
+	//		item.Author.Name = answer.UserInfo.DisplayName
+	//		item.Author.URL = fmt.Sprintf("%s/users/%s", siteInfo.General.SiteUrl, answer.UserInfo.Username)
+	//		answerList = append(answerList, item)
+	//	}
+	//
+	//}
+	//jsonLD.MainEntity.SuggestedAnswer = answerList
+	jsonLDStr, err := json.Marshal(jsonLD)
+	if err == nil {
+		siteInfo.JsonLD = `<script data-react-helmet="true" type="application/ld+json">` + string(jsonLDStr) + ` </script>`
+	}
+
+	siteInfo.Description = htmltext.FetchExcerpt(detail.HTML, "...", 240)
+	tags := make([]string, 0)
+	for _, tag := range detail.Tags {
+		tags = append(tags, tag.DisplayName)
+	}
+	siteInfo.Keywords = strings.Replace(strings.Trim(fmt.Sprint(tags), "[]"), " ", ",", -1)
+	siteInfo.Title = fmt.Sprintf("%s - %s", detail.Title, siteInfo.General.Name)
+
+	log.Infof("templateController_QuoteInfo end")
+	tc.html(ctx, http.StatusOK, "quote-detail.html", siteInfo, gin.H{
+		"id":       id,
+		"answerid": answerid,
+		"detail":   detail,
+		//"answers":  answers,
+		"comments": comments,
+		"noindex":  detail.Show == entity.QuoteHide,
+	})
+}
 
 // TagList tags list
 func (tc *TemplateController) TagList(ctx *gin.Context) {
@@ -740,6 +912,10 @@ func (tc *TemplateController) html(ctx *gin.Context, code int, tpl string, siteI
 	data["scriptPath"] = scriptPath
 	data["cssPath"] = cssPath
 	data["keywords"] = siteInfo.Keywords
+	//这里siteInfo.Keywords 之前没有， 加上读取General.Keywords
+	if siteInfo.Keywords == "" {
+		siteInfo.Keywords = siteInfo.General.Keywords
+	}
 	if siteInfo.Description == "" {
 		siteInfo.Description = siteInfo.General.Description
 	}

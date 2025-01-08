@@ -223,6 +223,23 @@ func (qr *quotePieceRepo) GetQuotePiece(ctx context.Context, id string) (
 	return
 }
 
+func (qr *quotePieceRepo) GetQuotePieceSimple(ctx context.Context, id string) (
+	quotePieceBasicInfo *schema.QuotePieceBasicInfo, exist bool, err error,
+) {
+	id = uid.DeShortID(id)
+	quotePiece := &entity.QuotePiece{}
+	quotePieceBasicInfo = &schema.QuotePieceBasicInfo{}
+	//quotePiece.ID = id
+	exist, err = qr.data.DB.Context(ctx).Table(quotePiece.TableName()).Where("id = ?", id).Get(quotePieceBasicInfo)
+	if err != nil {
+		return nil, false, errors.InternalServer(reason.DatabaseError).WithError(err).WithStack()
+	}
+	if handler.GetEnableShortID(ctx) {
+		quotePieceBasicInfo.ID = uid.EnShortID(quotePieceBasicInfo.ID)
+	}
+	return
+}
+
 // GetQuotePiecesByTitle get quotePiece list by title
 func (qr *quotePieceRepo) GetQuotePiecesByTitle(ctx context.Context, title string, pageSize int) (
 	quotePieceList []*entity.QuotePiece, err error) {

@@ -22,7 +22,6 @@ package unique
 import (
 	"context"
 	"fmt"
-
 	"github.com/apache/incubator-answer/internal/base/constant"
 	"github.com/apache/incubator-answer/internal/base/data"
 	"github.com/apache/incubator-answer/internal/base/reason"

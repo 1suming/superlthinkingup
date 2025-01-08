@@ -1,0 +1,74 @@
+
+.page-main {
+    max-width: 70%;
+}
+.page-right-side {
+  flex: none;
+  width: 30%;
+}
+
+.quote-item{
+    background:#fff;
+    margin-bottom: 20px;
+    border-radius: 7px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    
+    padding:0 20px;
+    a {
+      color:#5e5454;
+    }
+
+    .article-title{
+        font-size:18px;
+        color:#fff;
+        font-weight: 700;
+        margin-bottom: 12px;
+    }
+    .quote-decription {
+        //color:rgb(101, 94, 94);
+        color:#000;
+        font-size:16px;
+        margin-bottom: 22px;
+    }
+    .quote-content{
+        margin-bottom:10px;
+        
+        .article-img-content-wrapper.article-has-img{
+            display: flex;
+    
+            .img-wrapper{
+                //flex属性是flex-grow, flex-shrink 和 flex-basis的简写，默认值为0 1 auto。后两个属性可选。
+    
+    
+               // flex: 1; //如果  中间flex: 1; 和 width 有冲突。 优先执行 flex：1；
+               //当一个元素同时被设置了 flex-basis (除值为 auto 外) 和 width (或者在 flex-direction: column 情况下设置了height) , flex-basis 具有更高的优先级。
+                flex-basis: 216px;   
+    
+                // max-width: 40%;
+            }
+            .quote-content-wrapper{
+                //flex: 1;
+                margin-left: 20px;
+            }
+        }
+    
+        
+    }
+    
+}
+
+
+  // lg
+  @media screen and (max-width: 1199.9px) {
+    .page-main {
+      max-width: 100%;
+    }
+    .page-right-side {
+      width: 100%;
+    }
+  }
+  
+
+.body-main-content-quote{
+   background-color: #f9f9f9;
+}

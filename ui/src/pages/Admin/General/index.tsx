@@ -65,6 +65,13 @@ const General: FC = () => {
         })}`,
         description: t('desc.text'),
       },
+      keywords: {
+        type: 'string',
+        title: `${t('keywords.label')} ${t('optional', {
+          keyPrefix: 'form',
+        })}`,
+        description: t('keywords.text'),
+      },
       contact_email: {
         type: 'string',
         title: t('contact_email.label'),
@@ -135,6 +142,7 @@ const General: FC = () => {
       site_url: formData.site_url.value,
       contact_email: formData.contact_email.value,
       check_update: formData.check_update.value,
+      keywords: formData.keywords.value,
     };
 
     updateGeneralSetting(reqParams)
@@ -150,6 +158,7 @@ const General: FC = () => {
           formData.site_url.value = res.site_url;
           formData.contact_email.value = res.contact_email;
           formData.check_update.value = res.check_update;
+          formData.keywords.value = res.keywords;
         }
 
         setFormData({ ...formData });

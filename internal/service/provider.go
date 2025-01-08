@@ -25,6 +25,7 @@ import (
 	"github.com/apache/incubator-answer/internal/service/activity_common"
 	"github.com/apache/incubator-answer/internal/service/activity_queue"
 	answercommon "github.com/apache/incubator-answer/internal/service/answer_common"
+	articlecommon "github.com/apache/incubator-answer/internal/service/article_common"
 	"github.com/apache/incubator-answer/internal/service/auth"
 	"github.com/apache/incubator-answer/internal/service/badge"
 	"github.com/apache/incubator-answer/internal/service/collection"
@@ -124,4 +125,7 @@ var ProviderSetService = wire.NewSet(
 	badge.NewBadgeEventService,
 	badge.NewBadgeAwardService,
 	badge.NewBadgeGroupService,
+
+	//
+	articlecommon.NewArticleCommon,
 )

@@ -66,10 +66,10 @@ const routes: RouteNode[] = [
         // side nav layout
         page: 'pages/SideNavLayout',
         children: [
-        //   { //@cws ，不要设置为首页
-        //     index: true,
-        //     page: 'pages/Questions',
-        //   },
+          // { //@cws ，不要设置为首页
+          //   index: true,
+          //   page: 'pages/Questions',
+          // },
           {
             path: 'questions',
             page: 'pages/Questions',
@@ -533,7 +533,7 @@ const routes: RouteNode[] = [
 
         ],
     },
-
+    //article module cms 
     {
         path: '/',
         page: 'pages/Layout', //page: 'pages/Article/Layout/ArticleRootLayout',
@@ -554,9 +554,7 @@ const routes: RouteNode[] = [
                 page: 'pages/SideNavLayout',
                 //page: 'pages/Article/Layout/ArticleSideNavLayout',
                 children: [
-                    
                  
-
                       {
                         path: 'articles/write',
                         page: 'pages/Article/Write',
@@ -581,7 +579,29 @@ const routes: RouteNode[] = [
 
                 ],
             },
+ 
+                
 
+        ],
+    },
+
+       //about site
+    {
+        path: '/',
+        page: 'pages/Layout', //page: 'pages/Article/Layout/ArticleRootLayout',
+        loader: async () => {
+            await guard.setupApp();
+            return null;
+        },
+        guard: () => {
+            const gr = guard.shouldLoginRequired();
+            if (!gr.ok) {
+                return gr;
+            }
+            return guard.notForbidden();
+        },
+        children: [
+      
             {
                 path: 'siteinfo/about',
                 page: 'pages/siteinfo/site_about',
@@ -599,6 +619,105 @@ const routes: RouteNode[] = [
                 page: 'pages/Ais/AIIndex',
             },
                 
+
+        ],
+    },
+
+    //@cws quote
+    {
+      path: '/',
+      page: 'pages/Layout', //page: 'pages/Article/Layout/ArticleRootLayout',
+      loader: async () => {
+          await guard.setupApp();
+          return null;
+      },
+      guard: () => {
+          const gr = guard.shouldLoginRequired();
+          if (!gr.ok) {
+              return gr;
+          }
+          return guard.notForbidden();
+      },
+      children: [
+          { 
+              // side nav layout // 'pages/SideNavLayout',
+              page: 'pages/Quote/Layout/QuoteSideNavLayout',
+              children: [
+                  // {
+                  //     index: true,
+                  //     page: 'pages/Article',
+                  // },
+                  {
+                      path: '/quotes',
+                      page: 'pages/Quote/List/QuoteList',
+                  },
+
+                  {
+                      path: 'quotes/:qid',
+                      page: 'pages/Quote/Detail',
+                    },
+                    {
+                      path: 'quotes/:qid/:slugPermalink',
+                      page:'pages/Quote/Detail',
+                    },
+                    {
+                      path: 'quotes/:qid/:slugPermalink/:aid',
+                      page: 'pages/Quote/Detail',
+                    },
+
+
+              ],
+          },
+
+      ],
+  },
+    //quote module cms 
+    {
+        path: '/',
+        page: 'pages/Layout', //page: 'pages/Article/Layout/ArticleRootLayout',
+        loader: async () => {
+            await guard.setupApp();
+            return null;
+        },
+        guard: () => {
+            const gr = guard.shouldLoginRequired();
+            if (!gr.ok) {
+                return gr;
+            }
+            return guard.notForbidden();
+        },
+        children: [
+            { 
+                // side nav layout // 'pages/SideNavLayout',
+                page: 'pages/SideNavLayout',
+                //page: 'pages/Article/Layout/ArticleSideNavLayout',
+                children: [
+                      {
+                        path: 'quotes/write',
+                        page: 'pages/Quote/Write',
+                        guard: () => {
+                          return guard.activated();
+                        },
+                      },
+                           // {
+                    //     path: 'posts/:qid/edit',
+                    //     page: 'pages/Questions/Ask',
+                    //     guard: () => {
+                    //       return guard.activated();
+                    //     },
+                    //   },
+                      {
+                        path: 'quotes/:qid/edit',
+                        page: 'pages/Quote/Write',
+                        guard: () => {
+                          return guard.activated();
+                        },
+                      },
+
+                ],
+            },
+
+          
 
         ],
     },
