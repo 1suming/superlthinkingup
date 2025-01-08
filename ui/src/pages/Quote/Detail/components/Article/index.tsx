@@ -140,7 +140,10 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
                       link_to={`/authors/${data.quote_author_basic_info.id}`}
                       avatar={data.quote_author_basic_info.avatar}
                       
-                      className="me-1"
+                      avatarClass="me-2 d-block"
+                      avatarSearchStr=''
+
+                     
                     />
                     - 
                     <div> 

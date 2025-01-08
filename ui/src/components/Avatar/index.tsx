@@ -43,7 +43,15 @@ const Index: FC<IProps> = ({
   let url = '';
   if (typeof avatar === 'string') {
     if (avatar.length > 1) {
-      url = `${avatar}?${searchStr}${
+      //@cws 如果searchStr为空，那么不要
+      // url = `${avatar}?${searchStr}${
+      //   avatar?.includes('gravatar') ? '&d=identicon' : ''
+      // }`;
+      url= `${avatar}`
+      if(searchStr!=''){
+        url = `${url}?${searchStr}`
+      }
+      url = `${url}${
         avatar?.includes('gravatar') ? '&d=identicon' : ''
       }`;
     }
@@ -59,7 +67,7 @@ const Index: FC<IProps> = ({
   return (
     <>
       {/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role,jsx-a11y/control-has-associated-label */}
-      <img
+      <img  referrerPolicy='no-referrer'
         src={url || DefaultAvatar}
         width={size}
         height={size}
