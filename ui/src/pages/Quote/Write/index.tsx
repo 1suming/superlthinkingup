@@ -65,6 +65,7 @@ interface FormDataItem {
   edit_summary: Type.FormValue<string>;
 
   content_format: Type.FormValue<number>;
+  content_plain_text: Type.FormValue<string>;
   author: Type.FormValue<string>;//作者
   author_id: Type.FormValue<string>;//作者id
   piece: Type.FormValue<string>;//出处
@@ -103,6 +104,11 @@ const Ask = () => {
     //markdown或html
     content_format: {
         value: 0,
+        isInvalid: false,
+        errorMsg: '',
+      },
+    content_plain_text: {
+        value: '',
         isInvalid: false,
         errorMsg: '',
       },
@@ -347,11 +353,14 @@ const [editorType,setEditorType] = useState(EnumEditorType.TinyMCE);//@cws编辑
       setSimilarQuestions([]);
     }
   };
-  const handleContentChange = (value: string) => {
-     console.log("handleContentChange vlaue:")//,value)
+  const handleContentChange = (value: string,plainValue:string) => {
+     console.log("handleContentChange value:",value)
+     console.log("handleContentChange plainValue:",plainValue)
+     value=plainValue //@只使用纯文本
     setFormData({
       ...formData,
       content: { value, errorMsg: '', isInvalid: false },
+      // content_plain_text: { value, errorMsg: '', isInvalid: false },
     });
   };
   const handleTagsChange = (value) =>

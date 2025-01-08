@@ -100,30 +100,7 @@ const Index: FC<Props> = ({ data, initPage, hasAnswer, isLogged }) => {
 
   return (
     <div className="quote-all-wrapper px-3">
-      <h1 className="h3 mb-3 text-wrap text-break">
-        {data?.pin === 2 && (
-          <Icon
-            name="pin-fill"
-            className="me-1"
-            title={t('pinned', { keyPrefix: 'btns' })}
-          />
-        )}
-        {/* <Link
-          className="link-dark"
-          reloadDocument
-          to={pathFactory.questionLanding(data.id, data.url_title)}>
-
-          {data.title}
-          {data.status === 2
-            ? ` [${t('closed', { keyPrefix: 'question' })}]`
-            : ''}
-        </Link> */}
-        {data.title}
-          {data.status === 2
-            ? ` [${t('closed', { keyPrefix: 'question' })}]`
-            : ''}
-
-      </h1>
+   
 
       <div className="d-flex flex-wrap align-items-center small mb-3 text-secondary">
         <FormatTime

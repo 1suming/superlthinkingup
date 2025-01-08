@@ -57,7 +57,9 @@ export interface EditorRef {
 }
 
 interface EventRef {
-  onChange?(value: string): void;
+  // onChange?(value: string): void;
+  onChange?(value: string,value_plain_text?: string): void; //@cws，增加一个plain_text
+
   onFocus?(): void;
   onBlur?(): void;
 }

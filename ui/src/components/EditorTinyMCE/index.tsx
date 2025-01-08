@@ -61,7 +61,10 @@ function EditorTinyMCE ({
        // console.log('Content was updated:', content);
        setContentValue(content);
 
-        onChange(content);
+       const plainText = editor.getContent({ format: 'text' });
+        console.log("plainText:",plainText)
+
+        onChange(content,plainText);
     
 
      };

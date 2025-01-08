@@ -53,3 +53,5 @@ pnpm run start
  --where="id=36 and post_date_*>='2013-10-25'"
 mysqldump -uroot -p --default-character-set=utf8  superthinking ta_article > ta_article_backup.sql
 
+问题：如果是translate i18n不生效的问题
+应该是删除answer-data下面的i18n文件，用新的文件覆盖
