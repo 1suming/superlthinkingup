@@ -32,6 +32,17 @@
     <changefreq>daily</changefreq>
   </url>
   {{ end }}
+  {{ range .quotes }}
+  <url>
+    {{if $.hastitle}}
+    <loc>{{$.general.SiteUrl}}/quotes/{{.ID}}/{{.Title}}</loc>
+    {{else}}
+    <loc>{{$.general.SiteUrl}}/quotes/{{.ID}}</loc>
+    {{end}}
+    <lastmod>{{.UpdateTime}}</lastmod>
+    <changefreq>daily</changefreq>
+  </url>
+  {{ end }}
 
   {{ range .list }}
   <url>
