@@ -311,7 +311,7 @@ func (qr *quoteRepo) SitemapQuotes(ctx context.Context, page, pageSize int) (
 	rows := make([]*entity.Quote, 0)
 	session := qr.data.DB.Context(ctx)
 	//session.Select("id,title,created_at,post_update_time")
-	session.Select("id,title,created_at,update_at")
+	session.Select("id,title,created_at,updated_at")
 
 	session.Where("`show` = ?", entity.QuoteShow)
 	session.Where("status = ? OR status = ?", entity.QuoteStatusAvailable, entity.QuoteStatusClosed)

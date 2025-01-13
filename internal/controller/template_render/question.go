@@ -76,7 +76,7 @@ func (t *TemplateRenderController) Sitemap(ctx *gin.Context) {
 
 	quotes, err := t.quoteRepo.SitemapQuotes(ctx, 1, constant.SitemapMaxSize)
 	if err != nil {
-		log.Errorf("get sitemap articles failed: %s", err)
+		log.Errorf("get sitemap quotes failed: %s", err)
 		return
 	}
 
