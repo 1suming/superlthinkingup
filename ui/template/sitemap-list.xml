@@ -25,4 +25,14 @@
     <loc>{{$.general.SiteUrl}}/sitemap/question-{{.}}.xml</loc>
   </sitemap>
   {{ end }}
+  {{ range .article_pageList }}
+  <sitemap>
+    <loc>{{$.general.SiteUrl}}/sitemap/article-{{.}}.xml</loc>
+  </sitemap>
+  {{ end }}
+  {{ range .quote_pageList }}
+  <sitemap>
+    <loc>{{$.general.SiteUrl}}/sitemap/quote-{{.}}.xml</loc>
+  </sitemap>
+  {{ end }}
 </sitemapindex>

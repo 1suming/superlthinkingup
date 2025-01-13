@@ -54,6 +54,8 @@ func (a *TemplateRouter) RegisterTemplateRouter(r *gin.RouterGroup, baseURLPath 
 	seoNoAuth := r.Group(baseURLPath)
 	seoNoAuth.GET("/sitemap.xml", a.templateController.Sitemap)
 	seoNoAuth.GET("/sitemap/:page", a.templateController.SitemapPage)
+	seoNoAuth.GET("/sitemap/article/:page", a.templateController.SitemapPage_article)
+	seoNoAuth.GET("/sitemap/quote/:page", a.templateController.SitemapPage_quote)
 
 	seoNoAuth.GET("/robots.txt", a.siteInfoController.GetRobots)
 	seoNoAuth.GET("/custom.css", a.siteInfoController.GetCss)

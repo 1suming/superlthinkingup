@@ -73,10 +73,17 @@ func (t *TemplateRenderController) Sitemap(ctx *gin.Context) {
 		log.Errorf("get sitemap articles failed: %s", err)
 		return
 	}
-	totalCnt := len(questions) + len(articles)
-	for _, v := range articles {
-		log.Infof("sitemap articles::%+v", v)
+
+	quotes, err := t.quoteRepo.SitemapQuotes(ctx, 1, constant.SitemapMaxSize)
+	if err != nil {
+		log.Errorf("get sitemap articles failed: %s", err)
+		return
 	}
+
+	totalCnt := len(questions) + len(articles) + len(quotes)
+	//for _, v := range articles {
+	//	log.Infof("sitemap articles::%+v", v)
+	//}
 
 	ctx.Header("Content-Type", "application/xml")
 	//	if len(questions) < constant.SitemapMaxSize {
@@ -90,6 +97,7 @@ func (t *TemplateRenderController) Sitemap(ctx *gin.Context) {
 					siteInfo.Permalink == constant.PermalinkQuestionIDAndTitleByShortID,
 
 				"articles": articles,
+				"quotes":   quotes,
 			},
 		)
 		return
@@ -105,11 +113,36 @@ func (t *TemplateRenderController) Sitemap(ctx *gin.Context) {
 	for i := 1; i <= totalPages; i++ {
 		pageList = append(pageList, i)
 	}
+
+	articleNum, err := t.articleRepo.GetArticleCount(ctx)
+	if err != nil {
+		log.Error("GetArticleCount error", err)
+		return
+	}
+	var article_pageList []int
+	article_totalPages := int(math.Ceil(float64(articleNum) / float64(constant.SitemapMaxSize)))
+	for i := 1; i <= article_totalPages; i++ {
+		article_pageList = append(article_pageList, i)
+	}
+
+	quoteNum, err := t.quoteRepo.GetQuoteCount(ctx)
+	if err != nil {
+		log.Error("GetArticleCount error", err)
+		return
+	}
+	var quote_pageList []int
+	quote_totalPages := int(math.Ceil(float64(quoteNum) / float64(constant.SitemapMaxSize)))
+	for i := 1; i <= quote_totalPages; i++ {
+		quote_pageList = append(quote_pageList, i)
+	}
 	ctx.HTML(
 		http.StatusOK, "sitemap-list.xml", gin.H{
 			"xmlHeader": template.HTML(`<?xml version="1.0" encoding="UTF-8"?>`),
 			"page":      pageList,
 			"general":   general,
+
+			"article_pageList": article_pageList,
+			"quote_pageList":   quote_pageList,
 		},
 	)
 }
@@ -149,6 +182,64 @@ func (t *TemplateRenderController) SitemapPage(ctx *gin.Context, page int) error
 	}
 
 	questions, err := t.questionRepo.SitemapQuestions(ctx, page, constant.SitemapMaxSize)
+	if err != nil {
+		log.Errorf("get sitemap questions failed: %s", err)
+		return err
+	}
+	ctx.Header("Content-Type", "application/xml")
+	ctx.HTML(
+		http.StatusOK, "sitemap.xml", gin.H{
+			"xmlHeader": template.HTML(`<?xml version="1.0" encoding="UTF-8"?>`),
+			"list":      questions,
+			"general":   general,
+			"hastitle": siteInfo.Permalink == constant.PermalinkQuestionIDAndTitle ||
+				siteInfo.Permalink == constant.PermalinkQuestionIDAndTitleByShortID,
+		},
+	)
+	return nil
+}
+func (t *TemplateRenderController) SitemapPage_Article(ctx *gin.Context, page int) error {
+	general, err := t.siteInfoService.GetSiteGeneral(ctx)
+	if err != nil {
+		log.Error("get site general failed:", err)
+		return err
+	}
+	siteInfo, err := t.siteInfoService.GetSiteSeo(ctx)
+	if err != nil {
+		log.Error("get site GetSiteSeo failed:", err)
+		return err
+	}
+
+	questions, err := t.articleRepo.SitemapArticles(ctx, page, constant.SitemapMaxSize)
+	if err != nil {
+		log.Errorf("get sitemap questions failed: %s", err)
+		return err
+	}
+	ctx.Header("Content-Type", "application/xml")
+	ctx.HTML(
+		http.StatusOK, "sitemap.xml", gin.H{
+			"xmlHeader": template.HTML(`<?xml version="1.0" encoding="UTF-8"?>`),
+			"list":      questions,
+			"general":   general,
+			"hastitle": siteInfo.Permalink == constant.PermalinkQuestionIDAndTitle ||
+				siteInfo.Permalink == constant.PermalinkQuestionIDAndTitleByShortID,
+		},
+	)
+	return nil
+}
+func (t *TemplateRenderController) SitemapPage_quote(ctx *gin.Context, page int) error {
+	general, err := t.siteInfoService.GetSiteGeneral(ctx)
+	if err != nil {
+		log.Error("get site general failed:", err)
+		return err
+	}
+	siteInfo, err := t.siteInfoService.GetSiteSeo(ctx)
+	if err != nil {
+		log.Error("get site GetSiteSeo failed:", err)
+		return err
+	}
+
+	questions, err := t.quoteRepo.SitemapQuotes(ctx, page, constant.SitemapMaxSize)
 	if err != nil {
 		log.Errorf("get sitemap questions failed: %s", err)
 		return err

@@ -984,7 +984,54 @@ func (tc *TemplateController) SitemapPage(ctx *gin.Context) {
 		return
 	}
 }
-
+func (tc *TemplateController) SitemapPage_article(ctx *gin.Context) {
+	if tc.checkPrivateMode(ctx) {
+		tc.Page404(ctx)
+		return
+	}
+	page := 0
+	pageParam := ctx.Param("page")
+	pageRegexp := regexp.MustCompile(`aritcle-(.*).xml`)
+	pageStr := pageRegexp.FindStringSubmatch(pageParam)
+	if len(pageStr) != 2 {
+		tc.Page404(ctx)
+		return
+	}
+	page = converter.StringToInt(pageStr[1])
+	if page == 0 {
+		tc.Page404(ctx)
+		return
+	}
+	err := tc.templateRenderController.SitemapPage_Article(ctx, page)
+	if err != nil {
+		tc.Page404(ctx)
+		return
+	}
+}
+func (tc *TemplateController) SitemapPage_quote(ctx *gin.Context) {
+	if tc.checkPrivateMode(ctx) {
+		tc.Page404(ctx)
+		return
+	}
+	page := 0
+	pageParam := ctx.Param("page")
+	pageRegexp := regexp.MustCompile(`quote-(.*).xml`)
+	pageStr := pageRegexp.FindStringSubmatch(pageParam)
+	if len(pageStr) != 2 {
+		tc.Page404(ctx)
+		return
+	}
+	page = converter.StringToInt(pageStr[1])
+	if page == 0 {
+		tc.Page404(ctx)
+		return
+	}
+	err := tc.templateRenderController.SitemapPage_quote(ctx, page)
+	if err != nil {
+		tc.Page404(ctx)
+		return
+	}
+}
 func (tc *TemplateController) checkPrivateMode(ctx *gin.Context) bool {
 	resp, err := tc.siteInfoService.GetSiteLogin(ctx)
 	if err != nil {
